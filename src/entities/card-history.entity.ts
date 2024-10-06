@@ -16,6 +16,8 @@ export default class CardHistory {
   @Column()
   content: string;
   @Column()
+  date: Date;
+  @Column()
   prepaidCardId: number;
   @ManyToOne(() => PrepaidCard, (p) => p.cardHistories)
   @JoinColumn({

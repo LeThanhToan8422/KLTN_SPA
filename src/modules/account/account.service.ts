@@ -11,6 +11,10 @@ import { Pagination } from 'src/helpers/pagination';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import CustomerDto from '../customer/dtos/customer.dto';
+import { CustomerService } from '../customer/customer.service';
+import EmployeeDto from '../employee/dtos/employee.dto';
+import { EmployeeService } from '../employee/employee.service';
 
 @Injectable()
 export class AccountService {
@@ -19,6 +23,8 @@ export class AccountService {
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
     private readonly jwtService: JwtService,
+    private readonly customerService: CustomerService,
+    private readonly employeeService: EmployeeService,
     private datasource: DataSource,
     private configService: ConfigService,
   ) {
@@ -137,6 +143,59 @@ export class AccountService {
     } else {
       return ResponseCustomizer.error(
         ErrorCustomizer.NotFoundError('Account not found'),
+      );
+    }
+  }
+
+  async register(
+    type: string,
+    accountDto: AccountDto,
+    customerDto: CustomerDto,
+    employeeDto: EmployeeDto,
+  ) {
+    const queryRunner = this.datasource.createQueryRunner();
+    queryRunner.startTransaction();
+    try {
+      if (accountDto) {
+        const accountResponse = await this.create(accountDto);
+        const accountDtoResponse = plainToInstance(
+          AccountDto,
+          accountResponse.data,
+        );
+        if (type === 'customer' && customerDto) {
+          const customerResponse = await this.customerService.create({
+            ...customerDto,
+            accountId: accountDtoResponse.id,
+          });
+          await queryRunner.commitTransaction();
+          return ResponseCustomizer.success({
+            account: instanceToPlain(
+              plainToInstance(AccountDto, accountDtoResponse),
+            ),
+            customer: instanceToPlain(
+              plainToInstance(CustomerDto, customerResponse.data),
+            ),
+          });
+        } else {
+          const employeeResponse = await this.employeeService.create({
+            ...employeeDto,
+            accountId: accountDtoResponse.id,
+          });
+          await queryRunner.commitTransaction();
+          return ResponseCustomizer.success({
+            account: instanceToPlain(
+              plainToInstance(AccountDto, accountDtoResponse),
+            ),
+            employee: instanceToPlain(
+              plainToInstance(EmployeeDto, employeeResponse.data),
+            ),
+          });
+        }
+      }
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
       );
     }
   }

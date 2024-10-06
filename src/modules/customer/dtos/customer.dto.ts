@@ -1,7 +1,6 @@
 import { Expose } from 'class-transformer';
 import {
   IsBoolean,
-  IsDate,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -24,9 +23,9 @@ export default class CustomerDto {
   @Expose()
   gender: boolean;
   @IsNotEmpty()
-  @IsDate()
+  @IsString()
   @Expose()
-  dob: Date;
+  dob: string;
   @IsNotEmpty()
   @IsString()
   @IsPhoneNumber('VN')

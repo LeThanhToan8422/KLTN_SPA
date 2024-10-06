@@ -8,6 +8,8 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Public } from 'src/decorators/public.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
+import CustomerDto from '../customer/dtos/customer.dto';
+import EmployeeDto from '../employee/dtos/employee.dto';
 
 @Controller('account')
 export class AccountController {
@@ -17,6 +19,26 @@ export class AccountController {
   @Post('login')
   async login(@Req() req: Request) {
     return await this.accountService.login(req.body.phone, req.body.password);
+  }
+
+  @Public()
+  @Post('register/:type')
+  async register(@Req() req: Request) {
+    const accountDto = req.body.account
+      ? plainToInstance(AccountDto, req.body.account)
+      : null;
+    const customerDto = req.body.customer
+      ? plainToInstance(CustomerDto, req.body.customer)
+      : null;
+    const employeeDto = req.body.employee
+      ? plainToInstance(EmployeeDto, req.body.employee)
+      : null;
+    return await this.accountService.register(
+      req.params.type,
+      accountDto,
+      customerDto,
+      employeeDto,
+    );
   }
 
   @Public()
@@ -36,6 +58,7 @@ export class AccountController {
     return await this.accountService.create(accountDto);
   }
 
+  @Public()
   @Put(':id')
   async update(@Req() req: Request) {
     const accountDto = await plainToInstance(AccountDto, {
@@ -55,11 +78,13 @@ export class AccountController {
     return await this.accountService.update(accountDto);
   }
 
+  @Public()
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.accountService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
   @Get()
   async getAll(@Req() req: Request) {
@@ -69,11 +94,13 @@ export class AccountController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.accountService.getById(Number(req.params.id));
   }
 
+  @Public()
   @Get('phone/:phone')
   async checkAccountByPhone(@Req() req: Request) {
     return await this.accountService.checkAccountByPhone(req.params.phone);

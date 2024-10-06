@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import Room from './room.entity';
 import AppointmentService from './details-appointment.entity';
+import { StatusBed } from 'src/enums/status-bed.enum';
 
 @Entity()
 export default class Bed {
@@ -16,7 +17,7 @@ export default class Bed {
   @Column()
   name: string;
   @Column()
-  status: string;
+  status: StatusBed;
   @Column()
   roomId: number;
   @ManyToOne(() => Room, (r) => r.beds)

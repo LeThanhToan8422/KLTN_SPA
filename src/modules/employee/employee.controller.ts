@@ -6,12 +6,15 @@ import EmployeeDto from './dtos/employee.dto';
 import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   async create(@Req() req: Request) {
     const accountDto = await plainToInstance(EmployeeDto, req.body);

@@ -14,6 +14,23 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RolesGuard } from './guards/roles.guard';
 import { CustomerService } from './modules/customer/customer.service';
 import { EmployeeService } from './modules/employee/employee.service';
+import { AppointmentModule } from './modules/appointment/appointment.module';
+import { BedModule } from './modules/bed/bed.module';
+import { BranchModule } from './modules/branch/branch.module';
+import { CardHistoryModule } from './modules/card-history/card-history.module';
+import { ConsumedProductModule } from './modules/consumed-product/consumed-product.module';
+import { DetailsAppointmentModule } from './modules/details-appointment/details-appointment.module';
+import { InternalExpenseModule } from './modules/internal-expense/internal-expense.module';
+import { PrepaidCardModule } from './modules/prepaid-card/prepaid-card.module';
+import { PricesModule } from './modules/prices/prices.module';
+import { RoomModule } from './modules/room/room.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
+import { ProductModule } from './modules/product/product.module';
+import { ServiceCategoryModule } from './modules/service-category/service-category.module';
+import { ServiceModule } from './modules/service/service.module';
+import { VoucherCategoryModule } from './modules/voucher-category/voucher-category.module';
+import { VoucherModule } from './modules/voucher/voucher.module';
+import { WageModule } from './modules/wage/wage.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 
@@ -44,6 +61,23 @@ import Employee from './entities/employee.entity';
     CustomerModule,
     EmployeeModule,
     TypeOrmModule.forFeature([Customer, Employee]),
+    AppointmentModule,
+    BedModule,
+    BranchModule,
+    CardHistoryModule,
+    ConsumedProductModule,
+    DetailsAppointmentModule,
+    InternalExpenseModule,
+    PrepaidCardModule,
+    PricesModule,
+    RoomModule,
+    ScheduleModule,
+    ProductModule,
+    ServiceCategoryModule,
+    ServiceModule,
+    VoucherCategoryModule,
+    VoucherModule,
+    WageModule,
   ],
   controllers: [AppController],
   providers: [
