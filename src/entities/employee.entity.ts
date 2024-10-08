@@ -46,6 +46,8 @@ export default class Employee {
   })
   status: Status;
   @Column()
+  image: string;
+  @Column()
   accountId: number;
   @Column()
   wageId: number;

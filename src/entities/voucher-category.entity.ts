@@ -7,6 +7,8 @@ export default class VoucherCategory {
   id: number;
   @Column()
   name: string;
+  @Column()
+  image: string;
   @OneToMany(() => Voucher, (v) => v.voucherCategory)
   vouchers: Voucher[];
 }

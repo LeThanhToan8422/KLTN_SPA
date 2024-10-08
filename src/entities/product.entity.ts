@@ -19,6 +19,8 @@ export default class Product {
   @Column()
   status: Status;
   @Column()
+  image: string;
+  @Column()
   serviceCategoryId: number;
   @ManyToOne(() => ServiceCategory, (sc) => sc.products)
   @JoinColumn({

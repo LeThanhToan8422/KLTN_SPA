@@ -14,6 +14,8 @@ export default class Branch {
   address: string;
   @Column()
   status: Status;
+  @Column()
+  image: string;
   @OneToMany(() => InternalExpense, (i) => i.branch)
   internalExpenses: InternalExpense[];
   @OneToMany(() => Appointment, (a) => a.branch)

@@ -30,6 +30,8 @@ export default class Customer {
   @Column()
   address: string;
   @Column()
+  image: string;
+  @Column()
   accountId: number;
   @OneToOne(() => Account)
   @JoinColumn({
