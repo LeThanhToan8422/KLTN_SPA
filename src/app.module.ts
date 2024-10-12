@@ -31,6 +31,7 @@ import { ServiceModule } from './modules/service/service.module';
 import { VoucherCategoryModule } from './modules/voucher-category/voucher-category.module';
 import { VoucherModule } from './modules/voucher/voucher.module';
 import { WageModule } from './modules/wage/wage.module';
+import { WorkingTimeModule } from './modules/working-time/working-time.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 
@@ -78,6 +79,7 @@ import Employee from './entities/employee.entity';
     VoucherCategoryModule,
     VoucherModule,
     WageModule,
+    WorkingTimeModule,
   ],
   controllers: [AppController],
   providers: [

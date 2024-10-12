@@ -1,33 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Bed from 'src/entities/bed.entity';
+import WorkingTime from 'src/entities/working-time.entity';
 import CRUDRepository from 'src/repositories/crud.repository';
 import { DataSource, Repository } from 'typeorm';
-import BedDto from './dtos/bed.dto';
+import WorkingTimeDto from './dtos/working-time.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
 
 @Injectable()
-export class BedService {
-  private crudRepository: CRUDRepository<Bed>;
+export class WorkingTimeService {
+  private crudRepository: CRUDRepository<WorkingTime>;
   constructor(
-    @InjectRepository(Bed)
-    private readonly bedRepository: Repository<Bed>,
+    @InjectRepository(WorkingTime)
+    private readonly workingTimeRepository: Repository<WorkingTime>,
     private datasource: DataSource,
   ) {
-    this.crudRepository = new CRUDRepository<Bed>(bedRepository);
+    this.crudRepository = new CRUDRepository<WorkingTime>(
+      workingTimeRepository,
+    );
   }
 
-  async create(bedDto: BedDto) {
+  async create(workingTimeDto: WorkingTimeDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const createdItem = await this.crudRepository.create(bedDto);
+      const createdItem = await this.crudRepository.create(workingTimeDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BedDto, createdItem)),
+        instanceToPlain(plainToInstance(WorkingTimeDto, createdItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -37,14 +39,14 @@ export class BedService {
     }
   }
 
-  async update(bedDto: BedDto) {
+  async update(workingTimeDto: WorkingTimeDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const savedItem = await this.crudRepository.update(bedDto);
+      const savedItem = await this.crudRepository.update(workingTimeDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BedDto, savedItem)),
+        instanceToPlain(plainToInstance(WorkingTimeDto, savedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -61,7 +63,7 @@ export class BedService {
       const removedItem = await this.crudRepository.delete(id);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BedDto, removedItem)),
+        instanceToPlain(plainToInstance(WorkingTimeDto, removedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -74,7 +76,7 @@ export class BedService {
   async getAll(page: number, limit: number) {
     const paginatedResult = await this.crudRepository.getAll(page, limit);
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BedDto, paginatedResult.data)),
+      instanceToPlain(plainToInstance(WorkingTimeDto, paginatedResult.data)),
       new Pagination(paginatedResult.totalItems, page, limit),
     );
   }
@@ -82,26 +84,38 @@ export class BedService {
   async getById(id: number) {
     const response = await this.crudRepository.getById(id);
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BedDto, response)),
+      instanceToPlain(plainToInstance(WorkingTimeDto, response)),
     );
   }
 
-  async getBedsByServiceAndDate(bId: number, sId: number, date: string) {
+  async getWorkingTimeByServiceIdAndDate(
+    bId: number,
+    sId: number,
+    date: string,
+  ) {
     const response = await this.datasource.query(
-      `
-      select * from bed as b
-      where b.id not in (
-        select bd.id from appointment as ap
-        inner join bed as bd on bd.id = ap.bedId
-        inner join service as s on s.id = ap.serviceOrTreatmentId
-        where ap.branchId = ? and ap.serviceOrTreatmentId = ? and ap.dateTime = ?
-        group by bd.id
-        having SUM(s.duration) >= 60
+      `select * from working_time as wt
+      where wt.status = 'active' and wt.time not in (
+        select DATE_FORMAT(a.dateTime, '%H:%i') as times from appointment as a
+        inner join service as s on s.id = a.serviceOrTreatmentId
+        where a.status = 'confirmed' and a.branchId = ? and a.serviceOrTreatmentId = ? and a.dateTime = ?
+        and (
+          select COUNT(*) from bed as b
+          where b.id not in (
+            select bd.id from appointment as ap
+            inner join bed as bd on bd.id = ap.bedId
+            inner join service as s on s.id = ap.serviceOrTreatmentId
+            where ap.serviceOrTreatmentId = a.serviceOrTreatmentId and ap.dateTime = a.dateTime
+            group by bd.id
+            having SUM(s.duration) >= 60
+          )
+        ) <= 0
+        group by times
       )`,
       [bId, sId, date],
     );
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BedDto, response)),
+      instanceToPlain(plainToInstance(WorkingTimeDto, response)),
     );
   }
 }

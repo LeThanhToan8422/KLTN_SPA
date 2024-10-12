@@ -29,7 +29,9 @@ export default class Customer {
   email: string;
   @Column()
   address: string;
-  @Column()
+  @Column({
+    default: 'avatar.png',
+  })
   image: string;
   @Column()
   accountId: number;

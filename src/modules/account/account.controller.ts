@@ -22,7 +22,7 @@ export class AccountController {
   }
 
   @Public()
-  @Post('register/:type')
+  @Post('register')
   async register(@Req() req: Request) {
     const accountDto = req.body.account
       ? plainToInstance(AccountDto, req.body.account)
@@ -34,7 +34,6 @@ export class AccountController {
       ? plainToInstance(EmployeeDto, req.body.employee)
       : null;
     return await this.accountService.register(
-      req.params.type,
       accountDto,
       customerDto,
       employeeDto,
@@ -58,7 +57,7 @@ export class AccountController {
     return await this.accountService.create(accountDto);
   }
 
-  @Public()
+  // @Public()
   @Put(':id')
   async update(@Req() req: Request) {
     const accountDto = await plainToInstance(AccountDto, {
@@ -78,16 +77,17 @@ export class AccountController {
     return await this.accountService.update(accountDto);
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.accountService.delete(Number(req.params.id));
   }
 
-  @Public()
   @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
   @Get()
   async getAll(@Req() req: Request) {
+    console.log('OKKK');
+
     return await this.accountService.getAll(
       Number(req.query.page),
       Number(req.query.limit),

@@ -1,21 +1,21 @@
 import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { Request } from 'express';
+import { WorkingTimeService } from './working-time.service';
 import { Public } from 'src/decorators/public.decorator';
-import { BedService } from './bed.service';
+import { plainToInstance } from 'class-transformer';
+import WorkingTimeDto from './dtos/working-time.dto';
 import { validate } from 'class-validator';
-import BedDto from './dtos/bed.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Request } from 'express';
 
-@Controller('bed')
-export class BedController {
-  constructor(private readonly bedService: BedService) {}
+@Controller('working-time')
+export class WorkingTimeController {
+  constructor(private readonly workingTimeService: WorkingTimeService) {}
 
   @Public()
   @Post()
   async create(@Req() req: Request) {
-    const bedDto = await plainToInstance(BedDto, req.body);
-    const errors = await validate(bedDto);
+    const workingTimeDto = await plainToInstance(WorkingTimeDto, req.body);
+    const errors = await validate(workingTimeDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -25,16 +25,16 @@ export class BedController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.bedService.create(bedDto);
+    return await this.workingTimeService.create(workingTimeDto);
   }
 
   @Put(':id')
   async update(@Req() req: Request) {
-    const bedDto = await plainToInstance(BedDto, {
+    const workingTimeDto = await plainToInstance(WorkingTimeDto, {
       id: Number(req.params.id),
       ...req.body,
     });
-    const errors = await validate(bedDto);
+    const errors = await validate(workingTimeDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -44,32 +44,34 @@ export class BedController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.bedService.update(bedDto);
+    return await this.workingTimeService.update(workingTimeDto);
   }
 
   @Delete(':id')
   async delete(@Req() req: Request) {
-    return await this.bedService.delete(Number(req.params.id));
+    return await this.workingTimeService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
-    return await this.bedService.getAll(
+    return await this.workingTimeService.getAll(
       Number(req.query.page),
       Number(req.query.limit),
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
-    return await this.bedService.getById(Number(req.params.id));
+    return await this.workingTimeService.getById(Number(req.params.id));
   }
 
   @Public()
-  @Get('service/beds')
-  async getBedsByServiceAndDate(@Req() req: Request) {
+  @Get('service/times')
+  async getWorkingTimeByServiceIdAndDate(@Req() req: Request) {
     const { branchId, serviceId, date } = req.query;
-    return await this.bedService.getBedsByServiceAndDate(
+    return await this.workingTimeService.getWorkingTimeByServiceIdAndDate(
       Number(branchId),
       Number(serviceId),
       date + '',

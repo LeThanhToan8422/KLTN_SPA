@@ -22,13 +22,13 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
-    let result;
-    if (user.type === 'customer') {
-      result = await this.customerService.getByAccountId(user.id);
-    } else {
-      result = await this.employeeService.getByAccountId(user.id);
-    }
-    console.log(result);
-    return requiredRoles.some((role) => user.roles?.includes(role));
+    // let result;
+    // if (user.type === 'customer') {
+    //   result = await this.customerService.getByAccountId(user.id);
+    // } else {
+    //   result = await this.employeeService.getByAccountId(user.id);
+    // }
+    // console.log(result);
+    return requiredRoles.some((role) => user.type?.includes(role));
   }
 }

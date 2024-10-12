@@ -21,13 +21,5 @@ export default class DetailsAppointmentDto {
   @IsNotEmpty()
   @IsNumber()
   @Expose()
-  serviceId: number;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
   bedId: number;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  employeeId: number;
 }

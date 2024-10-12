@@ -22,6 +22,19 @@ export default class AppoinmentDto {
   @Expose()
   status: string;
   @IsNotEmpty()
+  @IsString()
+  @IsIn(['services', 'treatments'])
+  @Expose()
+  category: string;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  serviceOrTreatmentId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  employeeId: number;
+  @IsNotEmpty()
   @IsNumber()
   @Expose()
   customerId: number;

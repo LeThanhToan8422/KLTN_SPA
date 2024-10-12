@@ -8,7 +8,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import AppointmentService from './details-appointment.entity';
 import TreatmentService from './treatment-service.entity';
 
 @Entity()
@@ -30,8 +29,6 @@ export default class Service {
     name: 'serviceCategoryId',
   })
   serviceCategories: ServiceCategory[];
-  @OneToMany(() => AppointmentService, (as) => as.service)
-  appointmentServices: AppointmentService[];
   @OneToMany(() => TreatmentService, (ts) => ts.service)
   treatmentServices: TreatmentService[];
 }

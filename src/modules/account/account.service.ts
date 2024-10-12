@@ -86,6 +86,8 @@ export class AccountService {
 
   async getAll(page: number, limit: number) {
     const paginatedResult = await this.crudRepository.getAll(page, limit);
+    console.log(paginatedResult);
+
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(AccountDto, paginatedResult.data)),
       new Pagination(paginatedResult.totalItems, page, limit),
@@ -123,17 +125,28 @@ export class AccountService {
     return await bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   }
 
-  async login(phone: string, password: string) {
+  async login(phone: string, pw: string) {
     const account = await this.getByPhone(phone);
+    console.log(account);
     if (account) {
-      if (bcrypt.compareSync(password, account.password)) {
+      const { id, phone, password, type, status } = account;
+      if (bcrypt.compareSync(pw, password)) {
         return ResponseCustomizer.success({
           access_token: await this.jwtService.signAsync(
-            instanceToPlain(plainToInstance(AccountDto, account)),
+            {
+              id,
+              type,
+            },
             {
               secret: this.configService.get<string>('JWT_SECRET'),
             },
           ),
+          data: {
+            phone,
+            password,
+            type,
+            status,
+          },
         });
       } else {
         return ResponseCustomizer.error(
@@ -148,7 +161,6 @@ export class AccountService {
   }
 
   async register(
-    type: string,
     accountDto: AccountDto,
     customerDto: CustomerDto,
     employeeDto: EmployeeDto,
@@ -162,7 +174,7 @@ export class AccountService {
           AccountDto,
           accountResponse.data,
         );
-        if (type === 'customer' && customerDto) {
+        if (customerDto) {
           const customerResponse = await this.customerService.create({
             ...customerDto,
             accountId: accountDtoResponse.id,
