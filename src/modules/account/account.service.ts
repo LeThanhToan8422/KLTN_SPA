@@ -86,8 +86,6 @@ export class AccountService {
 
   async getAll(page: number, limit: number) {
     const paginatedResult = await this.crudRepository.getAll(page, limit);
-    console.log(paginatedResult);
-
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(AccountDto, paginatedResult.data)),
       new Pagination(paginatedResult.totalItems, page, limit),
@@ -127,7 +125,6 @@ export class AccountService {
 
   async login(phone: string, pw: string) {
     const account = await this.getByPhone(phone);
-    console.log(account);
     if (account) {
       const { id, phone, password, type, status } = account;
       if (bcrypt.compareSync(pw, password)) {

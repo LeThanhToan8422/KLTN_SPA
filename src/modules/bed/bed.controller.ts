@@ -6,12 +6,14 @@ import { BedService } from './bed.service';
 import { validate } from 'class-validator';
 import BedDto from './dtos/bed.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('bed')
 export class BedController {
   constructor(private readonly bedService: BedService) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   async create(@Req() req: Request) {
     const bedDto = await plainToInstance(BedDto, req.body);
@@ -28,6 +30,7 @@ export class BedController {
     return await this.bedService.create(bedDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Put(':id')
   async update(@Req() req: Request) {
     const bedDto = await plainToInstance(BedDto, {
@@ -47,6 +50,7 @@ export class BedController {
     return await this.bedService.update(bedDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.bedService.delete(Number(req.params.id));

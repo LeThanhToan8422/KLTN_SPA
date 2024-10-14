@@ -1,17 +1,18 @@
 import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { Request } from 'express';
-import { Public } from 'src/decorators/public.decorator';
 import { BranchService } from './branch.service';
 import { validate } from 'class-validator';
 import BranchDto from './dtos/branch.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('branch')
 export class BranchController {
   constructor(private readonly branchService: BranchService) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   async create(@Req() req: Request) {
     const branchDto = await plainToInstance(BranchDto, req.body);
@@ -28,6 +29,7 @@ export class BranchController {
     return await this.branchService.create(branchDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Put(':id')
   async update(@Req() req: Request) {
     const branchDto = await plainToInstance(BranchDto, {
@@ -47,6 +49,7 @@ export class BranchController {
     return await this.branchService.update(branchDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.branchService.delete(Number(req.params.id));

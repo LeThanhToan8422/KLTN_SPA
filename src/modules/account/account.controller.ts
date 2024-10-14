@@ -10,6 +10,7 @@ import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
 import CustomerDto from '../customer/dtos/customer.dto';
 import EmployeeDto from '../employee/dtos/employee.dto';
+import UserDto from 'src/dtos/user.dto';
 
 @Controller('account')
 export class AccountController {
@@ -57,11 +58,11 @@ export class AccountController {
     return await this.accountService.create(accountDto);
   }
 
-  // @Public()
-  @Put(':id')
+  @Put()
   async update(@Req() req: Request) {
+    const userDto = await plainToInstance(UserDto, req.user);
     const accountDto = await plainToInstance(AccountDto, {
-      id: Number(req.params.id),
+      id: Number(userDto.id),
       ...req.body,
     });
     const errors = await validate(accountDto);
@@ -83,24 +84,22 @@ export class AccountController {
     return await this.accountService.delete(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
-    console.log('OKKK');
-
     return await this.accountService.getAll(
       Number(req.query.page),
       Number(req.query.limit),
     );
   }
 
-  @Public()
-  @Get(':id')
+  @Get('details')
   async getById(@Req() req: Request) {
-    return await this.accountService.getById(Number(req.params.id));
+    const userDto = await plainToInstance(UserDto, req.user);
+    return await this.accountService.getById(Number(userDto.id));
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get('phone/:phone')
   async checkAccountByPhone(@Req() req: Request) {
     return await this.accountService.checkAccountByPhone(req.params.phone);

@@ -6,7 +6,9 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export default class Account {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({
+    unique: true,
+  })
   phone: string;
   @Column()
   password: string;

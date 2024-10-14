@@ -5,15 +5,14 @@ import { plainToInstance } from 'class-transformer';
 import EmployeeDto from './dtos/employee.dto';
 import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
-import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import UserDto from 'src/dtos/user.dto';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
-  @Public()
   @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   async create(@Req() req: Request) {
@@ -31,10 +30,11 @@ export class EmployeeController {
     return await this.employeeService.create(accountDto);
   }
 
-  @Put(':id')
+  @Put()
   async update(@Req() req: Request) {
+    const userDto = await plainToInstance(UserDto, req.user);
     const accountDto = await plainToInstance(EmployeeDto, {
-      id: Number(req.params.id),
+      id: Number(userDto.id),
       ...req.body,
     });
     const errors = await validate(accountDto);
@@ -50,11 +50,13 @@ export class EmployeeController {
     return await this.employeeService.update(accountDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.employeeService.delete(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.employeeService.getAll(
@@ -63,9 +65,10 @@ export class EmployeeController {
     );
   }
 
-  @Get(':id')
+  @Get('details')
   async getById(@Req() req: Request) {
-    return await this.employeeService.getById(Number(req.params.id));
+    const userDto = await plainToInstance(UserDto, req.user);
+    return await this.employeeService.getById(Number(userDto.id));
   }
 
   @Get('account/:id')

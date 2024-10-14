@@ -28,6 +28,7 @@ export class AppointmentController {
     return await this.appointmentService.create(appointmentDto);
   }
 
+  @Public()
   @Put(':id')
   async update(@Req() req: Request) {
     const appointmentDto = await plainToInstance(AppoinmentDto, {
@@ -47,11 +48,13 @@ export class AppointmentController {
     return await this.appointmentService.update(appointmentDto);
   }
 
+  @Public()
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.appointmentService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentService.getAll(
@@ -60,6 +63,7 @@ export class AppointmentController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.appointmentService.getById(Number(req.params.id));

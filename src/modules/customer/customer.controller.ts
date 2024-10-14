@@ -6,6 +6,9 @@ import { validate } from 'class-validator';
 import CustomerDto from './dtos/customer.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Public } from 'src/decorators/public.decorator';
+import UserDto from 'src/dtos/user.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('customer')
 export class CustomerController {
@@ -28,10 +31,11 @@ export class CustomerController {
     return await this.customerService.create(accountDto);
   }
 
-  @Put(':id')
+  @Put()
   async update(@Req() req: Request) {
+    const userDto = await plainToInstance(UserDto, req.user);
     const accountDto = await plainToInstance(CustomerDto, {
-      id: Number(req.params.id),
+      id: Number(userDto.id),
       ...req.body,
     });
     const errors = await validate(accountDto);
@@ -47,11 +51,13 @@ export class CustomerController {
     return await this.customerService.update(accountDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.customerService.delete(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.customerService.getAll(
@@ -60,9 +66,10 @@ export class CustomerController {
     );
   }
 
-  @Get(':id')
+  @Get('details')
   async getById(@Req() req: Request) {
-    return await this.customerService.getById(Number(req.params.id));
+    const userDto = await plainToInstance(UserDto, req.user);
+    return await this.customerService.getById(Number(userDto.id));
   }
 
   @Get('account/:id')
