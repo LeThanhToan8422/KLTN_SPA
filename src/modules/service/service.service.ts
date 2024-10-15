@@ -85,4 +85,19 @@ export class ServiceService {
       instanceToPlain(plainToInstance(ServiceDto, response)),
     );
   }
+
+  async getByServiceCategoryId(serviceCategoryId: number) {
+    try {
+      const services = await this.serviceRepository.find({
+        where: { serviceCategoryId },
+      });
+      return ResponseCustomizer.success(
+        instanceToPlain(plainToInstance(ServiceDto, services)),
+      );
+    } catch (error) {
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    }
+  }
 }
