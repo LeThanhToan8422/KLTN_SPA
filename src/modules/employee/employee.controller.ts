@@ -57,7 +57,6 @@ export class EmployeeController {
     return await this.employeeService.delete(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.employeeService.getAll(
