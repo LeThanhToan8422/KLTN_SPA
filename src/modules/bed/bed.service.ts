@@ -102,7 +102,7 @@ export class BedService {
         where ap.branchId = ? and ap.serviceOrTreatmentId = ? and ap.dateTime = ?
         group by bd.id
         having SUM(s.duration) >= 60
-      ) where and b.roomId = ?`,
+      ) and b.roomId = ?`,
       [bId, sId, date, roomId],
     );
     return ResponseCustomizer.success(

@@ -1,11 +1,5 @@
 import { Expose } from 'class-transformer';
-import {
-  IsIn,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export default class ServiceDto {
   @IsOptional()
@@ -22,11 +16,26 @@ export default class ServiceDto {
   duration: number;
   @IsNotEmpty()
   @IsString()
-  @IsIn(['active', 'inactive'])
   @Expose()
-  status: string;
+  image: string;
   @IsOptional()
   @IsNumber()
   @Expose()
   serviceCategoryId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  originalPrice: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  price: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  specialPrice: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  commission: number;
 }
