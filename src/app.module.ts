@@ -38,17 +38,20 @@ import Employee from './entities/employee.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Đảm bảo rằng ConfigModule được sử dụng toàn cục
+      isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'sapassword',
-      database: 'kltn_spa',
-      entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'mysql',
+        host: configService.get<string>('DB_HOST'),
+        port: 3306,
+        username: configService.get<string>('DB_USERNAME', 'root'),
+        password: configService.get<string>('DB_PASSWORD', 'sapassword'),
+        database: configService.get<string>('DB_NAME', 'kltn_spa'),
+        entities: [join(__dirname, '**', '*.entity{.ts,.js}')],
+        synchronize: true,
+      }),
     }),
     PassportModule,
     JwtModule.registerAsync({

@@ -10,7 +10,6 @@ import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
 import CustomerDto from '../customer/dtos/customer.dto';
 import EmployeeDto from '../employee/dtos/employee.dto';
-import UserDto from 'src/dtos/user.dto';
 
 @Controller('account')
 export class AccountController {
@@ -58,11 +57,10 @@ export class AccountController {
     return await this.accountService.create(accountDto);
   }
 
-  @Put()
+  @Put(':id')
   async update(@Req() req: Request) {
-    const userDto = await plainToInstance(UserDto, req.user);
     const accountDto = await plainToInstance(AccountDto, {
-      id: Number(userDto.id),
+      id: Number(req.params.id),
       ...req.body,
     });
     const errors = await validate(accountDto);
@@ -93,13 +91,14 @@ export class AccountController {
     );
   }
 
-  @Get('details')
+  @Public()
+  @Get(':id')
   async getById(@Req() req: Request) {
-    const userDto = await plainToInstance(UserDto, req.user);
-    return await this.accountService.getById(Number(userDto.id));
+    return await this.accountService.getById(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
+  // @Roles(Role.ADMIN, Role.MANAGER)
+  @Public()
   @Get('phone/:phone')
   async checkAccountByPhone(@Req() req: Request) {
     return await this.accountService.checkAccountByPhone(req.params.phone);

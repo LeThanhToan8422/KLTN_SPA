@@ -1,5 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import Bed from './bed.entity';
+import ServiceCategory from './service-category.entity';
 
 @Entity()
 export default class Room {
@@ -7,6 +14,8 @@ export default class Room {
   id: number;
   @Column()
   name: string;
+  @OneToOne(() => ServiceCategory, (sc) => sc.room)
+  serviceCategory: ServiceCategory;
   @OneToMany(() => Bed, (b) => b.room)
   beds: Bed[];
 }

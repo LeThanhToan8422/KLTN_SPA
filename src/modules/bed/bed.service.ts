@@ -86,7 +86,12 @@ export class BedService {
     );
   }
 
-  async getBedsByServiceAndDate(bId: number, sId: number, date: string) {
+  async getBedsByServiceAndDate(
+    bId: number,
+    sId: number,
+    date: string,
+    roomId: number,
+  ) {
     const response = await this.datasource.query(
       `
       select * from bed as b
@@ -97,8 +102,8 @@ export class BedService {
         where ap.branchId = ? and ap.serviceOrTreatmentId = ? and ap.dateTime = ?
         group by bd.id
         having SUM(s.duration) >= 60
-      )`,
-      [bId, sId, date],
+      ) where and b.roomId = ?`,
+      [bId, sId, date, roomId],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(BedDto, response)),

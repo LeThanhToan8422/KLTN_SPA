@@ -1,15 +1,15 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { plainToInstance } from 'class-transformer';
 import { ROLES_KEY } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
-import { CustomerService } from 'src/modules/customer/customer.service';
+import EmployeeDto from 'src/modules/employee/dtos/employee.dto';
 import { EmployeeService } from 'src/modules/employee/employee.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private customerService: CustomerService,
     private employeeService: EmployeeService,
   ) {}
 
@@ -22,13 +22,8 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const { user } = context.switchToHttp().getRequest();
-    // let result;
-    // if (user.type === 'customer') {
-    //   result = await this.customerService.getByAccountId(user.id);
-    // } else {
-    //   result = await this.employeeService.getByAccountId(user.id);
-    // }
-    // console.log(result);
-    return requiredRoles.some((role) => user.type?.includes(role));
+    const response = await this.employeeService.getById(user.id);
+    const employeeDto = plainToInstance(EmployeeDto, response.data);
+    return requiredRoles.some((role) => employeeDto.role?.includes(role));
   }
 }

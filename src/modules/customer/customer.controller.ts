@@ -6,7 +6,6 @@ import { validate } from 'class-validator';
 import CustomerDto from './dtos/customer.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Public } from 'src/decorators/public.decorator';
-import UserDto from 'src/dtos/user.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 
@@ -31,11 +30,10 @@ export class CustomerController {
     return await this.customerService.create(accountDto);
   }
 
-  @Put()
+  @Put(':id')
   async update(@Req() req: Request) {
-    const userDto = await plainToInstance(UserDto, req.user);
     const accountDto = await plainToInstance(CustomerDto, {
-      id: Number(userDto.id),
+      id: Number(req.params.id),
       ...req.body,
     });
     const errors = await validate(accountDto);
@@ -66,10 +64,10 @@ export class CustomerController {
     );
   }
 
-  @Get('details')
+  @Public()
+  @Get(':id')
   async getById(@Req() req: Request) {
-    const userDto = await plainToInstance(UserDto, req.user);
-    return await this.customerService.getById(Number(userDto.id));
+    return await this.customerService.getById(Number(req.params.id));
   }
 
   @Get('account/:id')

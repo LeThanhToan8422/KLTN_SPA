@@ -52,6 +52,7 @@ export class ServiceController {
     return await this.serviceService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.serviceService.getAll(
