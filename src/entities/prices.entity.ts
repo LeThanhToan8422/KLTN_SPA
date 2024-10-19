@@ -13,8 +13,6 @@ export default class Prices {
   specialPrice: number;
   @Column()
   commission: number;
-  @Column()
-  vat: number;
   @Column({
     type: 'date',
   })
