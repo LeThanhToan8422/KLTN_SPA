@@ -8,6 +8,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import UserDto from 'src/dtos/user.dto';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('employee')
 export class EmployeeController {
@@ -56,7 +57,6 @@ export class EmployeeController {
     return await this.employeeService.delete(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.employeeService.getAll(

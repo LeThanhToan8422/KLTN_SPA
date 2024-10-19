@@ -65,4 +65,11 @@ export class ServiceController {
   async getById(@Req() req: Request) {
     return await this.serviceService.getById(Number(req.params.id));
   }
+
+  @Get('category/:serviceCategoryId')
+  async getByServiceCategoryId(@Req() req: Request) {
+    return await this.serviceService.getByServiceCategoryId(
+      Number(req.params.serviceCategoryId),
+    );
+  }
 }
