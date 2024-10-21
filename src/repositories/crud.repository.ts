@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import ICRUDGeneric, {
   PaginatedResult,
 } from 'src/interfaces/crud-generic.interface';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
 
 interface withId {
   id: number;
@@ -61,5 +61,9 @@ export default class CRUDRepository<T extends withId>
     return await this.repository.findOne({
       where: { id } as FindOptionsWhere<T>,
     });
+  }
+
+  async getByCondition(options: FindManyOptions<T>): Promise<T[]> {
+    return await this.repository.find(options);
   }
 }

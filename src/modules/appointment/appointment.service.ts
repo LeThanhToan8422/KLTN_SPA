@@ -87,4 +87,13 @@ export class AppointmentService {
       instanceToPlain(plainToInstance(AppoinmentDto, response)),
     );
   }
+
+  async getByCustomerId(customerId: number) {
+    const appointments = await this.crudRepository.getByCondition({
+      where: { customerId },
+    });
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(AppoinmentDto, appointments)),
+    );
+  }
 }
