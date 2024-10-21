@@ -57,6 +57,7 @@ export class ServiceCategoryController {
     return await this.serviceCategoryService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.serviceCategoryService.getAll(
@@ -65,6 +66,7 @@ export class ServiceCategoryController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.serviceCategoryService.getById(Number(req.params.id));
