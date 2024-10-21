@@ -7,7 +7,6 @@ import ServiceDto from './dtos/service.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
-import { Pagination } from 'src/helpers/pagination';
 
 @Injectable()
 export class ServiceService {
@@ -71,11 +70,21 @@ export class ServiceService {
     }
   }
 
-  async getAll(page: number, limit: number) {
-    const paginatedResult = await this.crudRepository.getAll(page, limit);
+  async getAll(serviceCategoryId: number, page: number, limit: number) {
+    // const paginatedResult = await this.crudRepository.getAll(page, limit);
+    const paginatedResult = await this.datasource.query(
+      `
+      select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission from service as s
+      inner join prices as p on s.id = p.foreignKeyId
+      where s.status = 'active' and p.type = 'service' and p.applicableDate <= current_date() and s.serviceCategoryId = ?
+      limit ?, ? 
+    `,
+      [serviceCategoryId, (page - 1) * limit, limit],
+    );
+    console.log(paginatedResult);
+
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(ServiceDto, paginatedResult.data)),
-      new Pagination(paginatedResult.totalItems, page, limit),
+      instanceToPlain(plainToInstance(ServiceDto, paginatedResult)),
     );
   }
 

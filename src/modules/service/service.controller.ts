@@ -56,6 +56,7 @@ export class ServiceController {
   @Get()
   async getAll(@Req() req: Request) {
     return await this.serviceService.getAll(
+      Number(req.query.serviceCategoryId),
       Number(req.query.page),
       Number(req.query.limit),
     );
