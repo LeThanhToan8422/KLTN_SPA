@@ -64,4 +64,10 @@ export class PricesController {
   async getById(@Req() req: Request) {
     return await this.pricesService.getById(Number(req.params.id));
   }
+
+  @Get('foreign-key/:foreignKeyId')
+  async getByForeignKeyId(@Req() req: Request) {
+    const foreignKeyId = Number(req.params.foreignKeyId);
+    return await this.pricesService.getByForeignKeyId(foreignKeyId);
+  }
 }

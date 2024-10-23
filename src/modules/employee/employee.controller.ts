@@ -75,4 +75,9 @@ export class EmployeeController {
   async getByAccountId(@Req() req: Request) {
     return await this.employeeService.getByAccountId(Number(req.params.id));
   }
+
+  @Get(':id')
+  async getByEmpId(@Req() req: Request) {
+    return await this.employeeService.getById(Number(req.params.id));
+  }
 }
