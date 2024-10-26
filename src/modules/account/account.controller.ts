@@ -57,6 +57,7 @@ export class AccountController {
     return await this.accountService.create(accountDto);
   }
 
+  @Public()
   @Put(':id')
   async update(@Req() req: Request) {
     const accountDto = await plainToInstance(AccountDto, {

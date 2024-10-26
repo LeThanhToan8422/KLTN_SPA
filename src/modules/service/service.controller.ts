@@ -62,6 +62,15 @@ export class ServiceController {
     );
   }
 
+  @Public()
+  @Get('discount')
+  async getDiscountServices(@Req() req: Request) {
+    return await this.serviceService.getDiscountServices(
+      Number(req.query.page),
+      Number(req.query.limit),
+    );
+  }
+
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.serviceService.getById(Number(req.params.id));

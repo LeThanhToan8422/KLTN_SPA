@@ -71,7 +71,6 @@ export class ServiceService {
   }
 
   async getAll(serviceCategoryId: number, page: number, limit: number) {
-    // const paginatedResult = await this.crudRepository.getAll(page, limit);
     const paginatedResult = await this.datasource.query(
       `
       select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission from service as s
@@ -81,8 +80,21 @@ export class ServiceService {
     `,
       [serviceCategoryId, (page - 1) * limit, limit],
     );
-    console.log(paginatedResult);
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ServiceDto, paginatedResult)),
+    );
+  }
 
+  async getDiscountServices(page: number, limit: number) {
+    const paginatedResult = await this.datasource.query(
+      `
+      select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission from prices as p
+      inner join service as s on p.foreignKeyId = s.id
+      where p.type = 'service' and (p.price - p.specialPrice) > 0
+      limit ?, ? 
+    `,
+      [(page - 1) * limit, limit],
+    );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(ServiceDto, paginatedResult)),
     );

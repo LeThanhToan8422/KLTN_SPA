@@ -1,3 +1,4 @@
+import { Status } from 'src/enums/status.enum';
 import { TypePrices } from 'src/enums/type-prices.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -23,6 +24,12 @@ export default class Prices {
     default: TypePrices.SERVICE,
   })
   type: TypePrices;
+  @Column({
+    type: 'enum',
+    enum: Status,
+    default: Status.ACTIVE,
+  })
+  status: Status;
   @Column()
   foreignKeyId: number;
 }

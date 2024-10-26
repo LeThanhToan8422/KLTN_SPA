@@ -2,6 +2,7 @@ import { StatusAppoiment } from 'src/enums/status-appointment.enum';
 import Customer from './customer.entity';
 import Branch from './branch.entity';
 import {
+  AfterInsert,
   Column,
   Entity,
   JoinColumn,
@@ -13,6 +14,7 @@ import AppointmentService from './details-appointment.entity';
 import { CategoryAppointment } from 'src/enums/category-appointment.enum';
 import Employee from './employee.entity';
 import Bed from './bed.entity';
+import BonusPointHistory from './bonus-point-history.entity';
 
 @Entity()
 export default class Appointment {
@@ -62,4 +64,9 @@ export default class Appointment {
   branch: Branch;
   @OneToMany(() => AppointmentService, (as) => as.appointment)
   appointmentServices: AppointmentService[];
+  @OneToMany(() => BonusPointHistory, (bph) => bph.appointment)
+  bonusPointHistory: BonusPointHistory[];
+
+  @AfterInsert()
+  insertBonusPointHistory() {}
 }

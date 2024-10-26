@@ -21,7 +21,7 @@
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'0329623380','$2a$10$R4PZRFX5QOhCZnyzz8Z76.rdYiZxvcaiTe7EsN2TUAcFzs.eBX4ca','employee','active'),(2,'0329623381','$2a$10$k5vcfQoWQ3G8dh0V0nINjeO7ROXN4.f3lqx31pJQuzH3gayzVeYBK','employee','active'),(3,'0329623382','$2a$10$ZaxWgWSz.cBqA3oD57eAbuoEN0q9zQOcQDRZMm8p3tw0tvdzuXvIu','employee','active'),(4,'0329623383','$2a$10$SrBIIgDrKkQ2dtWL/of2oujyTKhe5vWPJnHYj9BgA4wyeg6OEPw.C','employee','active'),(5,'0329623384','$2a$10$zPqQ8eFyFt35.KgjvRORd.nYMnzaQV.stvbAMsR7dv8KBsIxYgcAW','employee','active'),(6,'0329623385','$2a$10$4xFOQI7fSmZbOxBNZCv7S.FD.XZ18uQARo73ZLBQfRFoRUBHRR.9q','customer','active'),(7,'0329623386','$2a$10$/byj4vAzynanw0jpAxpT1.VDA.beN2n6ISHQH1Lvtq6syCkSJYzty','customer','active'),(8,'0329623387','$2a$10$qVFnoeWKPehlUIeKcmWPp.i64g.EFTeNekEMYB.iODeRSAOXf4RqK','customer','active'),(9,'0329623388','$2a$10$m19vqGuaQBul2.ODGNg/E.3sBwSV4ryDoGh/gcq8tRcQsbkTlp1ZK','customer','active'),(10,'0352014149','$2a$10$XJQKiomnTwOTcq8Q/k.pqOIt12JrdERyi2tkJwbuPsY3bfzaM8pha','customer','active');
+INSERT INTO `account` VALUES (1,'0329623389','$2a$10$qCl0sPCMbsP5b1JR9Ear9uCtHlt.8BNN/yrp7.hL7CrRkiOlwFSmC','employee','active'),(2,'0329623381','$2a$10$k5vcfQoWQ3G8dh0V0nINjeO7ROXN4.f3lqx31pJQuzH3gayzVeYBK','employee','active'),(3,'0329623382','$2a$10$ZaxWgWSz.cBqA3oD57eAbuoEN0q9zQOcQDRZMm8p3tw0tvdzuXvIu','employee','active'),(4,'0329623383','$2a$10$SrBIIgDrKkQ2dtWL/of2oujyTKhe5vWPJnHYj9BgA4wyeg6OEPw.C','employee','active'),(5,'0329623384','$2a$10$zPqQ8eFyFt35.KgjvRORd.nYMnzaQV.stvbAMsR7dv8KBsIxYgcAW','employee','active'),(6,'0329623385','$2a$10$4xFOQI7fSmZbOxBNZCv7S.FD.XZ18uQARo73ZLBQfRFoRUBHRR.9q','customer','active'),(7,'0329623386','$2a$10$/byj4vAzynanw0jpAxpT1.VDA.beN2n6ISHQH1Lvtq6syCkSJYzty','customer','active'),(8,'0329623387','$2a$10$qVFnoeWKPehlUIeKcmWPp.i64g.EFTeNekEMYB.iODeRSAOXf4RqK','customer','active'),(9,'0329623388','$2a$10$m19vqGuaQBul2.ODGNg/E.3sBwSV4ryDoGh/gcq8tRcQsbkTlp1ZK','customer','active'),(10,'0352014149','$2a$10$XJQKiomnTwOTcq8Q/k.pqOIt12JrdERyi2tkJwbuPsY3bfzaM8pha','customer','active');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -31,6 +31,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `appointment` WRITE;
 /*!40000 ALTER TABLE `appointment` DISABLE KEYS */;
+INSERT INTO `appointment` VALUES (2,'2024-10-19 21:00:00','confirmed','services',1,1,1,1,71),(3,'2024-10-19 21:00:00','confirmed','services',1,2,2,1,71),(4,'2024-10-12 21:00:00','confirmed','services',1,4,4,2,71);
 /*!40000 ALTER TABLE `appointment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,6 +84,15 @@ INSERT INTO `customer` VALUES (1,'Nguyễn Thị Hiền',1,'2003-04-11','0329623
 UNLOCK TABLES;
 
 --
+-- Dumping data for table `detail_event`
+--
+
+LOCK TABLES `detail_event` WRITE;
+/*!40000 ALTER TABLE `detail_event` DISABLE KEYS */;
+/*!40000 ALTER TABLE `detail_event` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Dumping data for table `details_appointment`
 --
 
@@ -97,8 +107,17 @@ UNLOCK TABLES;
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'Lê Thanh Toàn',1,'2002-04-08','0329623380','mail@gmail.com','HCM','manager','active','image.png',1,1),(2,'Lê Thanh Tú',1,'2002-04-09','0329623381','mail1@gmail.com','HCM','employee','active','image.png',2,2),(3,'Lê Thanh Tèo',1,'2002-04-10','0329623382','mail2@gmail.com','HCM','employee','active','image.png',3,2),(4,'Lê Thanh Táo',1,'2002-04-11','0329623383','mail3@gmail.com','HCM City','employee','active','image.png',4,2),(5,'Lê Thanh Tí',1,'2002-04-10','0329623384','mail4@gmail.com','HCM City','employee','active','image.png',5,2);
+INSERT INTO `employee` VALUES (1,'Lê Thanh Toàn',1,'2002-04-08','0329623389','mail@gmail.com','HCM','manager','active','image.png',1,1),(2,'Lê Thanh Tú',1,'2002-04-09','0329623381','mail1@gmail.com','HCM','employee','active','image.png',2,2),(3,'Lê Thanh Tèo',1,'2002-04-10','0329623382','mail2@gmail.com','HCM','employee','active','image.png',3,2),(4,'Lê Thanh Táo',1,'2002-04-11','0329623383','mail3@gmail.com','HCM City','employee','active','image.png',4,2),(5,'Lê Thanh Tí',1,'2002-04-10','0329623384','mail4@gmail.com','HCM City','employee','active','image.png',5,2);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `events`
+--
+
+LOCK TABLES `events` WRITE;
+/*!40000 ALTER TABLE `events` DISABLE KEYS */;
+/*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -125,6 +144,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `prices` WRITE;
 /*!40000 ALTER TABLE `prices` DISABLE KEYS */;
+INSERT INTO `prices` VALUES (1,0,500000,300000,30000,'2024-10-19','service',1),(2,0,500000,400000,40000,'2024-10-19','service',2),(3,0,1500000,1200000,100000,'2024-10-19','service',3),(4,0,2000000,1700000,100000,'2024-10-19','service',4),(5,0,2500000,2300000,150000,'2024-10-19','service',5),(6,200000,600000,500000,50000,'2024-10-19','product',49),(7,250000,500000,400000,40000,'2024-10-19','product',50),(8,300000,700000,600000,60000,'2024-10-19','product',51),(9,350000,750000,700000,70000,'2024-10-19','product',52),(10,450000,700000,600000,60000,'2024-10-19','product',53),(11,0,800000,700000,70000,'2024-10-19','service',6),(12,0,1000000,900000,90000,'2024-10-19','service',7),(13,0,2000000,1900000,150000,'2024-10-19','service',8),(14,0,2500000,2400000,200000,'2024-10-19','service',9),(15,200000,500000,400000,40000,'2024-10-19','product',54),(16,250000,600000,500000,50000,'2024-10-19','product',55),(17,300000,700000,600000,60000,'2024-10-19','product',56),(18,500000,1000000,900000,90000,'2024-10-19','product',57),(19,0,6000000,5500000,200000,'2024-10-19','service',10),(20,0,4000000,3700000,150000,'2024-10-19','service',11),(21,0,5000000,4800000,180000,'2024-10-19','service',12),(22,100000,300000,200000,20000,'2024-10-19','product',58),(23,200000,500000,400000,40000,'2024-10-19','product',59),(24,300000,600000,500000,50000,'2024-10-19','product',60),(25,0,300000,250000,25000,'2024-10-19','service',13),(26,0,200000,150000,15000,'2024-10-19','service',14),(27,0,500000,450000,45000,'2024-10-19','service',15),(28,300000,500000,450000,45000,'2024-10-19','product',61),(29,500000,1000000,900000,90000,'2024-10-19','product',62),(30,200000,450000,400000,40000,'2024-10-19','product',63),(31,0,2500000,2300000,200000,'2024-10-19','service',16),(32,0,4000000,3500000,200000,'2024-10-19','service',17),(33,200000,500000,450000,45000,'2024-10-19','product',64),(34,600000,600000,550000,55000,'2024-10-19','product',65),(35,500000,1500000,1300000,130000,'2024-10-19','product',66),(36,0,6000000,5500000,300000,'2024-10-19','service',18),(37,0,3500000,3000000,200000,'2024-10-19','service',19),(38,400000,800000,750000,75000,'2024-10-19','product',67),(39,500000,1200000,1100000,100000,'2024-10-19','product',68),(40,300000,600000,550000,55000,'2024-10-19','product',69),(41,0,8000000,7500000,300000,'2024-10-19','service',20),(42,0,5000000,4600000,250000,'2024-10-19','service',21),(43,0,6000000,5400000,280000,'2024-10-19','service',22),(44,600000,1200000,1100000,100000,'2024-10-19','product',70),(45,1000000,2500000,2300000,150000,'2024-10-19','product',71),(46,500000,1500000,1300000,100000,'2024-10-19','product',72);
 /*!40000 ALTER TABLE `prices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,6 +174,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `schedule` WRITE;
 /*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
+INSERT INTO `schedule` VALUES (1,'2024-10-01','morning','07:00:00','15:00:00',1),(2,'2024-10-02','morning','07:00:00','15:00:00',1),(3,'2024-10-03','morning','07:00:00','15:00:00',1),(4,'2024-10-04','morning','07:00:00','15:00:00',1),(5,'2024-10-05','morning','07:00:00','15:00:00',1),(6,'2024-10-06','morning','07:00:00','15:00:00',1),(7,'2024-10-07','morning','07:00:00','15:00:00',1),(8,'2024-10-08','morning','07:00:00','15:00:00',1),(9,'2024-10-09','morning','07:00:00','15:00:00',1),(10,'2024-10-10','morning','07:00:00','15:00:00',1),(11,'2024-10-11','morning','07:00:00','15:00:00',1),(12,'2024-10-12','morning','07:00:00','15:00:00',1),(13,'2024-10-13','morning','07:00:00','15:00:00',1),(14,'2024-10-14','morning','07:00:00','15:00:00',1),(15,'2024-10-15','morning','07:00:00','15:00:00',1),(16,'2024-10-16','morning','07:00:00','15:00:00',1),(17,'2024-10-17','morning','07:00:00','15:00:00',1),(18,'2024-10-18','morning','07:00:00','15:00:00',1),(19,'2024-10-19','morning','07:00:00','15:00:00',1),(20,'2024-10-20','morning','07:00:00','15:00:00',1),(21,'2024-10-01','afternoon','15:00:00','23:00:00',2),(22,'2024-10-02','afternoon','15:00:00','23:00:00',2),(23,'2024-10-03','afternoon','15:00:00','23:00:00',2),(24,'2024-10-04','afternoon','15:00:00','23:00:00',2),(25,'2024-10-05','afternoon','15:00:00','23:00:00',2),(26,'2024-10-06','afternoon','15:00:00','23:00:00',2),(27,'2024-10-07','afternoon','15:00:00','23:00:00',2),(28,'2024-10-08','afternoon','15:00:00','23:00:00',2),(29,'2024-10-09','afternoon','15:00:00','23:00:00',2),(30,'2024-10-10','afternoon','15:00:00','23:00:00',2),(31,'2024-10-11','afternoon','15:00:00','23:00:00',2),(32,'2024-10-12','afternoon','15:00:00','23:00:00',2),(33,'2024-10-13','afternoon','15:00:00','23:00:00',2),(34,'2024-10-14','afternoon','15:00:00','23:00:00',2),(35,'2024-10-15','afternoon','15:00:00','23:00:00',2),(36,'2024-10-16','afternoon','15:00:00','23:00:00',2),(37,'2024-10-17','afternoon','15:00:00','23:00:00',2),(38,'2024-10-18','afternoon','15:00:00','23:00:00',2),(39,'2024-10-19','afternoon','15:00:00','23:00:00',2),(40,'2024-10-20','afternoon','15:00:00','23:00:00',2);
 /*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +194,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `service_category` WRITE;
 /*!40000 ALTER TABLE `service_category` DISABLE KEYS */;
-INSERT INTO `service_category` VALUES (1,'Dịch vụ chăm sóc da mặt'),(2,'Dịch vụ chăm sóc cơ thể'),(3,'Dịch vụ phun xăm thẩm mỹ'),(4,'Dịch vụ chăm sóc tóc và móng'),(5,'Dịch vụ tắm trắng và làm trắng da'),(6,'Dịch vụ giảm béo và tạo hình cơ thể'),(7,'Dịch vụ thẩm mỹ không xâm lấn');
+INSERT INTO `service_category` VALUES (1,'Dịch vụ chăm sóc da mặt',1),(2,'Dịch vụ chăm sóc cơ thể',2),(3,'Dịch vụ phun xăm thẩm mỹ',3),(4,'Dịch vụ chăm sóc tóc và móng',4),(5,'Dịch vụ tắm trắng và làm trắng da',5),(6,'Dịch vụ giảm béo và tạo hình cơ thể',6),(7,'Dịch vụ thẩm mỹ không xâm lấn',7);
 /*!40000 ALTER TABLE `service_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -219,7 +240,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `wage` WRITE;
 /*!40000 ALTER TABLE `wage` DISABLE KEYS */;
-INSERT INTO `wage` VALUES (1,50,'2024-10-10','manage'),(2,25,'2024-10-10','employee');
+INSERT INTO `wage` VALUES (1,50000,'2024-10-10','manage'),(2,25000,'2024-10-10','employee');
 /*!40000 ALTER TABLE `wage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -242,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-13 20:35:10
+-- Dump completed on 2024-10-23  9:20:06

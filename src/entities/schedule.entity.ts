@@ -12,8 +12,6 @@ import Employee from './employee.entity';
 export default class Schedule {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
-  day: string;
   @Column({
     type: 'date',
     default: null,
