@@ -24,7 +24,11 @@ export default class Appointment {
     type: 'datetime',
   })
   dateTime: Date;
-  @Column()
+  @Column({
+    type: 'enum',
+    enum: StatusAppoiment,
+    default: StatusAppoiment.CONFIRMED,
+  })
   status: StatusAppoiment;
   @Column({
     type: 'enum',

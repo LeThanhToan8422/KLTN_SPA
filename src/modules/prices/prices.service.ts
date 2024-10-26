@@ -85,4 +85,13 @@ export class PricesService {
       instanceToPlain(plainToInstance(PricesDto, response)),
     );
   }
+
+  async getByForeignKeyId(foreignKeyId: number) {
+    const prices = await this.crudRepository.getByCondition({
+      where: { foreignKeyId },
+    });
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(PricesDto, prices)),
+    );
+  }
 }

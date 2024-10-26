@@ -68,4 +68,10 @@ export class AppointmentController {
   async getById(@Req() req: Request) {
     return await this.appointmentService.getById(Number(req.params.id));
   }
+
+  @Get('customer/:customerId')
+  async getByCustomerId(@Req() req: Request) {
+    const customerId = Number(req.params.customerId);
+    return await this.appointmentService.getByCustomerId(customerId);
+  }
 }

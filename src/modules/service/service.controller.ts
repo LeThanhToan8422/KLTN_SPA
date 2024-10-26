@@ -76,6 +76,7 @@ export class ServiceController {
     return await this.serviceService.getById(Number(req.params.id));
   }
 
+  @Public()
   @Get('category/:serviceCategoryId')
   async getByServiceCategoryId(@Req() req: Request) {
     return await this.serviceService.getByServiceCategoryId(
