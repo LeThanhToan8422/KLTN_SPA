@@ -1,6 +1,6 @@
 import { Status } from 'src/enums/status.enum';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import BonusPointHistory from './bonus-point-history.entity';
+import Appointment from './appointment.entity';
 
 @Entity()
 export default class Bonus {
@@ -9,13 +9,13 @@ export default class Bonus {
   @Column()
   price: number;
   @Column()
-  point: string;
+  point: number;
   @Column({
     type: 'enum',
     enum: Status,
     default: Status.ACTIVE,
   })
   status: Status;
-  @OneToMany(() => BonusPointHistory, (bph) => bph.appointment)
-  bonusPointHistory: BonusPointHistory[];
+  @OneToMany(() => Appointment, (a) => a.bonus)
+  appointments: Appointment[];
 }

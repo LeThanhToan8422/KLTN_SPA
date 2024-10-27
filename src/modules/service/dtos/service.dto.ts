@@ -22,20 +22,4 @@ export default class ServiceDto {
   @IsNumber()
   @Expose()
   serviceCategoryId: number;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  originalPrice: number;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  price: number;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  specialPrice: number;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  commission: number;
 }

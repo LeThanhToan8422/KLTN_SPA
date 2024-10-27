@@ -14,7 +14,7 @@ import AppointmentService from './details-appointment.entity';
 import { CategoryAppointment } from 'src/enums/category-appointment.enum';
 import Employee from './employee.entity';
 import Bed from './bed.entity';
-import BonusPointHistory from './bonus-point-history.entity';
+import Bonus from './bonus.entity';
 
 @Entity()
 export default class Appointment {
@@ -46,6 +46,8 @@ export default class Appointment {
   branchId: number;
   @Column()
   bedId: number;
+  @Column()
+  bonusId: number;
   @ManyToOne(() => Employee, (e) => e.appointments)
   @JoinColumn({
     name: 'employeeId',
@@ -66,11 +68,16 @@ export default class Appointment {
     name: 'branchId',
   })
   branch: Branch;
+  @ManyToOne(() => Bonus, (b) => b.appointments)
+  @JoinColumn({
+    name: 'bonusId',
+  })
+  bonus: Bonus;
   @OneToMany(() => AppointmentService, (as) => as.appointment)
   appointmentServices: AppointmentService[];
-  @OneToMany(() => BonusPointHistory, (bph) => bph.appointment)
-  bonusPointHistory: BonusPointHistory[];
 
   @AfterInsert()
-  insertBonusPointHistory() {}
+  insertBonusPointHistory() {
+    console.log(this.customerId, this.serviceOrTreatmentId);
+  }
 }
