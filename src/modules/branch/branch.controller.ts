@@ -1,4 +1,14 @@
-import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { Request } from 'express';
 import { BranchService } from './branch.service';
@@ -7,15 +17,27 @@ import BranchDto from './dtos/branch.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { S3Service } from 'src/services/s3.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('branch')
 export class BranchController {
-  constructor(private readonly branchService: BranchService) {}
+  constructor(
+    private readonly branchService: BranchService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
-  async create(@Req() req: Request) {
-    const branchDto = await plainToInstance(BranchDto, req.body);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') data: string,
+  ) {
+    const fileUrl = await this.s3Service.uploadFile(file);
+    const dataParse = JSON.parse(data);
+    dataParse.image = fileUrl;
+    const branchDto = await plainToInstance(BranchDto, dataParse);
     const errors = await validate(branchDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {

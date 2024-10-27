@@ -33,6 +33,8 @@ import { VoucherModule } from './modules/voucher/voucher.module';
 import { WageModule } from './modules/wage/wage.module';
 import { WorkingTimeModule } from './modules/working-time/working-time.module';
 import { BonusModule } from './modules/bonus/bonus.module';
+import { EventModule } from './modules/event/event.module';
+import { DetailEventModule } from './modules/detail-event/detail-event.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 
@@ -85,6 +87,8 @@ import Employee from './entities/employee.entity';
     WageModule,
     WorkingTimeModule,
     BonusModule,
+    EventModule,
+    DetailEventModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,4 +1,14 @@
-import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { EmployeeService } from './employee.service';
 import { plainToInstance } from 'class-transformer';
@@ -8,16 +18,27 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import UserDto from 'src/dtos/user.dto';
-import { Public } from 'src/decorators/public.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { S3Service } from 'src/services/s3.service';
 
 @Controller('employee')
 export class EmployeeController {
-  constructor(private readonly employeeService: EmployeeService) {}
+  constructor(
+    private readonly employeeService: EmployeeService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
-  async create(@Req() req: Request) {
-    const accountDto = await plainToInstance(EmployeeDto, req.body);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') data: string,
+  ) {
+    const fileUrl = await this.s3Service.uploadFile(file);
+    const dataParse = JSON.parse(data);
+    dataParse.image = fileUrl;
+    const accountDto = await plainToInstance(EmployeeDto, dataParse);
     const errors = await validate(accountDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {

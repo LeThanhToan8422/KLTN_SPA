@@ -1,4 +1,14 @@
-import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Public } from 'src/decorators/public.decorator';
 import { ServiceService } from './service.service';
 import { Request } from 'express';
@@ -6,15 +16,27 @@ import { plainToInstance } from 'class-transformer';
 import ServiceDto from './dtos/service.dto';
 import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { S3Service } from 'src/services/s3.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('service')
 export class ServiceController {
-  constructor(private readonly serviceService: ServiceService) {}
+  constructor(
+    private readonly serviceService: ServiceService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   @Public()
   @Post()
-  async create(@Req() req: Request) {
-    const serviceDto = await plainToInstance(ServiceDto, req.body);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') data: string,
+  ) {
+    const fileUrl = await this.s3Service.uploadFile(file);
+    const dataParse = JSON.parse(data);
+    dataParse.image = fileUrl;
+    const serviceDto = await plainToInstance(ServiceDto, dataParse);
     const errors = await validate(serviceDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {

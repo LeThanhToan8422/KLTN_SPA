@@ -9,24 +9,25 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ProductService } from './product.service';
-import { Public } from 'src/decorators/public.decorator';
-import { Request } from 'express';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import ProductDto from './dtos/product.dto';
+import { Request } from 'express';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
-import { S3Service } from 'src/services/s3.service';
+import DetailEventDto from './dtos/detail-event.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { S3Service } from 'src/services/s3.service';
+import { DetailEventService } from './detail-event.service';
 
-@Controller('product')
-export class ProductController {
+@Controller('detail-event')
+export class DetailEventController {
   constructor(
-    private readonly productService: ProductService,
+    private readonly detailEventService: DetailEventService,
     private readonly s3Service: S3Service,
   ) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -36,8 +37,8 @@ export class ProductController {
     const fileUrl = await this.s3Service.uploadFile(file);
     const dataParse = JSON.parse(data);
     dataParse.image = fileUrl;
-    const appointmentDto = await plainToInstance(ProductDto, dataParse);
-    const errors = await validate(appointmentDto);
+    const detailEventDto = await plainToInstance(DetailEventDto, dataParse);
+    const errors = await validate(detailEventDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -47,16 +48,17 @@ export class ProductController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.productService.create(appointmentDto);
+    return await this.detailEventService.create(detailEventDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Put(':id')
   async update(@Req() req: Request) {
-    const appointmentDto = await plainToInstance(ProductDto, {
+    const detailEventDto = await plainToInstance(DetailEventDto, {
       id: Number(req.params.id),
       ...req.body,
     });
-    const errors = await validate(appointmentDto);
+    const errors = await validate(detailEventDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -66,17 +68,18 @@ export class ProductController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.productService.update(appointmentDto);
+    return await this.detailEventService.update(detailEventDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
-    return await this.productService.delete(Number(req.params.id));
+    return await this.detailEventService.delete(Number(req.params.id));
   }
 
   @Get()
   async getAll(@Req() req: Request) {
-    return await this.productService.getAll(
+    return await this.detailEventService.getAll(
       Number(req.query.page),
       Number(req.query.limit),
     );
@@ -84,6 +87,6 @@ export class ProductController {
 
   @Get(':id')
   async getById(@Req() req: Request) {
-    return await this.productService.getById(Number(req.params.id));
+    return await this.detailEventService.getById(Number(req.params.id));
   }
 }
