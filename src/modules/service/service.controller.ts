@@ -71,6 +71,7 @@ export class ServiceController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.serviceService.getById(Number(req.params.id));
