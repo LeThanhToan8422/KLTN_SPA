@@ -16,14 +16,64 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `account`
+--
+
+DROP TABLE IF EXISTS `account`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `account` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `phone` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `type` enum('customer','employee') NOT NULL DEFAULT 'customer',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IDX_a13e2234cf22b150ea2e72fba6` (`phone`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `account`
 --
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'0329623389','$2a$10$qCl0sPCMbsP5b1JR9Ear9uCtHlt.8BNN/yrp7.hL7CrRkiOlwFSmC','employee','active'),(2,'0329623381','$2a$10$k5vcfQoWQ3G8dh0V0nINjeO7ROXN4.f3lqx31pJQuzH3gayzVeYBK','employee','active'),(3,'0329623382','$2a$10$ZaxWgWSz.cBqA3oD57eAbuoEN0q9zQOcQDRZMm8p3tw0tvdzuXvIu','employee','active'),(4,'0329623383','$2a$10$SrBIIgDrKkQ2dtWL/of2oujyTKhe5vWPJnHYj9BgA4wyeg6OEPw.C','employee','active'),(5,'0329623384','$2a$10$zPqQ8eFyFt35.KgjvRORd.nYMnzaQV.stvbAMsR7dv8KBsIxYgcAW','employee','active'),(6,'0329623385','$2a$10$4xFOQI7fSmZbOxBNZCv7S.FD.XZ18uQARo73ZLBQfRFoRUBHRR.9q','customer','active'),(7,'0329623386','$2a$10$/byj4vAzynanw0jpAxpT1.VDA.beN2n6ISHQH1Lvtq6syCkSJYzty','customer','active'),(8,'0329623387','$2a$10$qVFnoeWKPehlUIeKcmWPp.i64g.EFTeNekEMYB.iODeRSAOXf4RqK','customer','active'),(9,'0329623388','$2a$10$m19vqGuaQBul2.ODGNg/E.3sBwSV4ryDoGh/gcq8tRcQsbkTlp1ZK','customer','active'),(10,'0352014149','$2a$10$XJQKiomnTwOTcq8Q/k.pqOIt12JrdERyi2tkJwbuPsY3bfzaM8pha','customer','active');
+INSERT INTO `account` VALUES (1,'0329623380','$2a$10$7Vj/r.V6UzIhMfJwC8yEBu/6fKr3vLsJsAQPD04YJX9Un9JdtCmxG','employee','active'),(2,'0329623381','$2a$10$69rF8J7HKvHYXAvv71XjiehKWuf3VRlljFBt.8fky5Z.9R3mnfQf6','employee','active'),(3,'0329623382','$2a$10$ZaxWgWSz.cBqA3oD57eAbuoEN0q9zQOcQDRZMm8p3tw0tvdzuXvIu','employee','active'),(4,'0329623383','$2a$10$SrBIIgDrKkQ2dtWL/of2oujyTKhe5vWPJnHYj9BgA4wyeg6OEPw.C','employee','active'),(5,'0329623384','$2a$10$zPqQ8eFyFt35.KgjvRORd.nYMnzaQV.stvbAMsR7dv8KBsIxYgcAW','employee','active'),(6,'0329623385','$2a$10$4xFOQI7fSmZbOxBNZCv7S.FD.XZ18uQARo73ZLBQfRFoRUBHRR.9q','customer','active'),(7,'0329623386','$2a$10$/byj4vAzynanw0jpAxpT1.VDA.beN2n6ISHQH1Lvtq6syCkSJYzty','customer','active'),(8,'0329623387','$2a$10$qVFnoeWKPehlUIeKcmWPp.i64g.EFTeNekEMYB.iODeRSAOXf4RqK','customer','active'),(9,'0329623388','$2a$10$m19vqGuaQBul2.ODGNg/E.3sBwSV4ryDoGh/gcq8tRcQsbkTlp1ZK','customer','active'),(10,'0352014149','$2a$10$XJQKiomnTwOTcq8Q/k.pqOIt12JrdERyi2tkJwbuPsY3bfzaM8pha','customer','active'),(12,'0329623389','$2a$10$7Vj/r.V6UzIhMfJwC8yEBu/6fKr3vLsJsAQPD04YJX9Un9JdtCmxG','customer','active');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `appointment`
+--
+
+DROP TABLE IF EXISTS `appointment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `appointment` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `dateTime` datetime NOT NULL,
+  `category` enum('services','treatments') NOT NULL DEFAULT 'services',
+  `serviceOrTreatmentId` int NOT NULL,
+  `employeeId` int NOT NULL,
+  `customerId` int NOT NULL,
+  `branchId` int NOT NULL,
+  `bedId` int NOT NULL,
+  `status` enum('not_comfirm','confirmed','performing','finished','cancelled') NOT NULL DEFAULT 'confirmed',
+  `bonusId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_b6e57758a28acd843878b1f30d8` (`employeeId`),
+  KEY `FK_d08b7b77e0f909c6e8723f07eaa` (`bedId`),
+  KEY `FK_c048c6004b69354f46183f93a85` (`customerId`),
+  KEY `FK_54e83867f2699998a25aa23e6ba` (`branchId`),
+  KEY `FK_865c324af65a8a3e29764db7a8f` (`bonusId`),
+  CONSTRAINT `FK_54e83867f2699998a25aa23e6ba` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`),
+  CONSTRAINT `FK_865c324af65a8a3e29764db7a8f` FOREIGN KEY (`bonusId`) REFERENCES `bonus` (`id`),
+  CONSTRAINT `FK_b6e57758a28acd843878b1f30d8` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
+  CONSTRAINT `FK_c048c6004b69354f46183f93a85` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`),
+  CONSTRAINT `FK_d08b7b77e0f909c6e8723f07eaa` FOREIGN KEY (`bedId`) REFERENCES `bed` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `appointment`
@@ -31,9 +81,27 @@ UNLOCK TABLES;
 
 LOCK TABLES `appointment` WRITE;
 /*!40000 ALTER TABLE `appointment` DISABLE KEYS */;
-INSERT INTO `appointment` VALUES (2,'2024-10-19 21:00:00','confirmed','services',1,1,1,1,71),(3,'2024-10-19 21:00:00','confirmed','services',1,2,2,1,71),(4,'2024-10-12 21:00:00','confirmed','services',1,4,4,2,71);
+INSERT INTO `appointment` VALUES (2,'2024-10-19 21:00:00','services',1,1,1,1,71,'confirmed',1),(3,'2024-10-19 21:00:00','services',1,2,2,1,71,'confirmed',1),(4,'2024-10-12 21:00:00','services',1,4,4,2,71,'confirmed',1),(5,'2024-10-28 21:00:00','services',1,4,4,2,71,'confirmed',1),(6,'2024-10-29 21:00:00','services',1,4,4,2,71,'confirmed',1);
 /*!40000 ALTER TABLE `appointment` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `bed`
+--
+
+DROP TABLE IF EXISTS `bed`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bed` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `roomId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_6281e91aacd3728b560352ea961` (`roomId`),
+  CONSTRAINT `FK_6281e91aacd3728b560352ea961` FOREIGN KEY (`roomId`) REFERENCES `room` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bed`
@@ -46,6 +114,49 @@ INSERT INTO `bed` VALUES (71,'FR01','active',1),(72,'FR02','active',1),(73,'FR03
 UNLOCK TABLES;
 
 --
+-- Table structure for table `bonus`
+--
+
+DROP TABLE IF EXISTS `bonus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bonus` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `price` int NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `point` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bonus`
+--
+
+LOCK TABLES `bonus` WRITE;
+/*!40000 ALTER TABLE `bonus` DISABLE KEYS */;
+INSERT INTO `bonus` VALUES (1,100000,'active',1),(2,150000,'active',1);
+/*!40000 ALTER TABLE `bonus` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `branch`
+--
+
+DROP TABLE IF EXISTS `branch`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `branch` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `branch`
 --
 
@@ -54,6 +165,25 @@ LOCK TABLES `branch` WRITE;
 INSERT INTO `branch` VALUES (1,'Beauty Spa','Bình Thạnh','active','image.png'),(2,'Beauty Spa','Gò Vấp','active','image.png'),(3,'Beauty Spa','Quận 1','active','image.png');
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `card_history`
+--
+
+DROP TABLE IF EXISTS `card_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `card_history` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `expense` int NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `date` datetime NOT NULL,
+  `prepaidCardId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_4f1726d90a0a70ba8e85916caf4` (`prepaidCardId`),
+  CONSTRAINT `FK_4f1726d90a0a70ba8e85916caf4` FOREIGN KEY (`prepaidCardId`) REFERENCES `prepaid_card` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `card_history`
@@ -65,6 +195,27 @@ LOCK TABLES `card_history` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `consumed_product`
+--
+
+DROP TABLE IF EXISTS `consumed_product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `consumed_product` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `branchId` int NOT NULL,
+  `productId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_ea766f2e8ba9e33f3726e8939e1` (`branchId`),
+  KEY `FK_be0b9fbeef277b569de7ae1bb54` (`productId`),
+  CONSTRAINT `FK_be0b9fbeef277b569de7ae1bb54` FOREIGN KEY (`productId`) REFERENCES `product` (`id`),
+  CONSTRAINT `FK_ea766f2e8ba9e33f3726e8939e1` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `consumed_product`
 --
 
@@ -74,14 +225,58 @@ LOCK TABLES `consumed_product` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customer` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fullName` varchar(255) NOT NULL,
+  `gender` tinyint NOT NULL,
+  `dob` date DEFAULT NULL,
+  `phone` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL DEFAULT 'avatar.png',
+  `accountId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `REL_c97c8c28cd65bdc7a3dcd26af5` (`accountId`),
+  UNIQUE KEY `IDX_03846b4bae9df80f19c76005a8` (`phone`),
+  UNIQUE KEY `IDX_fdb2f3ad8115da4c7718109a6e` (`email`),
+  CONSTRAINT `FK_c97c8c28cd65bdc7a3dcd26af5c` FOREIGN KEY (`accountId`) REFERENCES `account` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `customer`
 --
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'Nguyễn Thị Hiền',1,'2003-04-11','0329623385','mail5@gmail.com','HCM City','avatar.png',6),(2,'Nguyễn Thị Như',1,'2003-04-11','0329623386','mail6@gmail.com','HCM City','avatar.png',7),(3,'Nguyễn Thị Ý',1,'2003-04-11','0329623387','mail7@gmail.com','HCM City','avatar.png',8),(4,'Nguyễn Thị Quỳnh',1,'2003-04-11','0329623388','mail8@gmail.com','HCM City','avatar.png',9),(5,'Tống Thị Minh Hợp',1,'2002-06-28','0352014149','min@gmail.com','HCM City','avatar.png',10);
+INSERT INTO `customer` VALUES (1,'Nguyễn Thị Hiền',1,'2003-04-11','0329623385','mail5@gmail.com','HCM City','avatar.png',6),(2,'Nguyễn Thị Như',1,'2003-04-11','0329623386','mail6@gmail.com','HCM City','avatar.png',7),(3,'Nguyễn Thị Ý',1,'2003-04-11','0329623387','mail7@gmail.com','HCM City','avatar.png',8),(4,'Nguyễn Thị Quỳnh',1,'2003-04-11','0329623388','mail8@gmail.com','HCM City','avatar.png',9),(5,'Tống Thị Minh Hợp',1,'2002-06-28','0352014149','min@gmail.com','HCM City','avatar.png',10),(6,'Full Name',1,'2002-05-06','0329623358','email@gmail.com','123 Main Street','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/a670be5a-2e9c-4d8f-9b13-9157b503d9a7-HP%20ProBook%20440%20G6.jpg',12);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `detail_event`
+--
+
+DROP TABLE IF EXISTS `detail_event`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `detail_event` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `eventId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_317328f8a5331f5a19a9d0244d2` (`eventId`),
+  CONSTRAINT `FK_317328f8a5331f5a19a9d0244d2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `detail_event`
@@ -93,6 +288,27 @@ LOCK TABLES `detail_event` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `details_appointment`
+--
+
+DROP TABLE IF EXISTS `details_appointment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `details_appointment` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `timeIn` time NOT NULL,
+  `timeOut` time NOT NULL,
+  `appointmentId` int NOT NULL,
+  `bedId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_269ec2474c3ee29ea16e83ee7b0` (`appointmentId`),
+  KEY `FK_7f11f7375fe3879250ff913906a` (`bedId`),
+  CONSTRAINT `FK_269ec2474c3ee29ea16e83ee7b0` FOREIGN KEY (`appointmentId`) REFERENCES `appointment` (`id`),
+  CONSTRAINT `FK_7f11f7375fe3879250ff913906a` FOREIGN KEY (`bedId`) REFERENCES `bed` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `details_appointment`
 --
 
@@ -100,6 +316,34 @@ LOCK TABLES `details_appointment` WRITE;
 /*!40000 ALTER TABLE `details_appointment` DISABLE KEYS */;
 /*!40000 ALTER TABLE `details_appointment` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `employee`
+--
+
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `employee` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fullName` varchar(255) NOT NULL,
+  `gender` tinyint NOT NULL,
+  `dob` date DEFAULT NULL,
+  `phone` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `role` enum('admin','manager','employee') NOT NULL DEFAULT 'employee',
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `image` varchar(255) NOT NULL DEFAULT 'avatar.png',
+  `accountId` int NOT NULL,
+  `wageId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `REL_0bac95278716cdb1057c9129fd` (`accountId`),
+  KEY `FK_ff517a067283daf2108a38829b7` (`wageId`),
+  CONSTRAINT `FK_0bac95278716cdb1057c9129fdc` FOREIGN KEY (`accountId`) REFERENCES `account` (`id`),
+  CONSTRAINT `FK_ff517a067283daf2108a38829b7` FOREIGN KEY (`wageId`) REFERENCES `wage` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `employee`
@@ -112,6 +356,23 @@ INSERT INTO `employee` VALUES (1,'Lê Thanh Toàn',1,'2002-04-08','0329623389','
 UNLOCK TABLES;
 
 --
+-- Table structure for table `events`
+--
+
+DROP TABLE IF EXISTS `events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `events` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `startDate` date NOT NULL,
+  `expiryDate` datetime NOT NULL,
+  `image` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `events`
 --
 
@@ -119,6 +380,24 @@ LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `internal_expense`
+--
+
+DROP TABLE IF EXISTS `internal_expense`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `internal_expense` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `content` varchar(255) NOT NULL,
+  `date` datetime NOT NULL,
+  `branchId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_8cdc4557e1542c5a8c286cdcf89` (`branchId`),
+  CONSTRAINT `FK_8cdc4557e1542c5a8c286cdcf89` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `internal_expense`
@@ -130,6 +409,27 @@ LOCK TABLES `internal_expense` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `prepaid_card`
+--
+
+DROP TABLE IF EXISTS `prepaid_card`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `prepaid_card` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `cardNumber` varchar(255) NOT NULL,
+  `balance` int NOT NULL,
+  `issueDate` date NOT NULL,
+  `expiryDate` date DEFAULT NULL,
+  `status` enum('active','inactive','expired') NOT NULL DEFAULT 'active',
+  `customerId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `REL_43f20a04f7ec21735773dca95d` (`customerId`),
+  CONSTRAINT `FK_43f20a04f7ec21735773dca95d1` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `prepaid_card`
 --
 
@@ -139,14 +439,54 @@ LOCK TABLES `prepaid_card` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `prices`
+--
+
+DROP TABLE IF EXISTS `prices`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `prices` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `originalPrice` int NOT NULL,
+  `price` int NOT NULL,
+  `specialPrice` int NOT NULL,
+  `commission` int NOT NULL,
+  `applicableDate` date NOT NULL,
+  `type` enum('service','product') NOT NULL DEFAULT 'service',
+  `foreignKeyId` int NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `prices`
 --
 
 LOCK TABLES `prices` WRITE;
 /*!40000 ALTER TABLE `prices` DISABLE KEYS */;
-INSERT INTO `prices` VALUES (1,0,500000,300000,30000,'2024-10-19','service',1),(2,0,500000,400000,40000,'2024-10-19','service',2),(3,0,1500000,1200000,100000,'2024-10-19','service',3),(4,0,2000000,1700000,100000,'2024-10-19','service',4),(5,0,2500000,2300000,150000,'2024-10-19','service',5),(6,200000,600000,500000,50000,'2024-10-19','product',49),(7,250000,500000,400000,40000,'2024-10-19','product',50),(8,300000,700000,600000,60000,'2024-10-19','product',51),(9,350000,750000,700000,70000,'2024-10-19','product',52),(10,450000,700000,600000,60000,'2024-10-19','product',53),(11,0,800000,700000,70000,'2024-10-19','service',6),(12,0,1000000,900000,90000,'2024-10-19','service',7),(13,0,2000000,1900000,150000,'2024-10-19','service',8),(14,0,2500000,2400000,200000,'2024-10-19','service',9),(15,200000,500000,400000,40000,'2024-10-19','product',54),(16,250000,600000,500000,50000,'2024-10-19','product',55),(17,300000,700000,600000,60000,'2024-10-19','product',56),(18,500000,1000000,900000,90000,'2024-10-19','product',57),(19,0,6000000,5500000,200000,'2024-10-19','service',10),(20,0,4000000,3700000,150000,'2024-10-19','service',11),(21,0,5000000,4800000,180000,'2024-10-19','service',12),(22,100000,300000,200000,20000,'2024-10-19','product',58),(23,200000,500000,400000,40000,'2024-10-19','product',59),(24,300000,600000,500000,50000,'2024-10-19','product',60),(25,0,300000,250000,25000,'2024-10-19','service',13),(26,0,200000,150000,15000,'2024-10-19','service',14),(27,0,500000,450000,45000,'2024-10-19','service',15),(28,300000,500000,450000,45000,'2024-10-19','product',61),(29,500000,1000000,900000,90000,'2024-10-19','product',62),(30,200000,450000,400000,40000,'2024-10-19','product',63),(31,0,2500000,2300000,200000,'2024-10-19','service',16),(32,0,4000000,3500000,200000,'2024-10-19','service',17),(33,200000,500000,450000,45000,'2024-10-19','product',64),(34,600000,600000,550000,55000,'2024-10-19','product',65),(35,500000,1500000,1300000,130000,'2024-10-19','product',66),(36,0,6000000,5500000,300000,'2024-10-19','service',18),(37,0,3500000,3000000,200000,'2024-10-19','service',19),(38,400000,800000,750000,75000,'2024-10-19','product',67),(39,500000,1200000,1100000,100000,'2024-10-19','product',68),(40,300000,600000,550000,55000,'2024-10-19','product',69),(41,0,8000000,7500000,300000,'2024-10-19','service',20),(42,0,5000000,4600000,250000,'2024-10-19','service',21),(43,0,6000000,5400000,280000,'2024-10-19','service',22),(44,600000,1200000,1100000,100000,'2024-10-19','product',70),(45,1000000,2500000,2300000,150000,'2024-10-19','product',71),(46,500000,1500000,1300000,100000,'2024-10-19','product',72);
+INSERT INTO `prices` VALUES (1,0,500000,300000,30000,'2024-10-19','service',1,'active'),(2,0,500000,400000,40000,'2024-10-19','service',2,'active'),(3,0,1500000,1200000,100000,'2024-10-19','service',3,'active'),(4,0,2000000,1700000,100000,'2024-10-19','service',4,'active'),(5,0,2500000,2300000,150000,'2024-10-19','service',5,'active'),(6,200000,600000,500000,50000,'2024-10-19','product',49,'active'),(7,250000,500000,400000,40000,'2024-10-19','product',50,'active'),(8,300000,700000,600000,60000,'2024-10-19','product',51,'active'),(9,350000,750000,700000,70000,'2024-10-19','product',52,'active'),(10,450000,700000,600000,60000,'2024-10-19','product',53,'active'),(11,0,800000,700000,70000,'2024-10-19','service',6,'active'),(12,0,1000000,900000,90000,'2024-10-19','service',7,'active'),(13,0,2000000,1900000,150000,'2024-10-19','service',8,'active'),(14,0,2500000,2400000,200000,'2024-10-19','service',9,'active'),(15,200000,500000,400000,40000,'2024-10-19','product',54,'active'),(16,250000,600000,500000,50000,'2024-10-19','product',55,'active'),(17,300000,700000,600000,60000,'2024-10-19','product',56,'active'),(18,500000,1000000,900000,90000,'2024-10-19','product',57,'active'),(19,0,6000000,5500000,200000,'2024-10-19','service',10,'active'),(20,0,4000000,3700000,150000,'2024-10-19','service',11,'active'),(21,0,5000000,4800000,180000,'2024-10-19','service',12,'active'),(22,100000,300000,200000,20000,'2024-10-19','product',58,'active'),(23,200000,500000,400000,40000,'2024-10-19','product',59,'active'),(24,300000,600000,500000,50000,'2024-10-19','product',60,'active'),(25,0,300000,250000,25000,'2024-10-19','service',13,'active'),(26,0,200000,150000,15000,'2024-10-19','service',14,'active'),(27,0,500000,450000,45000,'2024-10-19','service',15,'active'),(28,300000,500000,450000,45000,'2024-10-19','product',61,'active'),(29,500000,1000000,900000,90000,'2024-10-19','product',62,'active'),(30,200000,450000,400000,40000,'2024-10-19','product',63,'active'),(31,0,2500000,2300000,200000,'2024-10-19','service',16,'active'),(32,0,4000000,3500000,200000,'2024-10-19','service',17,'active'),(33,200000,500000,450000,45000,'2024-10-19','product',64,'active'),(34,600000,600000,550000,55000,'2024-10-19','product',65,'active'),(35,500000,1500000,1300000,130000,'2024-10-19','product',66,'active'),(36,0,6000000,5500000,300000,'2024-10-19','service',18,'active'),(37,0,3500000,3000000,200000,'2024-10-19','service',19,'active'),(38,400000,800000,750000,75000,'2024-10-19','product',67,'active'),(39,500000,1200000,1100000,100000,'2024-10-19','product',68,'active'),(40,300000,600000,550000,55000,'2024-10-19','product',69,'active'),(41,0,8000000,7500000,300000,'2024-10-19','service',20,'active'),(42,0,5000000,4600000,250000,'2024-10-19','service',21,'active'),(43,0,6000000,5400000,280000,'2024-10-19','service',22,'active'),(44,600000,1200000,1100000,100000,'2024-10-19','product',70,'active'),(45,1000000,2500000,2300000,150000,'2024-10-19','product',71,'active'),(46,500000,1500000,1300000,100000,'2024-10-19','product',72,'active');
 /*!40000 ALTER TABLE `prices` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `serviceCategoryId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_8392c4a9293209b44bbdddbeee4` (`serviceCategoryId`),
+  CONSTRAINT `FK_8392c4a9293209b44bbdddbeee4` FOREIGN KEY (`serviceCategoryId`) REFERENCES `service_category` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `product`
@@ -159,6 +499,20 @@ INSERT INTO `product` VALUES (49,'CeraVe Hydrating Cleanser','active','image.png
 UNLOCK TABLES;
 
 --
+-- Table structure for table `room`
+--
+
+DROP TABLE IF EXISTS `room`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `room` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `room`
 --
 
@@ -167,6 +521,26 @@ LOCK TABLES `room` WRITE;
 INSERT INTO `room` VALUES (1,'Phòng chăm sóc da mặt (Facial Room)'),(2,'Phòng chăm sóc cơ thể (Body Care Room)'),(3,'Phòng phun xăm thẩm mỹ (Semi-permanent Makeup Room)'),(4,'Phòng chăm sóc tóc và móng (Hair and Nail Room)'),(5,'Phòng tắm trắng (Whitening Room)'),(6,'Phòng giảm béo và tạo hình (Slimming and Body Contouring Room'),(7,'Phòng thẩm mỹ không xâm lấn (Non-invasive Aesthetic Room)');
 /*!40000 ALTER TABLE `room` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `schedule`
+--
+
+DROP TABLE IF EXISTS `schedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `schedule` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `date` date DEFAULT NULL,
+  `shift` enum('morning','afternoon') NOT NULL DEFAULT 'morning',
+  `checkInTime` time NOT NULL,
+  `checkOutTime` time NOT NULL,
+  `employeeId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_b81737400cce9875401177fd48b` (`employeeId`),
+  CONSTRAINT `FK_b81737400cce9875401177fd48b` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `schedule`
@@ -179,14 +553,51 @@ INSERT INTO `schedule` VALUES (1,'2024-10-01','morning','07:00:00','15:00:00',1)
 UNLOCK TABLES;
 
 --
+-- Table structure for table `service`
+--
+
+DROP TABLE IF EXISTS `service`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `duration` int NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `serviceCategoryId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_7a1a6e2ccf2b42863d8142d306a` (`serviceCategoryId`),
+  CONSTRAINT `FK_7a1a6e2ccf2b42863d8142d306a` FOREIGN KEY (`serviceCategoryId`) REFERENCES `service_category` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `service`
 --
 
 LOCK TABLES `service` WRITE;
 /*!40000 ALTER TABLE `service` DISABLE KEYS */;
-INSERT INTO `service` VALUES (1,'Làm sạch da (Facial cleansing)',45,'active','service.png',1),(2,'Dưỡng ẩm, chống lão hóa',60,'active','service.png',1),(3,'Peel da (tẩy tế bào chết hóa học)',30,'active','service.png',1),(4,'Cấy collagen, cấy tảo',60,'active','service.png',1),(5,'Trị nám, tàn nhang',60,'active','service.png',1),(6,'Massage toàn thân',60,'active','service.png',2),(7,'Tẩy tế bào chết toàn thân',45,'active','service.png',2),(8,'Giảm béo, săn chắc cơ thể',60,'active','service.png',2),(9,'Chăm sóc da tay, chân',30,'active','service.png',2),(10,'Phun môi',60,'active','service.png',3),(11,'Điêu khắc, phun lông mày',60,'active','service.png',3),(12,'Phun mí mắt',60,'active','service.png',3),(13,'Gội đầu, hấp dầu',45,'active','service.png',4),(14,'Làm móng (manicure, pedicure)',60,'active','service.png',4),(15,'Sơn gel, đắp móng bột',60,'active','service.png',4),(16,'Tắm trắng body',60,'active','service.png',5),(17,'Tắm trắng phi thuyền',60,'active','service.png',5),(18,'Giảm béo công nghệ cao (RF, cavitation, hifu)',60,'active','service.png',6),(19,'Massage giảm béo',60,'active','service.png',6),(20,'Căng da mặt bằng chỉ',60,'active','service.png',7),(21,'Tiêm filler, botox',30,'active','service.png',7),(22,'Điều trị bằng laser (trị nám, trẻ hóa da)',45,'active','service.png',7);
+INSERT INTO `service` VALUES (1,'Làm sạch da (Facial cleansing)',45,'active','service.png',1),(2,'Dưỡng ẩm, chống lão hóa',60,'active','service.png',1),(3,'Peel da (tẩy tế bào chết hóa học)',30,'active','service.png',1),(4,'Cấy collagen, cấy tảo',60,'active','service.png',1),(5,'Trị nám, tàn nhang',60,'active','service.png',1),(6,'Massage toàn thân',60,'active','service.png',2),(7,'Tẩy tế bào chết toàn thân',45,'active','service.png',2),(8,'Giảm béo, săn chắc cơ thể',60,'active','service.png',2),(9,'Chăm sóc da tay, chân',30,'active','service.png',2),(10,'Phun môi',60,'active','service.png',3),(11,'Điêu khắc, phun lông mày',60,'active','service.png',3),(12,'Phun mí mắt',60,'active','service.png',3),(13,'Gội đầu, hấp dầu',45,'active','service.png',4),(14,'Làm móng (manicure, pedicure)',60,'active','service.png',4),(15,'Sơn gel, đắp móng bột',60,'active','service.png',4),(16,'Tắm trắng body',60,'active','service.png',5),(17,'Tắm trắng phi thuyền',60,'active','service.png',5),(18,'Giảm béo công nghệ cao (RF, cavitation, hifu)',60,'active','service.png',6),(19,'Massage giảm béo',60,'active','service.png',6),(20,'Căng da mặt bằng chỉ',60,'active','service.png',7),(21,'Tiêm filler, botox',30,'active','service.png',7),(22,'Điều trị bằng laser (trị nám, trẻ hóa da)',45,'active','service.png',7),(23,'Service Demo',60,'active','newImage.png',1),(24,'Service Demo',60,'active','newImage.png',1),(25,'Service Demo',60,'active','ImageNew.png',1),(26,'Service Demo',60,'active','newImage.png',1);
 /*!40000 ALTER TABLE `service` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `service_category`
+--
+
+DROP TABLE IF EXISTS `service_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `service_category` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `roomId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `REL_f4b459f8da368795cd0ad77abb` (`roomId`),
+  CONSTRAINT `FK_f4b459f8da368795cd0ad77abb9` FOREIGN KEY (`roomId`) REFERENCES `room` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `service_category`
@@ -199,6 +610,27 @@ INSERT INTO `service_category` VALUES (1,'Dịch vụ chăm sóc da mặt',1),(2
 UNLOCK TABLES;
 
 --
+-- Table structure for table `treatment_package`
+--
+
+DROP TABLE IF EXISTS `treatment_package`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `treatment_package` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `numberOfTimes` int NOT NULL,
+  `intervalBetweenTimes` int NOT NULL,
+  `numberOfTimesPerformed` int NOT NULL,
+  `price` int NOT NULL,
+  `specialPrice` int NOT NULL,
+  `downPayment` int NOT NULL,
+  `commission` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `treatment_package`
 --
 
@@ -206,6 +638,27 @@ LOCK TABLES `treatment_package` WRITE;
 /*!40000 ALTER TABLE `treatment_package` DISABLE KEYS */;
 /*!40000 ALTER TABLE `treatment_package` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `treatment_service`
+--
+
+DROP TABLE IF EXISTS `treatment_service`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `treatment_service` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `serviceOrder` int NOT NULL,
+  `numberOfTimes` int NOT NULL,
+  `treatmentId` int NOT NULL,
+  `serviceId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_e659b91fa2b14b60b0da092202b` (`treatmentId`),
+  KEY `FK_817a45190895e3d8e4dc8665997` (`serviceId`),
+  CONSTRAINT `FK_817a45190895e3d8e4dc8665997` FOREIGN KEY (`serviceId`) REFERENCES `service` (`id`),
+  CONSTRAINT `FK_e659b91fa2b14b60b0da092202b` FOREIGN KEY (`treatmentId`) REFERENCES `treatment_package` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `treatment_service`
@@ -217,6 +670,26 @@ LOCK TABLES `treatment_service` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `voucher`
+--
+
+DROP TABLE IF EXISTS `voucher`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `voucher` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) NOT NULL,
+  `discount` int NOT NULL,
+  `minimumOrder` int NOT NULL,
+  `maximumDiscount` int NOT NULL,
+  `voucherCategoryId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_8a7b8e07b8d66c35835368128f3` (`voucherCategoryId`),
+  CONSTRAINT `FK_8a7b8e07b8d66c35835368128f3` FOREIGN KEY (`voucherCategoryId`) REFERENCES `voucher_category` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `voucher`
 --
 
@@ -224,6 +697,21 @@ LOCK TABLES `voucher` WRITE;
 /*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `voucher_category`
+--
+
+DROP TABLE IF EXISTS `voucher_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `voucher_category` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `voucher_category`
@@ -235,6 +723,22 @@ LOCK TABLES `voucher_category` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `wage`
+--
+
+DROP TABLE IF EXISTS `wage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `wage` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `hourlyRate` int NOT NULL,
+  `effectiveDate` date NOT NULL,
+  `role` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `wage`
 --
 
@@ -243,6 +747,21 @@ LOCK TABLES `wage` WRITE;
 INSERT INTO `wage` VALUES (1,50000,'2024-10-10','manage'),(2,25000,'2024-10-10','employee');
 /*!40000 ALTER TABLE `wage` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `working_time`
+--
+
+DROP TABLE IF EXISTS `working_time`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `working_time` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `time` varchar(255) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `working_time`
@@ -263,4 +782,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-23  9:20:06
+-- Dump completed on 2024-10-28 16:42:30
