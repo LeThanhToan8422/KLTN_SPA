@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Req,
@@ -35,11 +36,15 @@ export class EmployeeController {
     @UploadedFile() file: Express.Multer.File,
     @Body('data') data: string,
   ) {
-    const fileUrl = await this.s3Service.uploadFile(file);
+    console.log(file);
+    console.log(JSON.parse(data));
+
     const dataParse = JSON.parse(data);
-    dataParse.image = fileUrl;
-    const accountDto = await plainToInstance(EmployeeDto, dataParse);
-    const errors = await validate(accountDto);
+    if (file) {
+      dataParse.image = await this.s3Service.uploadFile(file);
+    }
+    const employeeDto = await plainToInstance(EmployeeDto, dataParse);
+    const errors = await validate(employeeDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -49,17 +54,25 @@ export class EmployeeController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.employeeService.create(accountDto);
+    return await this.employeeService.create(employeeDto);
   }
 
-  @Put()
-  async update(@Req() req: Request) {
-    const userDto = await plainToInstance(UserDto, req.user);
-    const accountDto = await plainToInstance(EmployeeDto, {
-      id: Number(userDto.id),
-      ...req.body,
+  @Put('id')
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') data: string,
+    @Param('id') id: number,
+  ) {
+    const dataParse = JSON.parse(data);
+    if (file) {
+      dataParse.image = await this.s3Service.uploadFile(file);
+    }
+    const employeeDto = await plainToInstance(EmployeeDto, {
+      id: Number(id),
+      ...dataParse,
     });
-    const errors = await validate(accountDto);
+    const errors = await validate(employeeDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -69,7 +82,7 @@ export class EmployeeController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.employeeService.update(accountDto);
+    return await this.employeeService.update(employeeDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)

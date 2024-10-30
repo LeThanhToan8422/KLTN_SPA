@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Req,
@@ -35,11 +36,12 @@ export class CustomerController {
     @UploadedFile() file: Express.Multer.File,
     @Body('data') data: string,
   ) {
-    const fileUrl = await this.s3Service.uploadFile(file);
     const dataParse = JSON.parse(data);
-    dataParse.image = fileUrl;
-    const accountDto = await plainToInstance(CustomerDto, dataParse);
-    const errors = await validate(accountDto);
+    if (file) {
+      dataParse.image = await this.s3Service.uploadFile(file);
+    }
+    const customerDto = await plainToInstance(CustomerDto, dataParse);
+    const errors = await validate(customerDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -49,16 +51,25 @@ export class CustomerController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.customerService.create(accountDto);
+    return await this.customerService.create(customerDto);
   }
 
-  @Put(':id')
-  async update(@Req() req: Request) {
-    const accountDto = await plainToInstance(CustomerDto, {
-      id: Number(req.params.id),
-      ...req.body,
+  @Put('id')
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') data: string,
+    @Param('id') id: number,
+  ) {
+    const dataParse = JSON.parse(data);
+    if (file) {
+      dataParse.image = await this.s3Service.uploadFile(file);
+    }
+    const customerDto = await plainToInstance(CustomerDto, {
+      id: Number(id),
+      ...dataParse,
     });
-    const errors = await validate(accountDto);
+    const errors = await validate(customerDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -68,7 +79,7 @@ export class CustomerController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.customerService.update(accountDto);
+    return await this.customerService.update(customerDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Req,
@@ -34,9 +35,10 @@ export class EventController {
     @UploadedFile() file: Express.Multer.File,
     @Body('data') data: string,
   ) {
-    const fileUrl = await this.s3Service.uploadFile(file);
     const dataParse = JSON.parse(data);
-    dataParse.image = fileUrl;
+    if (file) {
+      dataParse.image = await this.s3Service.uploadFile(file);
+    }
     const eventDto = await plainToInstance(EventDto, dataParse);
     const errors = await validate(eventDto);
     if (errors.length > 0) {
@@ -52,11 +54,20 @@ export class EventController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
-  @Put(':id')
-  async update(@Req() req: Request) {
+  @Put('id')
+  @UseInterceptors(FileInterceptor('file'))
+  async update(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') data: string,
+    @Param('id') id: number,
+  ) {
+    const dataParse = JSON.parse(data);
+    if (file) {
+      dataParse.image = await this.s3Service.uploadFile(file);
+    }
     const eventDto = await plainToInstance(EventDto, {
-      id: Number(req.params.id),
-      ...req.body,
+      id: Number(id),
+      ...dataParse,
     });
     const errors = await validate(eventDto);
     if (errors.length > 0) {
