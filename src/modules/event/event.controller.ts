@@ -19,6 +19,7 @@ import { validate } from 'class-validator';
 import EventDto from './dtos/event.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Request } from 'express';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('event')
 export class EventController {
@@ -77,6 +78,7 @@ export class EventController {
     return await this.eventService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.eventService.getAll(

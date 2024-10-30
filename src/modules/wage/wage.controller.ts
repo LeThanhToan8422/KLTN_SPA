@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { WageService } from './wage.service';
 import { Public } from 'src/decorators/public.decorator';
@@ -6,6 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import WageDto from './dtos/wage.dto';
 import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { RoleEmployee } from 'src/enums/role-employee.enum';
 
 @Controller('wage')
 export class WageController {
@@ -63,5 +64,10 @@ export class WageController {
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.wageService.getById(Number(req.params.id));
+  }
+
+  @Get('role/:role')
+  async getByRole(@Param('role') role: string) {
+    return await this.wageService.getByRole(role as RoleEmployee);
   }
 }
