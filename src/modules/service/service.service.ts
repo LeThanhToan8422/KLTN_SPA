@@ -7,6 +7,7 @@ import ServiceDto from './dtos/service.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Pagination } from 'src/helpers/pagination';
 
 @Injectable()
 export class ServiceService {
@@ -70,7 +71,19 @@ export class ServiceService {
     }
   }
 
-  async getAll(serviceCategoryId: number, page: number, limit: number) {
+  async getAll(page: number, limit: number) {
+    const paginatedResult = await this.crudRepository.getAll(page, limit);
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ServiceDto, paginatedResult.data)),
+      new Pagination(paginatedResult.totalItems, page, limit),
+    );
+  }
+
+  async getAllByCategory(
+    serviceCategoryId: number,
+    page: number,
+    limit: number,
+  ) {
     const paginatedResult = await this.datasource.query(
       `
       select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission from service as s

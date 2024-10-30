@@ -75,10 +75,19 @@ export class ServiceController {
   }
 
   @Public()
+  @Get('category/:serviceCategoryId')
+  async getAllByCategory(@Req() req: Request) {
+    return await this.serviceService.getAllByCategory(
+      Number(req.params.serviceCategoryId),
+      Number(req.query.page),
+      Number(req.query.limit),
+    );
+  }
+
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.serviceService.getAll(
-      Number(req.query.serviceCategoryId),
       Number(req.query.page),
       Number(req.query.limit),
     );
