@@ -1,4 +1,15 @@
-import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import { S3Service } from './../../services/s3.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Req,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AccountService } from './account.service';
 import { Request } from 'express';
 import { plainToInstance } from 'class-transformer';
@@ -10,10 +21,14 @@ import { Role } from 'src/enums/role.enum';
 import { Roles } from 'src/decorators/roles.decorator';
 import CustomerDto from '../customer/dtos/customer.dto';
 import EmployeeDto from '../employee/dtos/employee.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(
+    private readonly accountService: AccountService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   @Public()
   @Post('login')
@@ -23,16 +38,61 @@ export class AccountController {
 
   @Public()
   @Post('register')
-  async register(@Req() req: Request) {
-    const accountDto = req.body.account
-      ? plainToInstance(AccountDto, req.body.account)
+  @UseInterceptors(FileInterceptor('file'))
+  async register(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('data') data: string,
+  ) {
+    const dataParse = JSON.parse(data);
+    const account = dataParse.account;
+    const employee = dataParse.employee;
+    const customer = dataParse.customer;
+
+    if (file) {
+      if (employee) {
+        employee.image = await this.s3Service.uploadFile(file);
+      } else {
+        customer.image = await this.s3Service.uploadFile(file);
+      }
+    }
+    const accountDto = account ? plainToInstance(AccountDto, account) : null;
+    const customerDto = customer
+      ? plainToInstance(CustomerDto, customer)
       : null;
-    const customerDto = req.body.customer
-      ? plainToInstance(CustomerDto, req.body.customer)
+    const employeeDto = employee
+      ? plainToInstance(EmployeeDto, employee)
       : null;
-    const employeeDto = req.body.employee
-      ? plainToInstance(EmployeeDto, req.body.employee)
-      : null;
+
+    // const accountErrors = await validate(accountDto);
+    // if (accountErrors.length > 0) {
+    //   const messageErrors = accountErrors.map((e) => {
+    //     return {
+    //       property: e.property,
+    //       constraints: e.constraints,
+    //     };
+    //   });
+    //   return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
+    // }
+    // const employeeErrors = await validate(employeeDto);
+    // if (employeeErrors.length > 0) {
+    //   const messageErrors = employeeErrors.map((e) => {
+    //     return {
+    //       property: e.property,
+    //       constraints: e.constraints,
+    //     };
+    //   });
+    //   return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
+    // }
+    // const customerErrors = customerDto ? await validate(customerDto) : [];
+    // if (customerDto && customerErrors.length > 0) {
+    //   const messageErrors = customerErrors.map((e) => {
+    //     return {
+    //       property: e.property,
+    //       constraints: e.constraints,
+    //     };
+    //   });
+    //   return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
+    // }
     return await this.accountService.register(
       accountDto,
       customerDto,

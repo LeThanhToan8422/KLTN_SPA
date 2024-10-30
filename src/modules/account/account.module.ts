@@ -8,10 +8,17 @@ import { CustomerService } from '../customer/customer.service';
 import Customer from 'src/entities/customer.entity';
 import { EmployeeService } from '../employee/employee.service';
 import Employee from 'src/entities/employee.entity';
+import { S3Service } from 'src/services/s3.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Account, Customer, Employee])],
   controllers: [AccountController],
-  providers: [AccountService, JwtService, CustomerService, EmployeeService],
+  providers: [
+    AccountService,
+    JwtService,
+    CustomerService,
+    EmployeeService,
+    S3Service,
+  ],
 })
 export class AccountModule {}

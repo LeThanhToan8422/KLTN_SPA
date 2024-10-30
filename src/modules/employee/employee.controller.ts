@@ -36,9 +36,6 @@ export class EmployeeController {
     @UploadedFile() file: Express.Multer.File,
     @Body('data') data: string,
   ) {
-    console.log(file);
-    console.log(JSON.parse(data));
-
     const dataParse = JSON.parse(data);
     if (file) {
       dataParse.image = await this.s3Service.uploadFile(file);
