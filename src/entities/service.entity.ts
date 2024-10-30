@@ -1,7 +1,6 @@
 import { Status } from 'src/enums/status.enum';
 import ServiceCategory from './service-category.entity';
 import {
-  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -10,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import TreatmentService from './treatment-service.entity';
-import { Inject } from '@nestjs/common';
+import DetailService from './detail-service.entity';
 
 @Entity()
 export default class Service {
@@ -33,7 +32,6 @@ export default class Service {
   serviceCategories: ServiceCategory[];
   @OneToMany(() => TreatmentService, (ts) => ts.service)
   treatmentServices: TreatmentService[];
-
-  @BeforeInsert()
-  beforeInsertService() {}
+  @OneToMany(() => DetailService, (d) => d.service)
+  detailServices: DetailService[];
 }
