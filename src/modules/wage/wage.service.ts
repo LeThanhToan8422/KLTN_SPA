@@ -1,3 +1,4 @@
+import { RoleEmployee } from './../../enums/role-employee.enum';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Wage from 'src/entities/Wage.entity';
@@ -84,5 +85,20 @@ export class WageService {
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(WageDto, response)),
     );
+  }
+
+  async getByRole(role: RoleEmployee) {
+    try {
+      const services = await this.wageRepository.find({
+        where: { role },
+      });
+      return ResponseCustomizer.success(
+        instanceToPlain(plainToInstance(WageDto, services)),
+      );
+    } catch (error) {
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    }
   }
 }

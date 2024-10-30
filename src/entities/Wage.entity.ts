@@ -12,7 +12,7 @@ export default class Wage {
     type: 'date',
   })
   effectiveDate: Date;
-  @Column()
+  @Column({ type: 'enum', enum: ['admin', 'manager', 'employee'] })
   role: RoleEmployee;
   @OneToMany(() => Employee, (e) => e.wage)
   employees: Employee[];
