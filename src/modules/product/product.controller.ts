@@ -52,7 +52,7 @@ export class ProductController {
     return await this.productService.create(productDto);
   }
 
-  @Put('id')
+  @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
     @UploadedFile() file: Express.Multer.File,

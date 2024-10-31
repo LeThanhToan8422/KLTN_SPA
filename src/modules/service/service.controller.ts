@@ -52,7 +52,8 @@ export class ServiceController {
     return await this.serviceService.create(serviceDto);
   }
 
-  @Put('id')
+  @Public()
+  @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
     @UploadedFile() file: Express.Multer.File,

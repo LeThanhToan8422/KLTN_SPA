@@ -54,7 +54,7 @@ export class BranchController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
-  @Put('id')
+  @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
     @UploadedFile() file: Express.Multer.File,

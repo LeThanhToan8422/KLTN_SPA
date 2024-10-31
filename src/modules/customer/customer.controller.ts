@@ -54,7 +54,7 @@ export class CustomerController {
     return await this.customerService.create(customerDto);
   }
 
-  @Put('id')
+  @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
     @UploadedFile() file: Express.Multer.File,

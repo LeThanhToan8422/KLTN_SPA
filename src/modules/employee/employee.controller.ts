@@ -54,7 +54,7 @@ export class EmployeeController {
     return await this.employeeService.create(employeeDto);
   }
 
-  @Put('id')
+  @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
     @UploadedFile() file: Express.Multer.File,
