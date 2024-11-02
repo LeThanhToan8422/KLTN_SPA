@@ -10,26 +10,25 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { CustomerService } from './customer.service';
-import { Request } from 'express';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
-import CustomerDto from './dtos/customer.dto';
-import ErrorCustomizer from 'src/helpers/error-customizer.error';
-import { Public } from 'src/decorators/public.decorator';
+import { DetailServiceService } from './detail-service.service';
+import { S3Service } from 'src/services/s3.service';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { S3Service } from 'src/services/s3.service';
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
+import DetailServiceDto from './dtos/detail-service.dto';
+import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Request } from 'express';
 
-@Controller('customer')
-export class CustomerController {
+@Controller('detail-service')
+export class DetailServiceController {
   constructor(
-    private readonly customerService: CustomerService,
+    private readonly detailServiceService: DetailServiceService,
     private readonly s3Service: S3Service,
   ) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -40,8 +39,8 @@ export class CustomerController {
     if (file) {
       dataParse.image = await this.s3Service.uploadFile(file);
     }
-    const customerDto = await plainToInstance(CustomerDto, dataParse);
-    const errors = await validate(customerDto);
+    const detailServiceDto = await plainToInstance(DetailServiceDto, dataParse);
+    const errors = await validate(detailServiceDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -51,10 +50,10 @@ export class CustomerController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.customerService.create(customerDto);
+    return await this.detailServiceService.create(detailServiceDto);
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -66,11 +65,11 @@ export class CustomerController {
     if (file) {
       dataParse.image = await this.s3Service.uploadFile(file);
     }
-    const customerDto = await plainToInstance(CustomerDto, {
+    const detailServiceDto = await plainToInstance(DetailServiceDto, {
       id: Number(id),
       ...dataParse,
     });
-    const errors = await validate(customerDto);
+    const errors = await validate(detailServiceDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -80,32 +79,25 @@ export class CustomerController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.customerService.update(customerDto);
+    return await this.detailServiceService.update(detailServiceDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
-    return await this.customerService.delete(Number(req.params.id));
+    return await this.detailServiceService.delete(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
-    return await this.customerService.getAll(
+    return await this.detailServiceService.getAll(
       Number(req.query.page),
       Number(req.query.limit),
     );
   }
 
-  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
-    return await this.customerService.getById(Number(req.params.id));
-  }
-
-  @Get('account/:id')
-  async getByAccountId(@Req() req: Request) {
-    return await this.customerService.getByAccountId(Number(req.params.id));
+    return await this.detailServiceService.getById(Number(req.params.id));
   }
 }

@@ -7,7 +7,6 @@ import EventDto from './dtos/event.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
-import { Pagination } from 'src/helpers/pagination';
 
 @Injectable()
 export class EventService {
@@ -71,11 +70,13 @@ export class EventService {
     }
   }
 
-  async getAll(page: number, limit: number) {
-    const paginatedResult = await this.crudRepository.getAll(page, limit);
+  async getAll() {
+    const response = await this.datasource.query(`
+      select * from events as e
+      where e.startDate <= NOW() and e.expiryDate >= NOW()
+    `);
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(EventDto, paginatedResult.data)),
-      new Pagination(paginatedResult.totalItems, page, limit),
+      instanceToPlain(plainToInstance(EventDto, response)),
     );
   }
 

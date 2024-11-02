@@ -1,34 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Bonus from 'src/entities/bonus.entity';
+import DetailService from 'src/entities/detail-service.entity';
 import CRUDRepository from 'src/repositories/crud.repository';
 import { DataSource, Repository } from 'typeorm';
-import BonusDto from './dtos/bonus.dto';
+import DetailServiceDto from './dtos/detail-service.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
-import { Status } from 'src/enums/status.enum';
+import DetailEventDto from '../detail-event/dtos/detail-event.dto';
 
 @Injectable()
-export class BonusService {
-  private crudRepository: CRUDRepository<Bonus>;
+export class DetailServiceService {
+  private crudRepository: CRUDRepository<DetailService>;
   constructor(
-    @InjectRepository(Bonus)
-    private readonly bonusRepository: Repository<Bonus>,
+    @InjectRepository(DetailService)
+    private readonly branchRepository: Repository<DetailService>,
     private datasource: DataSource,
   ) {
-    this.crudRepository = new CRUDRepository<Bonus>(bonusRepository);
+    this.crudRepository = new CRUDRepository<DetailService>(branchRepository);
   }
 
-  async create(bonusDto: BonusDto) {
+  async create(detailServiceDto: DetailServiceDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const createdItem = await this.crudRepository.create(bonusDto);
+      const createdItem = await this.crudRepository.create(detailServiceDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BonusDto, createdItem)),
+        instanceToPlain(plainToInstance(DetailServiceDto, createdItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -38,14 +38,14 @@ export class BonusService {
     }
   }
 
-  async update(bonusDto: BonusDto) {
+  async update(detailServiceDto: DetailServiceDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const savedItem = await this.crudRepository.update(bonusDto);
+      const savedItem = await this.crudRepository.update(detailServiceDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BonusDto, savedItem)),
+        instanceToPlain(plainToInstance(DetailServiceDto, savedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -62,7 +62,7 @@ export class BonusService {
       const removedItem = await this.crudRepository.delete(id);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BonusDto, removedItem)),
+        instanceToPlain(plainToInstance(DetailServiceDto, removedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -75,7 +75,7 @@ export class BonusService {
   async getAll(page: number, limit: number) {
     const paginatedResult = await this.crudRepository.getAll(page, limit);
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BonusDto, paginatedResult.data)),
+      instanceToPlain(plainToInstance(DetailServiceDto, paginatedResult.data)),
       new Pagination(paginatedResult.totalItems, page, limit),
     );
   }
@@ -83,39 +83,7 @@ export class BonusService {
   async getById(id: number) {
     const response = await this.crudRepository.getById(id);
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BonusDto, response)),
+      instanceToPlain(plainToInstance(DetailEventDto, response)),
     );
-  }
-
-  async getNewestBonus() {
-    const response = await this.bonusRepository.findOne({
-      where: {
-        status: Status.ACTIVE,
-      },
-      order: { id: 'DESC' },
-    });
-    return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BonusDto, response)),
-    );
-  }
-
-  async getBonusPointByCustomerId(customerId: number) {
-    const response = await this.datasource.query(
-      `
-      SELECT 
-          SUM(p.specialPrice) AS expense, 
-          CONVERT(SUM((p.specialPrice / b.price) * b.point), SIGNED) AS points
-      FROM 
-          appointment AS a
-      INNER JOIN 
-          prices AS p ON p.foreignKeyId = a.serviceOrTreatmentId
-      INNER JOIN 
-          bonus AS b ON a.bonusId = b.id
-      WHERE 
-          a.category = 'services' and a.status = 'finished' and a.customerId = ?;
-    `,
-      [customerId],
-    );
-    return ResponseCustomizer.success(response[0]);
   }
 }

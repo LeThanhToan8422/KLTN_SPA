@@ -21,6 +21,7 @@ import { Role } from 'src/enums/role.enum';
 import UserDto from 'src/dtos/user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3Service } from 'src/services/s3.service';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('employee')
 export class EmployeeController {
@@ -54,6 +55,7 @@ export class EmployeeController {
     return await this.employeeService.create(employeeDto);
   }
 
+  @Public()
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -61,6 +63,10 @@ export class EmployeeController {
     @Body('data') data: string,
     @Param('id') id: number,
   ) {
+    console.log(id);
+    console.log(file);
+    console.log(data);
+
     const dataParse = JSON.parse(data);
     if (file) {
       dataParse.image = await this.s3Service.uploadFile(file);

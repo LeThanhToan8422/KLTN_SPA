@@ -29,7 +29,7 @@ export default class EmployeeDto {
   dob: string;
   @IsNotEmpty()
   @IsString()
-  @IsPhoneNumber('VN')
+  // @IsPhoneNumber('VN')
   @Expose()
   phone: string;
   @IsNotEmpty()

@@ -91,11 +91,8 @@ export class EventController {
 
   @Public()
   @Get()
-  async getAll(@Req() req: Request) {
-    return await this.eventService.getAll(
-      Number(req.query.page),
-      Number(req.query.limit),
-    );
+  async getAll() {
+    return await this.eventService.getAll();
   }
 
   @Get(':id')

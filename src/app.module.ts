@@ -35,6 +35,7 @@ import { WorkingTimeModule } from './modules/working-time/working-time.module';
 import { BonusModule } from './modules/bonus/bonus.module';
 import { EventModule } from './modules/event/event.module';
 import { DetailEventModule } from './modules/detail-event/detail-event.module';
+import { DetailServiceModule } from './modules/detail-service/detail-service.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 
@@ -89,6 +90,7 @@ import Employee from './entities/employee.entity';
     BonusModule,
     EventModule,
     DetailEventModule,
+    DetailServiceModule,
   ],
   controllers: [AppController],
   providers: [

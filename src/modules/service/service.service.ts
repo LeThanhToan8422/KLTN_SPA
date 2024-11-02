@@ -113,6 +113,27 @@ export class ServiceService {
     );
   }
 
+  async getOutStandingServices() {
+    const response = await this.datasource.query(
+      `
+      select a.serviceOrTreatmentId, s.name, ds.content, s.image, COUNT(*) as quantity from appointment as a
+      inner join service as s on a.serviceOrTreatmentId = s.id
+      inner join detail_service as ds on ds.serviceId = s.id
+      where YEAR(a.dateTime) = YEAR(NOW()) 
+      and MONTH(a.dateTime) = MONTH(NOW()) 
+      and a.status = 'finished'
+      and a.category = 'services'
+      and ds.title = 'Mô tả dịch vụ'
+      group by a.serviceOrTreatmentId
+      order by COUNT(*) desc
+      limit 4
+    `,
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ServiceDto, response)),
+    );
+  }
+
   async getById(id: number) {
     const response = await this.crudRepository.getById(id);
     return ResponseCustomizer.success(

@@ -97,6 +97,12 @@ export class ServiceController {
   }
 
   @Public()
+  @Get('out-standings')
+  async getOutStandingServices() {
+    return await this.serviceService.getOutStandingServices();
+  }
+
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.serviceService.getAll(
