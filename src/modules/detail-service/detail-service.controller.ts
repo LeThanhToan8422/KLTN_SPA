@@ -20,6 +20,7 @@ import { validate } from 'class-validator';
 import DetailServiceDto from './dtos/detail-service.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Request } from 'express';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('detail-service')
 export class DetailServiceController {
@@ -99,5 +100,11 @@ export class DetailServiceController {
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.detailServiceService.getById(Number(req.params.id));
+  }
+
+  @Public()
+  @Get('service/:serviceId')
+  async getByServiceId(@Param('serviceId') serviceId: number) {
+    return await this.detailServiceService.getByServiceId(serviceId);
   }
 }
