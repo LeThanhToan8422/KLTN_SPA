@@ -36,6 +36,7 @@ import { BonusModule } from './modules/bonus/bonus.module';
 import { EventModule } from './modules/event/event.module';
 import { DetailEventModule } from './modules/detail-event/detail-event.module';
 import { DetailServiceModule } from './modules/detail-service/detail-service.module';
+import { GiftModule } from './modules/gift/gift.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 
@@ -91,6 +92,7 @@ import Employee from './entities/employee.entity';
     EventModule,
     DetailEventModule,
     DetailServiceModule,
+    GiftModule,
   ],
   controllers: [AppController],
   providers: [

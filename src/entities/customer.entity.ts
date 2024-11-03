@@ -9,6 +9,7 @@ import {
 import PrepaidCard from './prepaid-card.entity';
 import Appointment from './appointment.entity';
 import Account from './account.entity';
+import CustomerGift from './customer-gift.entity';
 
 @Entity()
 export default class Customer {
@@ -48,4 +49,6 @@ export default class Customer {
   prepaidCard: PrepaidCard;
   @OneToMany(() => Appointment, (a) => a.customer)
   appointments: Appointment[];
+  @OneToMany(() => CustomerGift, (c) => c.customer)
+  customerGifts: CustomerGift[];
 }

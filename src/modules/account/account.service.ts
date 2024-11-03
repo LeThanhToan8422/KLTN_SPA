@@ -127,15 +127,18 @@ export class AccountService {
     const account = await this.getByPhone(phone);
     if (account) {
       const { id, phone, password, type, status } = account;
-      const employee = await this.employeeService.getByAccountId(id);
-      const employeeDto = plainToInstance(EmployeeDto, employee.data);
+      let employeeDto = null;
+      if (type === 'employee') {
+        const employee = await this.employeeService.getByAccountId(id);
+        employeeDto = plainToInstance(EmployeeDto, employee.data);
+      }
       if (bcrypt.compareSync(pw, password)) {
         return ResponseCustomizer.success({
           access_token: await this.jwtService.signAsync(
             {
               id,
               type,
-              role: employeeDto.role,
+              role: type === 'employee' ? employeeDto.role : 'customer',
             },
             {
               secret: this.configService.get<string>('JWT_SECRET'),
