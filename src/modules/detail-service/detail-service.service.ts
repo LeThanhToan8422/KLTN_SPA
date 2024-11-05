@@ -86,4 +86,13 @@ export class DetailServiceService {
       instanceToPlain(plainToInstance(DetailEventDto, response)),
     );
   }
+
+  async getByServiceId(serviceId: number) {
+    const details = await this.branchRepository.find({
+      where: { serviceId },
+    });
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(DetailServiceDto, details)),
+    );
+  }
 }
