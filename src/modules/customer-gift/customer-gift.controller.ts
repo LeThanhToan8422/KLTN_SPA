@@ -1,26 +1,22 @@
 import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
-import { VoucherCategoryService } from './voucher-category.service';
-import { Public } from 'src/decorators/public.decorator';
+import { CustomerGiftService } from './customer-gift.service';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 import { Request } from 'express';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import VoucherCategoryDto from './dtos/voucher-category.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import CustomerGiftDto from './dtos/customer-gift.dto';
 
-@Controller('voucher-category')
-export class VoucherCategoryController {
-  constructor(
-    private readonly voucherCategoryService: VoucherCategoryService,
-  ) {}
+@Controller('customer-gift')
+export class CustomerGiftController {
+  constructor(private readonly customerGiftService: CustomerGiftService) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   async create(@Req() req: Request) {
-    const voucherCategoryDto = await plainToInstance(
-      VoucherCategoryDto,
-      req.body,
-    );
-    const errors = await validate(voucherCategoryDto);
+    const customerGiftDto = await plainToInstance(CustomerGiftDto, req.body);
+    const errors = await validate(customerGiftDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -30,16 +26,17 @@ export class VoucherCategoryController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.voucherCategoryService.create(voucherCategoryDto);
+    return await this.customerGiftService.create(customerGiftDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Put(':id')
   async update(@Req() req: Request) {
-    const voucherCategoryDto = await plainToInstance(VoucherCategoryDto, {
+    const customerGiftDto = await plainToInstance(CustomerGiftDto, {
       id: Number(req.params.id),
       ...req.body,
     });
-    const errors = await validate(voucherCategoryDto);
+    const errors = await validate(customerGiftDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -49,17 +46,18 @@ export class VoucherCategoryController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.voucherCategoryService.update(voucherCategoryDto);
+    return await this.customerGiftService.update(customerGiftDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Delete(':id')
   async delete(@Req() req: Request) {
-    return await this.voucherCategoryService.delete(Number(req.params.id));
+    return await this.customerGiftService.delete(Number(req.params.id));
   }
 
   @Get()
   async getAll(@Req() req: Request) {
-    return await this.voucherCategoryService.getAll(
+    return await this.customerGiftService.getAll(
       Number(req.query.page),
       Number(req.query.limit),
     );
@@ -67,6 +65,6 @@ export class VoucherCategoryController {
 
   @Get(':id')
   async getById(@Req() req: Request) {
-    return await this.voucherCategoryService.getById(Number(req.params.id));
+    return await this.customerGiftService.getById(Number(req.params.id));
   }
 }

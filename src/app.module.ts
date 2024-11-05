@@ -28,7 +28,6 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
 import { ProductModule } from './modules/product/product.module';
 import { ServiceCategoryModule } from './modules/service-category/service-category.module';
 import { ServiceModule } from './modules/service/service.module';
-import { VoucherCategoryModule } from './modules/voucher-category/voucher-category.module';
 import { VoucherModule } from './modules/voucher/voucher.module';
 import { WageModule } from './modules/wage/wage.module';
 import { WorkingTimeModule } from './modules/working-time/working-time.module';
@@ -37,6 +36,8 @@ import { EventModule } from './modules/event/event.module';
 import { DetailEventModule } from './modules/detail-event/detail-event.module';
 import { DetailServiceModule } from './modules/detail-service/detail-service.module';
 import { GiftModule } from './modules/gift/gift.module';
+import { CustomerPointModule } from './modules/customer-point/customer-point.module';
+import { CustomerGiftModule } from './modules/customer-gift/customer-gift.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 
@@ -84,7 +85,6 @@ import Employee from './entities/employee.entity';
     ProductModule,
     ServiceCategoryModule,
     ServiceModule,
-    VoucherCategoryModule,
     VoucherModule,
     WageModule,
     WorkingTimeModule,
@@ -93,6 +93,8 @@ import Employee from './entities/employee.entity';
     DetailEventModule,
     DetailServiceModule,
     GiftModule,
+    CustomerPointModule,
+    CustomerGiftModule,
   ],
   controllers: [AppController],
   providers: [

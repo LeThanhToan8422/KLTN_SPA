@@ -7,26 +7,27 @@ import {
   IsString,
 } from 'class-validator';
 
-export default class GiftDto {
+export default class CustomerGiftDto {
   @IsOptional()
   @IsNumber()
   @Expose()
   id: number;
   @IsNotEmpty()
   @IsString()
+  @IsIn(['gift', 'voucher'])
   @Expose()
-  name: string;
+  category: string;
+  @IsNotEmpty()
+  @IsString()
+  @IsIn(['used', 'notused'])
+  @Expose()
+  status: string;
   @IsNotEmpty()
   @IsNumber()
   @Expose()
-  point: number;
+  customerId: number;
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   @Expose()
-  image: string;
-  @IsNotEmpty()
-  @IsString()
-  @IsIn(['active', 'inactive'])
-  @Expose()
-  status: string;
+  giftId: number;
 }

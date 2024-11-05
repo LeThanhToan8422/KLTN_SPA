@@ -7,10 +7,6 @@ export default class VoucherDto {
   @Expose()
   id: number;
   @IsNotEmpty()
-  @IsString()
-  @Expose()
-  code: string;
-  @IsNotEmpty()
   @IsNumber()
   @Expose()
   discount: number;
@@ -23,7 +19,15 @@ export default class VoucherDto {
   @Expose()
   maximumDiscount: number;
   @IsNotEmpty()
+  @IsString()
+  @Expose()
+  expiryDate: string;
+  @IsNotEmpty()
   @IsNumber()
   @Expose()
-  voucherCategoryId: number;
+  point: number;
+  @IsNotEmpty()
+  @IsString()
+  @Expose()
+  image: string;
 }

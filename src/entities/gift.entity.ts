@@ -1,6 +1,4 @@
-import { GiftCategory } from 'src/enums/gift-category.enum';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import CustomerGift from './customer-gift.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Status } from 'src/enums/status.enum';
 
 @Entity()
@@ -10,15 +8,7 @@ export default class Gift {
   @Column()
   name: string;
   @Column()
-  content: string;
-  @Column()
   point: number;
-  @Column({
-    type: 'enum',
-    enum: GiftCategory,
-    default: GiftCategory.PRODUCT,
-  })
-  category: GiftCategory;
   @Column()
   image: string;
   @Column({
@@ -27,6 +17,4 @@ export default class Gift {
     default: Status.ACTIVE,
   })
   status: Status;
-  @OneToMany(() => CustomerGift, (c) => c.gift)
-  customerGifts: CustomerGift[];
 }

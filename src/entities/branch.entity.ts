@@ -3,6 +3,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import InternalExpense from './internal-expense.entity';
 import Appointment from './appointment.entity';
 import ConsumedProduct from './consumed-product.entity';
+import Employee from './employee.entity';
 
 @Entity()
 export default class Branch {
@@ -22,4 +23,6 @@ export default class Branch {
   appointments: Appointment[];
   @OneToMany(() => ConsumedProduct, (cp) => cp.branches)
   consumedProducts: ConsumedProduct[];
+  @OneToMany(() => Employee, (e) => e.branch)
+  employees: Employee[];
 }

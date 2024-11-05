@@ -13,6 +13,7 @@ import Wage from './Wage.entity';
 import { Status } from 'src/enums/status.enum';
 import Account from './account.entity';
 import Appointment from './appointment.entity';
+import Branch from './branch.entity';
 
 @Entity()
 export default class Employee {
@@ -53,6 +54,8 @@ export default class Employee {
   accountId: number;
   @Column()
   wageId: number;
+  @Column()
+  branchId: number;
   @OneToOne(() => Account)
   @JoinColumn({
     name: 'accountId',
@@ -67,4 +70,9 @@ export default class Employee {
     name: 'wageId',
   })
   wage: Wage;
+  @ManyToOne(() => Branch, (b) => b.employees)
+  @JoinColumn({
+    name: 'branchId',
+  })
+  branch: Branch;
 }

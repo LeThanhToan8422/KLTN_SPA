@@ -7,12 +7,18 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Customer from './customer.entity';
-import Gift from './gift.entity';
+import { CategoryGift } from 'src/enums/category-gift.enum';
 
 @Entity()
 export default class CustomerGift {
   @PrimaryGeneratedColumn()
   id: number;
+  @Column({
+    type: 'enum',
+    enum: CategoryGift,
+    default: CategoryGift.GIFT,
+  })
+  category: CategoryGift;
   @Column()
   status: StatusCustomerGift;
   @Column()
@@ -24,9 +30,4 @@ export default class CustomerGift {
     name: 'customerId',
   })
   customer: Customer;
-  @ManyToOne(() => Gift, (g) => g.customerGifts)
-  @JoinColumn({
-    name: 'giftId',
-  })
-  gift: Gift;
 }

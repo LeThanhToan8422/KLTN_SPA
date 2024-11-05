@@ -1,35 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import VoucherCategory from 'src/entities/voucher-category.entity';
+import CustomerGift from 'src/entities/customer-gift.entity';
 import CRUDRepository from 'src/repositories/crud.repository';
 import { DataSource, Repository } from 'typeorm';
-import VoucherCategoryDto from './dtos/voucher-category.dto';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
+import CustomerGiftDto from './dtos/customer-gift.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
 
 @Injectable()
-export class VoucherCategoryService {
-  private crudRepository: CRUDRepository<VoucherCategory>;
+export class CustomerGiftService {
+  private crudRepository: CRUDRepository<CustomerGift>;
   constructor(
-    @InjectRepository(VoucherCategory)
-    private readonly appointmentRepository: Repository<VoucherCategory>,
+    @InjectRepository(CustomerGift)
+    private readonly customerGiftRepository: Repository<CustomerGift>,
     private datasource: DataSource,
   ) {
-    this.crudRepository = new CRUDRepository<VoucherCategory>(
-      appointmentRepository,
+    this.crudRepository = new CRUDRepository<CustomerGift>(
+      customerGiftRepository,
     );
   }
 
-  async create(voucherCategoryDto: VoucherCategoryDto) {
+  async create(customerGiftDto: CustomerGiftDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const createdItem = await this.crudRepository.create(voucherCategoryDto);
+      const createdItem = await this.crudRepository.create(customerGiftDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(VoucherCategoryDto, createdItem)),
+        instanceToPlain(plainToInstance(CustomerGiftDto, createdItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -39,14 +39,14 @@ export class VoucherCategoryService {
     }
   }
 
-  async update(voucherCategoryDto: VoucherCategoryDto) {
+  async update(customerGiftDto: CustomerGiftDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const savedItem = await this.crudRepository.update(voucherCategoryDto);
+      const savedItem = await this.crudRepository.update(customerGiftDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(VoucherCategoryDto, savedItem)),
+        instanceToPlain(plainToInstance(CustomerGiftDto, savedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -63,7 +63,7 @@ export class VoucherCategoryService {
       const removedItem = await this.crudRepository.delete(id);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(VoucherCategoryDto, removedItem)),
+        instanceToPlain(plainToInstance(CustomerGiftDto, removedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -76,9 +76,7 @@ export class VoucherCategoryService {
   async getAll(page: number, limit: number) {
     const paginatedResult = await this.crudRepository.getAll(page, limit);
     return ResponseCustomizer.success(
-      instanceToPlain(
-        plainToInstance(VoucherCategoryDto, paginatedResult.data),
-      ),
+      instanceToPlain(plainToInstance(CustomerGiftDto, paginatedResult.data)),
       new Pagination(paginatedResult.totalItems, page, limit),
     );
   }
@@ -86,7 +84,7 @@ export class VoucherCategoryService {
   async getById(id: number) {
     const response = await this.crudRepository.getById(id);
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(VoucherCategoryDto, response)),
+      instanceToPlain(plainToInstance(CustomerGiftDto, response)),
     );
   }
 }
