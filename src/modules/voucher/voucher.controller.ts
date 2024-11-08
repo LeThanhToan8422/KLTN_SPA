@@ -52,6 +52,7 @@ export class VoucherController {
     return await this.voucherService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.voucherService.getAll(
@@ -60,6 +61,7 @@ export class VoucherController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.voucherService.getById(Number(req.params.id));

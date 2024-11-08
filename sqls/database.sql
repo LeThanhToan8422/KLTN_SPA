@@ -30,7 +30,7 @@ CREATE TABLE `account` (
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IDX_a13e2234cf22b150ea2e72fba6` (`phone`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'0329623380','$2a$10$7Vj/r.V6UzIhMfJwC8yEBu/6fKr3vLsJsAQPD04YJX9Un9JdtCmxG','employee','active'),(2,'0329623381','$2a$10$69rF8J7HKvHYXAvv71XjiehKWuf3VRlljFBt.8fky5Z.9R3mnfQf6','employee','active'),(3,'0329623382','$2a$10$ZaxWgWSz.cBqA3oD57eAbuoEN0q9zQOcQDRZMm8p3tw0tvdzuXvIu','employee','active'),(4,'0329623383','$2a$10$SrBIIgDrKkQ2dtWL/of2oujyTKhe5vWPJnHYj9BgA4wyeg6OEPw.C','employee','active'),(5,'0329623384','$2a$10$zPqQ8eFyFt35.KgjvRORd.nYMnzaQV.stvbAMsR7dv8KBsIxYgcAW','employee','active'),(6,'0329623385','$2a$10$4xFOQI7fSmZbOxBNZCv7S.FD.XZ18uQARo73ZLBQfRFoRUBHRR.9q','customer','active'),(7,'0329623386','$2a$10$/byj4vAzynanw0jpAxpT1.VDA.beN2n6ISHQH1Lvtq6syCkSJYzty','customer','active'),(8,'0329623387','$2a$10$qVFnoeWKPehlUIeKcmWPp.i64g.EFTeNekEMYB.iODeRSAOXf4RqK','customer','active'),(9,'0329623388','$2a$10$m19vqGuaQBul2.ODGNg/E.3sBwSV4ryDoGh/gcq8tRcQsbkTlp1ZK','customer','active'),(10,'0352014149','$2a$10$XJQKiomnTwOTcq8Q/k.pqOIt12JrdERyi2tkJwbuPsY3bfzaM8pha','customer','active'),(12,'0329623389','$2a$10$7Vj/r.V6UzIhMfJwC8yEBu/6fKr3vLsJsAQPD04YJX9Un9JdtCmxG','customer','active');
+INSERT INTO `account` VALUES (1,'0329623380','$2a$10$7Vj/r.V6UzIhMfJwC8yEBu/6fKr3vLsJsAQPD04YJX9Un9JdtCmxG','employee','active'),(2,'0329623381','$2a$10$69rF8J7HKvHYXAvv71XjiehKWuf3VRlljFBt.8fky5Z.9R3mnfQf6','employee','active'),(3,'0329623382','$2a$10$ZaxWgWSz.cBqA3oD57eAbuoEN0q9zQOcQDRZMm8p3tw0tvdzuXvIu','employee','active'),(4,'0329623383','$2a$10$SrBIIgDrKkQ2dtWL/of2oujyTKhe5vWPJnHYj9BgA4wyeg6OEPw.C','employee','active'),(5,'0329623384','$2a$10$zPqQ8eFyFt35.KgjvRORd.nYMnzaQV.stvbAMsR7dv8KBsIxYgcAW','employee','active'),(6,'0329623385','$2a$10$4xFOQI7fSmZbOxBNZCv7S.FD.XZ18uQARo73ZLBQfRFoRUBHRR.9q','customer','active'),(7,'0329623386','$2a$10$/byj4vAzynanw0jpAxpT1.VDA.beN2n6ISHQH1Lvtq6syCkSJYzty','customer','active'),(8,'0329623387','$2a$10$qVFnoeWKPehlUIeKcmWPp.i64g.EFTeNekEMYB.iODeRSAOXf4RqK','customer','active'),(9,'0329623388','$2a$10$m19vqGuaQBul2.ODGNg/E.3sBwSV4ryDoGh/gcq8tRcQsbkTlp1ZK','customer','active'),(10,'0352014149','$2a$10$XJQKiomnTwOTcq8Q/k.pqOIt12JrdERyi2tkJwbuPsY3bfzaM8pha','customer','active'),(12,'0329623389','$2a$10$7Vj/r.V6UzIhMfJwC8yEBu/6fKr3vLsJsAQPD04YJX9Un9JdtCmxG','customer','active'),(13,'0256398745','$2a$10$x5Xa7oVuYfMhGEVGxuDJROrYDkymWIapsZrtT0aN9E65tPf9xDxjy','employee','active'),(14,'0256398788','$2a$10$6nWsVAFb6QPodfUKNIGrIOPcIeDkFk1lJ0a.b6yQyiTyxieqKYiWi','employee','active'),(15,'0256398777','$2a$10$hij69kQ/KiA6k4IB2MlucOqlvFZ81nybu5TnIeSBdN.gi9OaX7QaS','employee','active'),(16,'0328569985','$2a$10$y/Hnbz1BtAUitdwknPrVOuR3o/Xvh3.tleW3JtobarMMH4tBAyRY6','customer','active'),(17,'0325478896','$2a$10$6HpPnNHenilhu9FQ/jxXMu/a5.7sLt/gNnLVxu6R/F01lD8A2pSBG','customer','active'),(18,'0326589975','$2a$10$deSX98j6EL0j5wl0zXTdMevIIpjZDuvimbJINH7.D1z6afbk6hc4i','employee','active');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -72,7 +72,7 @@ CREATE TABLE `appointment` (
   CONSTRAINT `FK_b6e57758a28acd843878b1f30d8` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
   CONSTRAINT `FK_c048c6004b69354f46183f93a85` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`),
   CONSTRAINT `FK_d08b7b77e0f909c6e8723f07eaa` FOREIGN KEY (`bedId`) REFERENCES `bed` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +81,7 @@ CREATE TABLE `appointment` (
 
 LOCK TABLES `appointment` WRITE;
 /*!40000 ALTER TABLE `appointment` DISABLE KEYS */;
-INSERT INTO `appointment` VALUES (2,'2024-10-19 21:00:00','services',1,1,1,1,71,'confirmed',1),(3,'2024-10-19 21:00:00','services',1,2,2,1,71,'confirmed',1),(4,'2024-10-12 21:00:00','services',1,4,4,2,71,'confirmed',1),(5,'2024-10-28 21:00:00','services',1,4,4,2,71,'confirmed',1),(6,'2024-10-29 21:00:00','services',1,4,4,2,71,'confirmed',1);
+INSERT INTO `appointment` VALUES (2,'2024-11-01 21:00:00','services',1,1,1,1,71,'finished',1),(3,'2024-11-01 21:00:00','services',1,2,2,1,71,'finished',1),(4,'2024-11-01 21:00:00','services',2,4,4,2,71,'finished',1),(5,'2024-11-01 21:00:00','services',2,4,4,2,71,'finished',1),(6,'2024-11-01 21:00:00','services',3,4,4,2,71,'finished',1),(7,'2024-11-01 21:00:00','services',3,4,2,1,74,'finished',1),(8,'2024-11-01 21:00:00','services',4,2,3,1,77,'finished',1),(9,'2024-11-01 21:00:00','services',4,3,2,1,75,'finished',1),(10,'2024-11-01 21:00:00','services',5,3,4,1,72,'finished',1);
 /*!40000 ALTER TABLE `appointment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -246,7 +246,7 @@ CREATE TABLE `customer` (
   UNIQUE KEY `IDX_03846b4bae9df80f19c76005a8` (`phone`),
   UNIQUE KEY `IDX_fdb2f3ad8115da4c7718109a6e` (`email`),
   CONSTRAINT `FK_c97c8c28cd65bdc7a3dcd26af5c` FOREIGN KEY (`accountId`) REFERENCES `account` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,8 +255,36 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'Nguyễn Thị Hiền',1,'2003-04-11','0329623385','mail5@gmail.com','HCM City','avatar.png',6),(2,'Nguyễn Thị Như',1,'2003-04-11','0329623386','mail6@gmail.com','HCM City','avatar.png',7),(3,'Nguyễn Thị Ý',1,'2003-04-11','0329623387','mail7@gmail.com','HCM City','avatar.png',8),(4,'Nguyễn Thị Quỳnh',1,'2003-04-11','0329623388','mail8@gmail.com','HCM City','avatar.png',9),(5,'Tống Thị Minh Hợp',1,'2002-06-28','0352014149','min@gmail.com','HCM City','avatar.png',10),(6,'Full Name',1,'2002-05-06','0329623358','email@gmail.com','123 Main Street','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/a670be5a-2e9c-4d8f-9b13-9157b503d9a7-HP%20ProBook%20440%20G6.jpg',12);
+INSERT INTO `customer` VALUES (1,'Nguyễn Thị Hiền',1,'2003-04-11','0329623385','mail5@gmail.com','HCM City','avatar.png',6),(2,'Nguyễn Thị Như',1,'2003-04-11','0329623386','mail6@gmail.com','HCM City','avatar.png',7),(3,'Nguyễn Thị Ý',1,'2003-04-11','0329623387','mail7@gmail.com','HCM City','avatar.png',8),(4,'Nguyễn Thị Quỳnh',1,'2003-04-11','0329623388','mail8@gmail.com','HCM City','avatar.png',9),(5,'Tống Thị Minh Hợp',1,'2002-06-28','0352014149','min@gmail.com','HCM City','avatar.png',10),(6,'Full Name',1,'2002-05-06','0329623358','email@gmail.com','123 Main Street','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/a670be5a-2e9c-4d8f-9b13-9157b503d9a7-HP%20ProBook%20440%20G6.jpg',12),(7,'Demo3',1,'2024-10-30','0328569985','demo3@gmail.com','Demo3','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/107aa029-2b64-402b-aa08-c65033109354-HP%20ProBook%20440%20G6.jpg',16),(8,'Demo4update',0,'2024-10-30','0325478896','demo4update@gmail.com','Demo4update','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/980ffa73-7a26-43bd-9ddd-384da1797c1c-logoWord.png',17);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer_gift`
+--
+
+DROP TABLE IF EXISTS `customer_gift`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customer_gift` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `category` enum('gift','voucher') NOT NULL DEFAULT 'gift',
+  `status` varchar(255) NOT NULL,
+  `customerId` int NOT NULL,
+  `giftId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_738dcd104e60f4add6ea66b80c9` (`customerId`),
+  CONSTRAINT `FK_738dcd104e60f4add6ea66b80c9` FOREIGN KEY (`customerId`) REFERENCES `customer` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_gift`
+--
+
+LOCK TABLES `customer_gift` WRITE;
+/*!40000 ALTER TABLE `customer_gift` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customer_gift` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -285,6 +313,35 @@ CREATE TABLE `detail_event` (
 LOCK TABLES `detail_event` WRITE;
 /*!40000 ALTER TABLE `detail_event` DISABLE KEYS */;
 /*!40000 ALTER TABLE `detail_event` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `detail_service`
+--
+
+DROP TABLE IF EXISTS `detail_service`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `detail_service` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `serviceId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_80b755f34e5e43f039161853eed` (`serviceId`),
+  CONSTRAINT `FK_80b755f34e5e43f039161853eed` FOREIGN KEY (`serviceId`) REFERENCES `service` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `detail_service`
+--
+
+LOCK TABLES `detail_service` WRITE;
+/*!40000 ALTER TABLE `detail_service` DISABLE KEYS */;
+INSERT INTO `detail_service` VALUES (1,'Mô tả dịch vụ','balablabalabla1','image.png',1),(2,'Mô tả dịch vụ','balablabalabla2','image.png',2),(3,'Mô tả dịch vụ','balablabalabla3','image.png',3),(4,'Mô tả dịch vụ','balablabalabla4','image.png',4),(5,'Bước 1','làm bước 1','image.png',1);
+/*!40000 ALTER TABLE `detail_service` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -337,12 +394,15 @@ CREATE TABLE `employee` (
   `image` varchar(255) NOT NULL DEFAULT 'avatar.png',
   `accountId` int NOT NULL,
   `wageId` int NOT NULL,
+  `branchId` int NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `REL_0bac95278716cdb1057c9129fd` (`accountId`),
   KEY `FK_ff517a067283daf2108a38829b7` (`wageId`),
+  KEY `FK_c36b6dc182259c56ee8c1cfecb3` (`branchId`),
   CONSTRAINT `FK_0bac95278716cdb1057c9129fdc` FOREIGN KEY (`accountId`) REFERENCES `account` (`id`),
+  CONSTRAINT `FK_c36b6dc182259c56ee8c1cfecb3` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`),
   CONSTRAINT `FK_ff517a067283daf2108a38829b7` FOREIGN KEY (`wageId`) REFERENCES `wage` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -351,7 +411,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'Lê Thanh Toàn',1,'2002-04-08','0329623389','mail@gmail.com','HCM','manager','active','image.png',1,1),(2,'Lê Thanh Tú',1,'2002-04-09','0329623381','mail1@gmail.com','HCM','employee','active','image.png',2,2),(3,'Lê Thanh Tèo',1,'2002-04-10','0329623382','mail2@gmail.com','HCM','employee','active','image.png',3,2),(4,'Lê Thanh Táo',1,'2002-04-11','0329623383','mail3@gmail.com','HCM City','employee','active','image.png',4,2),(5,'Lê Thanh Tí',1,'2002-04-10','0329623384','mail4@gmail.com','HCM City','employee','active','image.png',5,2);
+INSERT INTO `employee` VALUES (1,'Lê Thanh Toàn',1,'2002-04-08','0329623389','mail@gmail.com','HCM','manager','active','image.png',1,1,1),(2,'Lê Thanh Tú',1,'2002-04-09','0329623381','mail1@gmail.com','HCM','employee','active','image.png',2,2,1),(3,'Lê Thanh Tèo',1,'2002-04-10','0329623382','mail2@gmail.com','HCM','employee','active','image.png',3,2,1),(4,'Lê Thanh Táo',1,'2002-04-11','0329623383','mail3@gmail.com','HCM City','employee','active','image.png',4,2,1),(5,'Lê Thanh Tí',1,'2002-04-10','0329623384','mail4@gmail.com','HCM City','employee','active','image.png',5,2,1),(6,'Demoud',1,'2024-10-30','0256398745','demoud@gmail.com','Demoud','employee','active','image.png',13,2,1),(7,'Demo1',1,'2024-10-30','0256398788','demo1@gmail.com','Demo1','employee','active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/50d1ddb9-4fe1-4995-842f-b457235eedd5-HP%20ProBook%20440%20G6.jpg',14,2,1),(8,'DemoUpdate',0,'2024-10-30','0256398777','demoupdate@gmail.com','DemoUpdate','employee','active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/60d498ba-da9d-4a84-9ce3-ecfb7029b5f6-logoWord.png',15,2,1),(9,'Demo3',1,'2024-11-01','0326589975','demo3@gmail.com','demo3','employee','active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/7a470654-74ae-4158-ad4d-53c3f58f85df-logoWord.png',18,2,1);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -369,7 +429,7 @@ CREATE TABLE `events` (
   `expiryDate` datetime NOT NULL,
   `image` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -378,7 +438,35 @@ CREATE TABLE `events` (
 
 LOCK TABLES `events` WRITE;
 /*!40000 ALTER TABLE `events` DISABLE KEYS */;
+INSERT INTO `events` VALUES (1,'Kimbeautyspa','2024-11-01','2024-12-31 00:00:00','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/slide-main.png'),(2,'Làm đẹp nữa giá','2024-11-01','2024-12-31 00:00:00','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/slide-sale50.png'),(3,'trung thu','2024-11-01','2024-11-01 00:00:00','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/slide-trungthu.png');
 /*!40000 ALTER TABLE `events` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `gift`
+--
+
+DROP TABLE IF EXISTS `gift`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `gift` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `point` int NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `gift`
+--
+
+LOCK TABLES `gift` WRITE;
+/*!40000 ALTER TABLE `gift` DISABLE KEYS */;
+INSERT INTO `gift` VALUES (1,'Mặt nạ dưỡng da',10,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/matnaduongda.jpg','active'),(2,'Sửa rửa mặt',15,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/suaruamat.jpg','active'),(3,'Serum dưỡng da',15,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/serumduongda.jpg','active'),(4,'Serum dưỡng da',15,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/serumduongda1.jfif','active'),(5,'Kem dưỡng da',15,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/kemduongda.jfif','active');
+/*!40000 ALTER TABLE `gift` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -569,7 +657,7 @@ CREATE TABLE `service` (
   PRIMARY KEY (`id`),
   KEY `FK_7a1a6e2ccf2b42863d8142d306a` (`serviceCategoryId`),
   CONSTRAINT `FK_7a1a6e2ccf2b42863d8142d306a` FOREIGN KEY (`serviceCategoryId`) REFERENCES `service_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -578,7 +666,7 @@ CREATE TABLE `service` (
 
 LOCK TABLES `service` WRITE;
 /*!40000 ALTER TABLE `service` DISABLE KEYS */;
-INSERT INTO `service` VALUES (1,'Làm sạch da (Facial cleansing)',45,'active','service.png',1),(2,'Dưỡng ẩm, chống lão hóa',60,'active','service.png',1),(3,'Peel da (tẩy tế bào chết hóa học)',30,'active','service.png',1),(4,'Cấy collagen, cấy tảo',60,'active','service.png',1),(5,'Trị nám, tàn nhang',60,'active','service.png',1),(6,'Massage toàn thân',60,'active','service.png',2),(7,'Tẩy tế bào chết toàn thân',45,'active','service.png',2),(8,'Giảm béo, săn chắc cơ thể',60,'active','service.png',2),(9,'Chăm sóc da tay, chân',30,'active','service.png',2),(10,'Phun môi',60,'active','service.png',3),(11,'Điêu khắc, phun lông mày',60,'active','service.png',3),(12,'Phun mí mắt',60,'active','service.png',3),(13,'Gội đầu, hấp dầu',45,'active','service.png',4),(14,'Làm móng (manicure, pedicure)',60,'active','service.png',4),(15,'Sơn gel, đắp móng bột',60,'active','service.png',4),(16,'Tắm trắng body',60,'active','service.png',5),(17,'Tắm trắng phi thuyền',60,'active','service.png',5),(18,'Giảm béo công nghệ cao (RF, cavitation, hifu)',60,'active','service.png',6),(19,'Massage giảm béo',60,'active','service.png',6),(20,'Căng da mặt bằng chỉ',60,'active','service.png',7),(21,'Tiêm filler, botox',30,'active','service.png',7),(22,'Điều trị bằng laser (trị nám, trẻ hóa da)',45,'active','service.png',7),(23,'Service Demo',60,'active','newImage.png',1),(24,'Service Demo',60,'active','newImage.png',1),(25,'Service Demo',60,'active','ImageNew.png',1),(26,'Service Demo',60,'active','newImage.png',1);
+INSERT INTO `service` VALUES (1,'Làm sạch da (Facial cleansing)',45,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/lamsachda.jpg',1),(2,'Dưỡng ẩm, chống lão hóa',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/duongam-chonglaohoa.jpg',1),(3,'Peel da (tẩy tế bào chết hóa học)',30,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/peelda.jpg',1),(4,'Cấy collagen, cấy tảo',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/caytao.jpg',1),(5,'Trị nám, tàn nhang',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/trinam.jpg',1),(6,'Massage toàn thân',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/massage.jpg',2),(7,'Tẩy tế bào chết toàn thân',45,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/taytebao.jpg',2),(8,'Giảm béo, săn chắc cơ thể',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/giambeo.avif',2),(9,'Chăm sóc da tay, chân',30,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/chamsocdatay.jpg',2),(10,'Phun môi',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/phunmoi.jpg',3),(11,'Điêu khắc, phun lông mày',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/dieukhac.jpg',3),(12,'Phun mí mắt',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/phunmimat.jpg',3),(13,'Gội đầu, hấp dầu',45,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/image2.png',4),(14,'Làm móng (manicure, pedicure)',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/lammong.jpg',4),(15,'Sơn gel, đắp móng bột',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/songel.jpg',4),(16,'Tắm trắng body',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/tamtrangbody.jpg',5),(17,'Tắm trắng phi thuyền',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/tamtrang.jpg',5),(18,'Giảm béo công nghệ cao (RF, cavitation, hifu)',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/giambeocongnghecao.jpg',6),(19,'Massage giảm béo',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/massagegiambeo.jpg',6),(20,'Căng da mặt bằng chỉ',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/cangdabangchi.jpg',7),(21,'Tiêm filler, botox',30,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/tiemfiller.jpeg',7),(22,'Điều trị bằng laser (trị nám, trẻ hóa da)',45,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/dieutribanglaser.jpg',7),(23,'Service Demo',60,'active','newImage.png',1),(24,'Service Demo',60,'active','newImage.png',1),(25,'Service Demo',60,'active','ImageNew.png',1),(26,'Service Demo',60,'active','newImage.png',1),(27,'DemoUpdate',60,'active','https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/46d8044d-361e-4e5a-8c95-4bbb53afe344-Lenovo%20T14%20Gen%205.jpg',1);
 /*!40000 ALTER TABLE `service` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -678,15 +766,14 @@ DROP TABLE IF EXISTS `voucher`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `voucher` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) NOT NULL,
   `discount` int NOT NULL,
   `minimumOrder` int NOT NULL,
   `maximumDiscount` int NOT NULL,
-  `voucherCategoryId` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_8a7b8e07b8d66c35835368128f3` (`voucherCategoryId`),
-  CONSTRAINT `FK_8a7b8e07b8d66c35835368128f3` FOREIGN KEY (`voucherCategoryId`) REFERENCES `voucher_category` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `expiryDate` datetime NOT NULL,
+  `point` int NOT NULL,
+  `image` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -695,31 +782,8 @@ CREATE TABLE `voucher` (
 
 LOCK TABLES `voucher` WRITE;
 /*!40000 ALTER TABLE `voucher` DISABLE KEYS */;
+INSERT INTO `voucher` VALUES (1,5,500000,50000,'2024-12-31 00:00:00',10,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+5%25.png'),(2,10,500000,100000,'2024-12-31 00:00:00',15,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+10%25.png'),(3,15,500000,150000,'2024-12-31 00:00:00',20,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+15%25.png'),(4,20,1000000,400000,'2024-12-31 00:00:00',25,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+20%25.png'),(5,25,1000000,450000,'2024-12-31 00:00:00',30,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+25%25.png'),(6,30,1000000,500000,'2024-12-31 00:00:00',35,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+30%25.png'),(7,35,1500000,700000,'2024-12-31 00:00:00',40,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+35%25.png'),(8,40,1500000,750000,'2024-12-31 00:00:00',45,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+40%25.png'),(9,45,1500000,800000,'2024-12-31 00:00:00',50,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+45%25.png'),(10,50,2000000,1500000,'2024-12-31 00:00:00',55,'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/Beige+Minimalist+Beauty+Gift+Voucher+Coupon+50%25.png');
 /*!40000 ALTER TABLE `voucher` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `voucher_category`
---
-
-DROP TABLE IF EXISTS `voucher_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `voucher_category` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `image` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `voucher_category`
---
-
-LOCK TABLES `voucher_category` WRITE;
-/*!40000 ALTER TABLE `voucher_category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `voucher_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -733,9 +797,9 @@ CREATE TABLE `wage` (
   `id` int NOT NULL AUTO_INCREMENT,
   `hourlyRate` int NOT NULL,
   `effectiveDate` date NOT NULL,
-  `role` varchar(255) NOT NULL,
+  `role` enum('admin','manager','employee') NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -744,7 +808,7 @@ CREATE TABLE `wage` (
 
 LOCK TABLES `wage` WRITE;
 /*!40000 ALTER TABLE `wage` DISABLE KEYS */;
-INSERT INTO `wage` VALUES (1,50000,'2024-10-10','manage'),(2,25000,'2024-10-10','employee');
+INSERT INTO `wage` VALUES (1,50000,'2024-10-10','manager'),(2,25000,'2024-10-10','employee'),(3,75000,'2024-10-10','admin');
 /*!40000 ALTER TABLE `wage` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -782,4 +846,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-28 16:42:30
+-- Dump completed on 2024-11-08 16:26:57

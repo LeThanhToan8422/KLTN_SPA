@@ -20,6 +20,7 @@ import { validate } from 'class-validator';
 import GiftDto from './dtos/gift.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Request } from 'express';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('gift')
 export class GiftController {
@@ -88,6 +89,7 @@ export class GiftController {
     return await this.giftService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.giftService.getAll(
@@ -96,6 +98,7 @@ export class GiftController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.giftService.getById(Number(req.params.id));
