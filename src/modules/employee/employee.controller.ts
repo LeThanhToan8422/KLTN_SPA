@@ -102,6 +102,24 @@ export class EmployeeController {
     );
   }
 
+  @Public()
+  @Get('appointments')
+  async getEmployeesByDateTime(@Req() req: Request) {
+    return await this.employeeService.getEmployeesByDateTime(
+      Number(req.query.branchId),
+      req.query.dateTime + '',
+    );
+  }
+
+  @Public()
+  @Get('salary')
+  async getSalaryOfEmployeeByMonthYear(@Req() req: Request) {
+    return await this.employeeService.getSalaryOfEmployeeByMonthYear(
+      Number(req.query.month),
+      Number(req.query.year),
+    );
+  }
+
   @Get('details')
   async getById(@Req() req: Request) {
     const userDto = await plainToInstance(UserDto, req.user);

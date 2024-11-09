@@ -57,6 +57,7 @@ export class AppointmentController {
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentService.getAll(
+      Number(req.query.branchId),
       Number(req.query.page),
       Number(req.query.limit),
     );

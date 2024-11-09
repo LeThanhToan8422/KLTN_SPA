@@ -73,11 +73,17 @@ export class AppointmentService {
     }
   }
 
-  async getAll(page: number, limit: number) {
-    const paginatedResult = await this.crudRepository.getAll(page, limit);
+  async getAll(branchId: number, page: number, limit: number) {
+    const [data, totalItems] = await this.appointmentRepository.findAndCount({
+      where: {
+        branchId: branchId,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(AppoinmentDto, paginatedResult.data)),
-      new Pagination(paginatedResult.totalItems, page, limit),
+      instanceToPlain(plainToInstance(AppoinmentDto, data)),
+      new Pagination(totalItems, page, limit),
     );
   }
 

@@ -84,8 +84,22 @@ export class AccountService {
     }
   }
 
-  async getAll(page: number, limit: number) {
-    const paginatedResult = await this.crudRepository.getAll(page, limit);
+  async getAll(branchId: number, page: number, limit: number) {
+    const paginatedResult = await this.datasource.query(
+      `
+      select a.* from account as a
+      inner join employee as e on e.accountId = a.id
+      where a.type = 'employee' and e.branchId = ?
+      union
+      select a.* from account as a
+      inner join customer as c on c.accountId = a.id
+      where a.type = 'customer' and c.id in (select a.customerId from appointment as a
+      where a.branchId = ?
+      group by a.customerId)
+      limit ?,? 
+    `,
+      [branchId, branchId, (page - 1) * limit, limit],
+    );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(AccountDto, paginatedResult.data)),
       new Pagination(paginatedResult.totalItems, page, limit),

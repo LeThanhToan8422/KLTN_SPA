@@ -6,7 +6,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsPhoneNumber,
   IsString,
 } from 'class-validator';
 
@@ -52,6 +51,10 @@ export default class EmployeeDto {
   @Expose()
   status: string;
   @IsNotEmpty()
+  @IsString()
+  @Expose()
+  image: string;
+  @IsNotEmpty()
   @IsNumber()
   @Expose()
   accountId: number;
@@ -59,4 +62,8 @@ export default class EmployeeDto {
   @IsNumber()
   @Expose()
   wageId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  branchId: number;
 }

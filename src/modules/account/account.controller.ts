@@ -62,37 +62,6 @@ export class AccountController {
     const employeeDto = employee
       ? plainToInstance(EmployeeDto, employee)
       : null;
-
-    // const accountErrors = await validate(accountDto);
-    // if (accountErrors.length > 0) {
-    //   const messageErrors = accountErrors.map((e) => {
-    //     return {
-    //       property: e.property,
-    //       constraints: e.constraints,
-    //     };
-    //   });
-    //   return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
-    // }
-    // const employeeErrors = await validate(employeeDto);
-    // if (employeeErrors.length > 0) {
-    //   const messageErrors = employeeErrors.map((e) => {
-    //     return {
-    //       property: e.property,
-    //       constraints: e.constraints,
-    //     };
-    //   });
-    //   return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
-    // }
-    // const customerErrors = customerDto ? await validate(customerDto) : [];
-    // if (customerDto && customerErrors.length > 0) {
-    //   const messageErrors = customerErrors.map((e) => {
-    //     return {
-    //       property: e.property,
-    //       constraints: e.constraints,
-    //     };
-    //   });
-    //   return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
-    // }
     return await this.accountService.register(
       accountDto,
       customerDto,
@@ -147,6 +116,7 @@ export class AccountController {
   @Get()
   async getAll(@Req() req: Request) {
     return await this.accountService.getAll(
+      Number(req.query.branchId),
       Number(req.query.page),
       Number(req.query.limit),
     );
