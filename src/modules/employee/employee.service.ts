@@ -72,11 +72,17 @@ export class EmployeeService {
     }
   }
 
-  async getAll(page: number, limit: number) {
-    const paginatedResult = await this.crudRepository.getAll(page, limit);
+  async getAll(branchId: number, page: number, limit: number) {
+    const [data, totalItems] = await this.employeeRepository.findAndCount({
+      where: {
+        branchId: branchId,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(EmployeeDto, paginatedResult.data)),
-      new Pagination(paginatedResult.totalItems, page, limit),
+      instanceToPlain(plainToInstance(EmployeeDto, data)),
+      new Pagination(totalItems, page, limit),
     );
   }
 

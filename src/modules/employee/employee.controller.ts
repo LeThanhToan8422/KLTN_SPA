@@ -63,10 +63,6 @@ export class EmployeeController {
     @Body('data') data: string,
     @Param('id') id: number,
   ) {
-    console.log(id);
-    console.log(file);
-    console.log(data);
-
     const dataParse = JSON.parse(data);
     if (file) {
       dataParse.image = await this.s3Service.uploadFile(file);
@@ -97,6 +93,7 @@ export class EmployeeController {
   @Get()
   async getAll(@Req() req: Request) {
     return await this.employeeService.getAll(
+      Number(req.query.branchId),
       Number(req.query.page),
       Number(req.query.limit),
     );

@@ -54,6 +54,7 @@ export class AppointmentController {
     return await this.appointmentService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentService.getAll(

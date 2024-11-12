@@ -7,7 +7,6 @@ import { DataSource, Repository } from 'typeorm';
 import AccountDto from './dtos/account.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
-import { Pagination } from 'src/helpers/pagination';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -85,7 +84,7 @@ export class AccountService {
   }
 
   async getAll(branchId: number, page: number, limit: number) {
-    const paginatedResult = await this.datasource.query(
+    const response = await this.datasource.query(
       `
       select a.* from account as a
       inner join employee as e on e.accountId = a.id
@@ -100,9 +99,9 @@ export class AccountService {
     `,
       [branchId, branchId, (page - 1) * limit, limit],
     );
+
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(AccountDto, paginatedResult.data)),
-      new Pagination(paginatedResult.totalItems, page, limit),
+      instanceToPlain(plainToInstance(AccountDto, response)),
     );
   }
 
