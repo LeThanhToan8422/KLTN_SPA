@@ -87,4 +87,14 @@ export class CustomerPointService {
       instanceToPlain(plainToInstance(CustomerPointDto, response)),
     );
   }
+
+  async getByCustomerId(customerId: number) {
+    const customerPoints = await this.customerPointRepository.find({
+      where: { customerId },
+    });
+
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(CustomerPointDto, customerPoints)),
+    );
+  }
 }

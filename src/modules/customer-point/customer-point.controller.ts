@@ -29,7 +29,6 @@ export class CustomerPointController {
     return await this.customerPointService.create(customerPointDto);
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
   @Put(':id')
   async update(@Req() req: Request) {
     const customerPointDto = await plainToInstance(CustomerPointDto, {
@@ -66,5 +65,12 @@ export class CustomerPointController {
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.customerPointService.getById(Number(req.params.id));
+  }
+
+  @Get('customer/:customerId')
+  async getByCustomerId(@Req() req: Request) {
+    return await this.customerPointService.getByCustomerId(
+      Number(req.params.customerId),
+    );
   }
 }

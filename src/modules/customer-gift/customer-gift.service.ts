@@ -87,4 +87,14 @@ export class CustomerGiftService {
       instanceToPlain(plainToInstance(CustomerGiftDto, response)),
     );
   }
+
+  async getByCustomerId(customerId: number) {
+    const customerPoints = await this.customerGiftRepository.find({
+      where: { customerId },
+    });
+
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(CustomerGiftDto, customerPoints)),
+    );
+  }
 }

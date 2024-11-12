@@ -12,7 +12,6 @@ import CustomerGiftDto from './dtos/customer-gift.dto';
 export class CustomerGiftController {
   constructor(private readonly customerGiftService: CustomerGiftService) {}
 
-  @Roles(Role.ADMIN, Role.MANAGER)
   @Post()
   async create(@Req() req: Request) {
     const customerGiftDto = await plainToInstance(CustomerGiftDto, req.body);
@@ -66,5 +65,12 @@ export class CustomerGiftController {
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.customerGiftService.getById(Number(req.params.id));
+  }
+
+  @Get('customer/:customerId')
+  async getByCustomerId(@Req() req: Request) {
+    return await this.customerGiftService.getByCustomerId(
+      Number(req.params.customerId),
+    );
   }
 }
