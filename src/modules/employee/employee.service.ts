@@ -85,11 +85,13 @@ export class EmployeeService {
       `
       select *
       from employee as e
-      where e.status = 'active' and e.branchId = ?
+      where e.status = 'active' and e.branchId = ? and e.id in (select e.id from employee as e
+      inner join schedule as sch on e.id = sch.employeeId
+      where DATE(sch.date) = DATE(?) and (TIME(?) BETWEEN sch.checkInTime AND sch.checkOutTime))
       order by (select COUNT(*) from appointment as a
       where a.dateTime = ? and a.employeeId = e.id) ASC  
     `,
-      [branchId, dateTime],
+      [branchId, dateTime, dateTime, dateTime],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(EmployeeDto, response)),
