@@ -133,4 +133,14 @@ export class ServiceController {
       Number(req.params.serviceCategoryId),
     );
   }
+
+  @Public()
+  @Get('revenues/:branchId')
+  async getRevenueOfServiceByDate(@Req() req: Request) {
+    return await this.serviceService.getRevenueOfServiceByDate(
+      Number(req.query.month),
+      Number(req.query.year),
+      Number(req.params.branchId),
+    );
+  }
 }

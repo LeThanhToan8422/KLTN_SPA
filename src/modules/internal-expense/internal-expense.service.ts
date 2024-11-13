@@ -83,6 +83,19 @@ export class InternalExpenseService {
     );
   }
 
+  async getExpenseByMonthYear(month: number, year: number, branchId: number) {
+    const response = await this.datasource.query(
+      `
+      select * from internal_expense as ie
+      where YEAR(ie.date) = ? and MONTH(ie.date) = ? and ie.branchId = ?
+    `,
+      [year, month, branchId],
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(InternalExpenseDto, response)),
+    );
+  }
+
   async getById(id: number) {
     const response = await this.crudRepository.getById(id);
     return ResponseCustomizer.success(

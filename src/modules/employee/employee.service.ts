@@ -123,7 +123,11 @@ export class EmployeeService {
     );
   }
 
-  async getSalaryOfEmployeeByMonthYear(month: number, year: number) {
+  async getSalaryOfEmployeeByMonthYear(
+    month: number,
+    year: number,
+    branchId: number,
+  ) {
     const response = await this.datasource.query(
       `
       select em.id, em.fullName, em.role, 
@@ -136,10 +140,10 @@ export class EmployeeService {
       from schedule as sch
       inner join employee as em on em.id = sch.employeeId
       where sch.checkInTime IS NOT NULL and sch.checkOutTime IS NOT NULL
-      and YEAR(sch.date) = ? and MONTH(sch.date) = ?
+      and YEAR(sch.date) = ? and MONTH(sch.date) = ? and em.branchId = ?
       group by sch.employeeId  
     `,
-      [year, month, year, month],
+      [year, month, year, month, branchId],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(EmployeeSalaryDto, response)),

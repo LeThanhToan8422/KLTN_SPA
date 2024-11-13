@@ -11,6 +11,7 @@ import Branch from './branch.entity';
 export default class InternalExpense {
   @PrimaryGeneratedColumn()
   id: number;
+  @Column()
   expense: number;
   @Column()
   content: string;

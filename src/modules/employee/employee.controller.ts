@@ -109,11 +109,12 @@ export class EmployeeController {
   }
 
   @Public()
-  @Get('salary')
+  @Get('salary/:branchId')
   async getSalaryOfEmployeeByMonthYear(@Req() req: Request) {
     return await this.employeeService.getSalaryOfEmployeeByMonthYear(
       Number(req.query.month),
       Number(req.query.year),
+      Number(req.params.branchId),
     );
   }
 

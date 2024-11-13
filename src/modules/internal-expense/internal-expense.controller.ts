@@ -65,6 +65,16 @@ export class InternalExpenseController {
     );
   }
 
+  @Public()
+  @Get('expense/:branchId')
+  async getExpenseByMonthYear(@Req() req: Request) {
+    return await this.internalExpenseService.getExpenseByMonthYear(
+      Number(req.query.month),
+      Number(req.query.year),
+      Number(req.params.branchId),
+    );
+  }
+
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.internalExpenseService.getById(Number(req.params.id));

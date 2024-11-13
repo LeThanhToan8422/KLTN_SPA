@@ -155,4 +155,26 @@ export class ServiceService {
       );
     }
   }
+
+  async getRevenueOfServiceByDate(
+    month: number,
+    year: number,
+    branchId: number,
+  ) {
+    const response = await this.datasource.query(
+      `
+      select s.id, s.name, SUM(pr.specialPrice) as revenue, COUNT(*) as quantities from appointment as a
+      inner join prices as pr on pr.foreignKeyId = a.serviceOrTreatmentId
+      inner join service as s on s.id = a.serviceOrTreatmentId
+      where YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
+      and a.status = 'finished' and a.branchId = ?
+      and pr.type = 'service' and s.status = 'active'
+      group by a.serviceOrTreatmentId
+    `,
+      [year, month, branchId],
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ServiceDto, response)),
+    );
+  }
 }

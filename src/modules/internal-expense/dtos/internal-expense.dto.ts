@@ -7,6 +7,10 @@ export default class InternalExpenseDto {
   @Expose()
   id: number;
   @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  expense: number;
+  @IsNotEmpty()
   @IsString()
   @Expose()
   content: string;
