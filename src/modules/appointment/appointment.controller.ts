@@ -49,6 +49,15 @@ export class AppointmentController {
   }
 
   @Public()
+  @Put('status/:appointmentId')
+  async updateStatus(@Req() req: Request) {
+    return await this.appointmentService.updateStatus(
+      Number(req.params.id),
+      req.query.status + '',
+    );
+  }
+
+  @Public()
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.appointmentService.delete(Number(req.params.id));

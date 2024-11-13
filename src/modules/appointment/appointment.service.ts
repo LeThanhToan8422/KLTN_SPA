@@ -8,6 +8,7 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
+import { StatusAppoiment } from 'src/enums/status-appointment.enum';
 
 @Injectable()
 export class AppointmentService {
@@ -100,6 +101,25 @@ export class AppointmentService {
     });
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(AppoinmentDto, appointments)),
+    );
+  }
+
+  async updateStatus(id: number, status: string) {
+    const founded = await this.appointmentRepository.findOne({
+      where: { id },
+    });
+    if (status === 'confirmed') {
+      founded.status = StatusAppoiment.CONFIRMED;
+    } else if (status === 'performing') {
+      founded.status = StatusAppoiment.PERFORMING;
+    } else if (status === 'finished') {
+      founded.status = StatusAppoiment.FINISHED;
+    } else if (status === 'cancelled') {
+      founded.status = StatusAppoiment.CANCELED;
+    }
+    const response = await this.appointmentRepository.save(founded);
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(AppoinmentDto, response)),
     );
   }
 }
