@@ -18,11 +18,11 @@ export default class CustomerDto {
   @IsString()
   @Expose()
   fullName: string;
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
   @Expose()
   gender: boolean;
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Expose()
   dob: string;
@@ -31,16 +31,16 @@ export default class CustomerDto {
   @IsPhoneNumber('VN')
   @Expose()
   phone: string;
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @IsEmail()
   @Expose()
   email: string;
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Expose()
   address: string;
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Expose()
   accountId: number;

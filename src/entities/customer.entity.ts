@@ -17,7 +17,9 @@ export default class Customer {
   id: number;
   @Column()
   fullName: string;
-  @Column()
+  @Column({
+    default: false,
+  })
   gender: boolean;
   @Column({
     type: 'date',
@@ -29,16 +31,21 @@ export default class Customer {
   })
   phone: string;
   @Column({
-    unique: true,
+    // unique: true,
+    default: null,
   })
   email: string;
-  @Column()
+  @Column({
+    default: null,
+  })
   address: string;
   @Column({
     default: 'avatar.png',
   })
   image: string;
-  @Column()
+  @Column({
+    default: null,
+  })
   accountId: number;
   @OneToOne(() => Account)
   @JoinColumn({

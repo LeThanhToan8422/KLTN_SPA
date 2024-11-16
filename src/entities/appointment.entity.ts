@@ -15,6 +15,7 @@ import { CategoryAppointment } from 'src/enums/category-appointment.enum';
 import Employee from './employee.entity';
 import Bed from './bed.entity';
 import Bonus from './bonus.entity';
+import AppointmentDetail from './appointment-detail.entity';
 
 @Entity()
 export default class Appointment {
@@ -36,6 +37,10 @@ export default class Appointment {
     default: CategoryAppointment.SERVICE,
   })
   category: CategoryAppointment;
+  @Column({
+    default: 0,
+  })
+  expense: number;
   @Column()
   serviceOrTreatmentId: number;
   @Column()
@@ -75,6 +80,8 @@ export default class Appointment {
   bonus: Bonus;
   @OneToMany(() => AppointmentService, (as) => as.appointment)
   appointmentServices: AppointmentService[];
+  @OneToMany(() => AppointmentDetail, (ad) => ad.appointment)
+  appointmentDetails: AppointmentDetail[];
 
   @AfterInsert()
   insertBonusPointHistory() {

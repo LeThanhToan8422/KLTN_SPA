@@ -10,6 +10,7 @@ import Room from './room.entity';
 import AppointmentService from './details-appointment.entity';
 import { StatusBed } from 'src/enums/status-bed.enum';
 import Appointment from './appointment.entity';
+import AppointmentDetail from './appointment-detail.entity';
 
 @Entity()
 export default class Bed {
@@ -30,4 +31,6 @@ export default class Bed {
   appointmentServices: AppointmentService[];
   @OneToMany(() => Appointment, (a) => a.bed)
   appointments: Appointment[];
+  @OneToMany(() => AppointmentDetail, (a) => a.bed)
+  appointmentDetails: AppointmentDetail[];
 }

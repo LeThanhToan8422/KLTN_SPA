@@ -6,6 +6,7 @@ import { Public } from 'src/decorators/public.decorator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { AppointmentService } from './appointment.service';
 import AppoinmentDto from './dtos/appoiment.dto';
+import CustomerDto from '../customer/dtos/customer.dto';
 
 @Controller('appointment')
 export class AppointmentController {
@@ -14,7 +15,27 @@ export class AppointmentController {
   @Public()
   @Post()
   async create(@Req() req: Request) {
-    const appointmentDto = await plainToInstance(AppoinmentDto, req.body);
+    const { fullName, phone, ...appointment } = req.body;
+    let customerDto = null;
+    if (fullName && phone) {
+      customerDto = await plainToInstance(CustomerDto, {
+        fullName: fullName,
+        phone: phone,
+      });
+      const errorss = await validate(customerDto);
+      if (errorss.length > 0) {
+        const messageErrorss = errorss.map((e) => {
+          return {
+            property: e.property,
+            constraints: e.constraints,
+          };
+        });
+        return ErrorCustomizer.BadRequestError(
+          JSON.stringify(messageErrorss[0]),
+        );
+      }
+    }
+    const appointmentDto = await plainToInstance(AppoinmentDto, appointment);
     const errors = await validate(appointmentDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
@@ -25,7 +46,7 @@ export class AppointmentController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.appointmentService.create(appointmentDto);
+    return await this.appointmentService.create(appointmentDto, customerDto);
   }
 
   @Public()
@@ -49,10 +70,10 @@ export class AppointmentController {
   }
 
   @Public()
-  @Put('status/:appointmentId')
+  @Post('status/:appointmentId')
   async updateStatus(@Req() req: Request) {
     return await this.appointmentService.updateStatus(
-      Number(req.params.id),
+      Number(req.params.appointmentId),
       req.query.status + '',
     );
   }

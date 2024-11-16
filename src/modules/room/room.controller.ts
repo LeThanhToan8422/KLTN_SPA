@@ -64,4 +64,10 @@ export class RoomController {
   async getById(@Req() req: Request) {
     return await this.roomService.getById(Number(req.params.id));
   }
+
+  @Public()
+  @Get('demo/xss')
+  async DemoXSS() {
+    return await this.roomService.DemoXSS();
+  }
 }

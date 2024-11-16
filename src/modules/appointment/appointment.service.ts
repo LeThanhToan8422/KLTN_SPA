@@ -9,6 +9,8 @@ import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
 import { StatusAppoiment } from 'src/enums/status-appointment.enum';
+import CustomerDto from '../customer/dtos/customer.dto';
+import { CustomerService } from '../customer/customer.service';
 
 @Injectable()
 export class AppointmentService {
@@ -16,6 +18,7 @@ export class AppointmentService {
   constructor(
     @InjectRepository(Appointment)
     private readonly appointmentRepository: Repository<Appointment>,
+    private readonly customerService: CustomerService,
     private datasource: DataSource,
   ) {
     this.crudRepository = new CRUDRepository<Appointment>(
@@ -23,10 +26,17 @@ export class AppointmentService {
     );
   }
 
-  async create(appointmentDto: AppoinmentDto) {
+  async create(appointmentDto: AppoinmentDto, customerDto: CustomerDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
+      if (customerDto) {
+        const insertedCustomer = await this.customerService.create(customerDto);
+        appointmentDto.customerId = plainToInstance(
+          CustomerDto,
+          insertedCustomer.data,
+        ).id;
+      }
       const createdItem = await this.crudRepository.create(appointmentDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(

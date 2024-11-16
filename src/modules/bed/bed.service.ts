@@ -96,12 +96,12 @@ export class BedService {
       `
       select * from bed as b
       where b.id not in (
-        select bd.id from appointment as ap
-        inner join bed as bd on bd.id = ap.bedId
-        inner join service as s on s.id = ap.serviceOrTreatmentId
-        where ap.branchId = ? and ap.serviceOrTreatmentId = ? and ap.dateTime = ?
-        group by bd.id
-        having SUM(s.duration) >= 60
+        select a.bedId from appointment as a
+        where a.branchId = ?
+          and a.serviceOrTreatmentId = ?
+        and a.dateTime = ?
+        and a.category = 'services'
+        
       ) and b.roomId = ?`,
       [bId, sId, date, roomId],
     );
