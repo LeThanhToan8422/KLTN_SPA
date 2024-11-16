@@ -1,7 +1,7 @@
 export enum StatusAppoiment {
-  NOTCOMFIRM = 'not_comfirm',
   CONFIRMED = 'confirmed',
-  PERFORMING = 'performing',
+  IMPLEMENT = 'implement',
   FINISHED = 'finished',
-  CANCELED = 'cancelled',
+  PAID = 'paid',
+  CANCELED = 'canceled',
 }

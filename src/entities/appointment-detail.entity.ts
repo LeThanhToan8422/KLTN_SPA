@@ -20,7 +20,9 @@ export default class AppointmentDetail {
     default: CategoryAppointment.SERVICE,
   })
   category: CategoryAppointment;
-  @Column()
+  @Column({
+    default: 0,
+  })
   expense: number;
   @Column()
   foreignKeyId: number;

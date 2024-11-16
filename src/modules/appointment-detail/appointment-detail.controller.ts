@@ -1,21 +1,26 @@
 import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
-import { WorkingTimeService } from './working-time.service';
+import { AppointmentDetailService } from './appointment-detail.service';
 import { Public } from 'src/decorators/public.decorator';
+import { Request } from 'express';
 import { plainToInstance } from 'class-transformer';
-import WorkingTimeDto from './dtos/working-time.dto';
+import AppoinmentDetailDto from './dtos/appointment-detail.dto';
 import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
-import { Request } from 'express';
 
-@Controller('working-time')
-export class WorkingTimeController {
-  constructor(private readonly workingTimeService: WorkingTimeService) {}
+@Controller('appointment-detail')
+export class AppointmentDetailController {
+  constructor(
+    private readonly appointmentDetailService: AppointmentDetailService,
+  ) {}
 
   @Public()
   @Post()
   async create(@Req() req: Request) {
-    const workingTimeDto = await plainToInstance(WorkingTimeDto, req.body);
-    const errors = await validate(workingTimeDto);
+    const appoinmentDetailDto = await plainToInstance(
+      AppoinmentDetailDto,
+      req.body,
+    );
+    const errors = await validate(appoinmentDetailDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -25,16 +30,17 @@ export class WorkingTimeController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.workingTimeService.create(workingTimeDto);
+    return await this.appointmentDetailService.create(appoinmentDetailDto);
   }
 
+  @Public()
   @Put(':id')
   async update(@Req() req: Request) {
-    const workingTimeDto = await plainToInstance(WorkingTimeDto, {
+    const appoinmentDetailDto = await plainToInstance(AppoinmentDetailDto, {
       id: Number(req.params.id),
       ...req.body,
     });
-    const errors = await validate(workingTimeDto);
+    const errors = await validate(appoinmentDetailDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
         return {
@@ -44,18 +50,20 @@ export class WorkingTimeController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.workingTimeService.update(workingTimeDto);
+    return await this.appointmentDetailService.update(appoinmentDetailDto);
   }
 
+  @Public()
   @Delete(':id')
   async delete(@Req() req: Request) {
-    return await this.workingTimeService.delete(Number(req.params.id));
+    return await this.appointmentDetailService.delete(Number(req.params.id));
   }
 
   @Public()
   @Get()
   async getAll(@Req() req: Request) {
-    return await this.workingTimeService.getAll(
+    return await this.appointmentDetailService.getAll(
+      Number(req.query.branchId),
       Number(req.query.page),
       Number(req.query.limit),
     );
@@ -64,17 +72,6 @@ export class WorkingTimeController {
   @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
-    return await this.workingTimeService.getById(Number(req.params.id));
-  }
-
-  @Public()
-  @Get('service/times')
-  async getWorkingTimeByServiceIdAndDate(@Req() req: Request) {
-    const { branchId, roomId, date } = req.query;
-    return await this.workingTimeService.getWorkingTimeByServiceIdAndDate(
-      Number(branchId),
-      Number(roomId),
-      date + '',
-    );
+    return await this.appointmentDetailService.getById(Number(req.params.id));
   }
 }

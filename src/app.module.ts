@@ -38,6 +38,7 @@ import { DetailServiceModule } from './modules/detail-service/detail-service.mod
 import { GiftModule } from './modules/gift/gift.module';
 import { CustomerPointModule } from './modules/customer-point/customer-point.module';
 import { CustomerGiftModule } from './modules/customer-gift/customer-gift.module';
+import { AppointmentDetailModule } from './modules/appointment-detail/appointment-detail.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 
@@ -95,6 +96,7 @@ import Employee from './entities/employee.entity';
     GiftModule,
     CustomerPointModule,
     CustomerGiftModule,
+    AppointmentDetailModule,
   ],
   controllers: [AppController],
   providers: [

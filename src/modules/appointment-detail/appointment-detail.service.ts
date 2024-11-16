@@ -1,33 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import Bed from 'src/entities/bed.entity';
+import AppointmentDetail from 'src/entities/appointment-detail.entity';
 import CRUDRepository from 'src/repositories/crud.repository';
 import { DataSource, Repository } from 'typeorm';
-import BedDto from './dtos/bed.dto';
+import AppoinmentDetailDto from './dtos/appointment-detail.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
 
 @Injectable()
-export class BedService {
-  private crudRepository: CRUDRepository<Bed>;
+export class AppointmentDetailService {
+  private crudRepository: CRUDRepository<AppointmentDetail>;
   constructor(
-    @InjectRepository(Bed)
-    private readonly bedRepository: Repository<Bed>,
+    @InjectRepository(AppointmentDetail)
+    private readonly appointmentDetailRepository: Repository<AppointmentDetail>,
     private datasource: DataSource,
   ) {
-    this.crudRepository = new CRUDRepository<Bed>(bedRepository);
+    this.crudRepository = new CRUDRepository<AppointmentDetail>(
+      appointmentDetailRepository,
+    );
   }
 
-  async create(bedDto: BedDto) {
+  async create(appointmenDetailtDto: AppoinmentDetailDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const createdItem = await this.crudRepository.create(bedDto);
+      const createdItem =
+        await this.crudRepository.create(appointmenDetailtDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BedDto, createdItem)),
+        instanceToPlain(plainToInstance(AppoinmentDetailDto, createdItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -37,14 +40,14 @@ export class BedService {
     }
   }
 
-  async update(bedDto: BedDto) {
+  async update(appointmenDetailtDto: AppoinmentDetailDto) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
-      const savedItem = await this.crudRepository.update(bedDto);
+      const savedItem = await this.crudRepository.update(appointmenDetailtDto);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BedDto, savedItem)),
+        instanceToPlain(plainToInstance(AppoinmentDetailDto, savedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -61,7 +64,7 @@ export class BedService {
       const removedItem = await this.crudRepository.delete(id);
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(BedDto, removedItem)),
+        instanceToPlain(plainToInstance(AppoinmentDetailDto, removedItem)),
       );
     } catch (error) {
       await queryRunner.rollbackTransaction();
@@ -71,36 +74,25 @@ export class BedService {
     }
   }
 
-  async getAll(page: number, limit: number) {
-    const paginatedResult = await this.crudRepository.getAll(page, limit);
+  async getAll(appointmentId: number, page: number, limit: number) {
+    const [data, totalItems] =
+      await this.appointmentDetailRepository.findAndCount({
+        where: {
+          appointmentId: appointmentId,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BedDto, paginatedResult.data)),
-      new Pagination(paginatedResult.totalItems, page, limit),
+      instanceToPlain(plainToInstance(AppoinmentDetailDto, data)),
+      new Pagination(totalItems, page, limit),
     );
   }
 
   async getById(id: number) {
     const response = await this.crudRepository.getById(id);
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BedDto, response)),
-    );
-  }
-
-  async getBedsByServiceAndDate(bId: number, date: string, roomId: number) {
-    const response = await this.datasource.query(
-      `
-      select * from bed as b
-      where b.id not in (
-        select ad.bedId from appointment as a
-        inner join appointment_detail as ad on a.id = ad.appointmentId
-        where ad.status = 'confirmed' and ad.category = 'services'
-        and a.branchId = ? and a.dateTime = ?
-      ) and b.roomId = ?
-      `,
-      [bId, date, roomId],
-    );
-    return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(BedDto, response)),
+      instanceToPlain(plainToInstance(AppoinmentDetailDto, response)),
     );
   }
 }

@@ -90,29 +90,26 @@ export class WorkingTimeService {
 
   async getWorkingTimeByServiceIdAndDate(
     bId: number,
-    sId: number,
+    roomId: number,
     date: string,
   ) {
     const response = await this.datasource.query(
-      `select * from working_time as wt
-      where wt.status = 'active' and wt.time not in (
-        select DATE_FORMAT(a.dateTime, '%H:%i') as times from appointment as a
-        inner join service as s on s.id = a.serviceOrTreatmentId
-        where a.status = 'confirmed' and a.branchId = ? and a.serviceOrTreatmentId = ? and a.dateTime = ?
-        and (
-          select COUNT(*) from bed as b
-          where b.id not in (
-            select bd.id from appointment as ap
-            inner join bed as bd on bd.id = ap.bedId
-            inner join service as s on s.id = ap.serviceOrTreatmentId
-            where ap.serviceOrTreatmentId = a.serviceOrTreatmentId and ap.dateTime = a.dateTime
-            group by bd.id
-            having SUM(s.duration) >= 60
-          )
-        ) <= 0
-        group by times
-      )`,
-      [bId, sId, date],
+      `
+      select * from working_time as wt
+      where wt.time not in (
+        select DATE_FORMAT(a.dateTime, '%H:%i')
+        from appointment as a
+        inner join appointment_detail ad on a.id = ad.appointmentId
+        inner join service as s on s.id = ad.foreignKeyId
+        inner join service_category as sc on sc.id = s.serviceCategoryId
+        where a.branchId = ? and a.dateTime = ?
+        and ad.status = 'confirmed' and ad.category = 'services'
+        and sc.roomId = ?
+        group by a.dateTime
+        having COUNT(*) = (select COUNT(*) from bed as b where b.roomId = ?)
+      )
+      `,
+      [bId, date, roomId, roomId],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(WorkingTimeDto, response)),

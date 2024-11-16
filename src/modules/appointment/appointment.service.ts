@@ -1,3 +1,4 @@
+import { AppointmentDetailService } from './../appointment-detail/appointment-detail.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Appointment from 'src/entities/appointment.entity';
@@ -8,9 +9,9 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
-import { StatusAppoiment } from 'src/enums/status-appointment.enum';
 import CustomerDto from '../customer/dtos/customer.dto';
 import { CustomerService } from '../customer/customer.service';
+import AppointmentDetailDto from '../appointment-detail/dtos/appointment-detail.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -19,6 +20,7 @@ export class AppointmentService {
     @InjectRepository(Appointment)
     private readonly appointmentRepository: Repository<Appointment>,
     private readonly customerService: CustomerService,
+    private readonly appointmentDetailService: AppointmentDetailService,
     private datasource: DataSource,
   ) {
     this.crudRepository = new CRUDRepository<Appointment>(
@@ -26,22 +28,34 @@ export class AppointmentService {
     );
   }
 
-  async create(appointmentDto: AppoinmentDto, customerDto: CustomerDto) {
+  async create(
+    appointmentDto: AppoinmentDto,
+    customerDto: CustomerDto,
+    appointmentDetailDto: AppointmentDetailDto,
+  ) {
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {
       if (customerDto) {
         const insertedCustomer = await this.customerService.create(customerDto);
-        appointmentDto.customerId = plainToInstance(
+        appointmentDto.customerId = await plainToInstance(
           CustomerDto,
           insertedCustomer.data,
         ).id;
       }
       const createdItem = await this.crudRepository.create(appointmentDto);
+      let result = null;
+      if (createdItem) {
+        result = await plainToInstance(AppoinmentDto, createdItem);
+        appointmentDetailDto.appointmentId = result.id;
+      }
+      const response =
+        await this.appointmentDetailService.create(appointmentDetailDto);
       await queryRunner.commitTransaction();
-      return ResponseCustomizer.success(
-        instanceToPlain(plainToInstance(AppoinmentDto, createdItem)),
-      );
+      return ResponseCustomizer.success({
+        appointment: result,
+        details: response.data,
+      });
     } catch (error) {
       await queryRunner.rollbackTransaction();
       return ResponseCustomizer.error(
@@ -111,25 +125,6 @@ export class AppointmentService {
     });
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(AppoinmentDto, appointments)),
-    );
-  }
-
-  async updateStatus(id: number, status: string) {
-    const founded = await this.appointmentRepository.findOne({
-      where: { id },
-    });
-    if (status === 'confirmed') {
-      founded.status = StatusAppoiment.CONFIRMED;
-    } else if (status === 'performing') {
-      founded.status = StatusAppoiment.PERFORMING;
-    } else if (status === 'finished') {
-      founded.status = StatusAppoiment.FINISHED;
-    } else if (status === 'cancelled') {
-      founded.status = StatusAppoiment.CANCELED;
-    }
-    const response = await this.appointmentRepository.save(founded);
-    return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(AppoinmentDto, response)),
     );
   }
 }

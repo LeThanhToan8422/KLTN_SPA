@@ -7,6 +7,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { AppointmentService } from './appointment.service';
 import AppoinmentDto from './dtos/appoiment.dto';
 import CustomerDto from '../customer/dtos/customer.dto';
+import AppoinmentDetailDto from '../appointment-detail/dtos/appointment-detail.dto';
 
 @Controller('appointment')
 export class AppointmentController {
@@ -15,7 +16,16 @@ export class AppointmentController {
   @Public()
   @Post()
   async create(@Req() req: Request) {
-    const { fullName, phone, ...appointment } = req.body;
+    const {
+      fullName,
+      phone,
+      status,
+      expense,
+      category,
+      foreignKeyId,
+      bedId,
+      ...appointment
+    } = req.body;
     let customerDto = null;
     if (fullName && phone) {
       customerDto = await plainToInstance(CustomerDto, {
@@ -35,6 +45,24 @@ export class AppointmentController {
         );
       }
     }
+    const appointmentDetailDto = await plainToInstance(AppoinmentDetailDto, {
+      status,
+      expense,
+      category,
+      foreignKeyId,
+      bedId,
+    });
+    const errorss = await validate(customerDto);
+    if (errorss.length > 0) {
+      const messageErrorss = errorss.map((e) => {
+        return {
+          property: e.property,
+          constraints: e.constraints,
+        };
+      });
+      return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrorss[0]));
+    }
+
     const appointmentDto = await plainToInstance(AppoinmentDto, appointment);
     const errors = await validate(appointmentDto);
     if (errors.length > 0) {
@@ -46,7 +74,11 @@ export class AppointmentController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
-    return await this.appointmentService.create(appointmentDto, customerDto);
+    return await this.appointmentService.create(
+      appointmentDto,
+      customerDto,
+      appointmentDetailDto,
+    );
   }
 
   @Public()
@@ -67,15 +99,6 @@ export class AppointmentController {
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
     return await this.appointmentService.update(appointmentDto);
-  }
-
-  @Public()
-  @Post('status/:appointmentId')
-  async updateStatus(@Req() req: Request) {
-    return await this.appointmentService.updateStatus(
-      Number(req.params.appointmentId),
-      req.query.status + '',
-    );
   }
 
   @Public()

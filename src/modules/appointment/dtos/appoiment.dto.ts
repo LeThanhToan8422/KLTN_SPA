@@ -1,11 +1,5 @@
 import { Expose } from 'class-transformer';
-import {
-  IsIn,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export default class AppoinmentDto {
   @IsOptional()
@@ -16,24 +10,6 @@ export default class AppoinmentDto {
   @IsString()
   @Expose()
   dateTime: string;
-  @IsNotEmpty()
-  @IsString()
-  @IsIn(['not_comfirm', 'confirmed', 'performing', 'finished', 'cancelled'])
-  @Expose()
-  status: string;
-  @IsNotEmpty()
-  @IsString()
-  @IsIn(['services', 'treatments', 'products'])
-  @Expose()
-  category: string;
-  @IsOptional()
-  @IsNumber()
-  @Expose()
-  expense: number;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  serviceOrTreatmentId: number;
   @IsNotEmpty()
   @IsNumber()
   @Expose()
@@ -46,4 +22,8 @@ export default class AppoinmentDto {
   @IsNumber()
   @Expose()
   branchId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  bonusId: number;
 }

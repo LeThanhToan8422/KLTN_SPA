@@ -1,8 +1,6 @@
-import { StatusAppoiment } from 'src/enums/status-appointment.enum';
 import Customer from './customer.entity';
 import Branch from './branch.entity';
 import {
-  AfterInsert,
   Column,
   Entity,
   JoinColumn,
@@ -11,9 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import AppointmentService from './details-appointment.entity';
-import { CategoryAppointment } from 'src/enums/category-appointment.enum';
 import Employee from './employee.entity';
-import Bed from './bed.entity';
 import Bonus from './bonus.entity';
 import AppointmentDetail from './appointment-detail.entity';
 
@@ -25,24 +21,6 @@ export default class Appointment {
     type: 'datetime',
   })
   dateTime: Date;
-  @Column({
-    type: 'enum',
-    enum: StatusAppoiment,
-    default: StatusAppoiment.CONFIRMED,
-  })
-  status: StatusAppoiment;
-  @Column({
-    type: 'enum',
-    enum: CategoryAppointment,
-    default: CategoryAppointment.SERVICE,
-  })
-  category: CategoryAppointment;
-  @Column({
-    default: 0,
-  })
-  expense: number;
-  @Column()
-  serviceOrTreatmentId: number;
   @Column()
   employeeId: number;
   @Column()
@@ -50,19 +28,12 @@ export default class Appointment {
   @Column()
   branchId: number;
   @Column()
-  bedId: number;
-  @Column()
   bonusId: number;
   @ManyToOne(() => Employee, (e) => e.appointments)
   @JoinColumn({
     name: 'employeeId',
   })
   employee: Employee;
-  @ManyToOne(() => Bed, (b) => b.appointments)
-  @JoinColumn({
-    name: 'bedId',
-  })
-  bed: Bed;
   @ManyToOne(() => Customer, (c) => c.appointments)
   @JoinColumn({
     name: 'customerId',
@@ -82,9 +53,4 @@ export default class Appointment {
   appointmentServices: AppointmentService[];
   @OneToMany(() => AppointmentDetail, (ad) => ad.appointment)
   appointmentDetails: AppointmentDetail[];
-
-  @AfterInsert()
-  insertBonusPointHistory() {
-    console.log(this.customerId, this.serviceOrTreatmentId);
-  }
 }

@@ -72,10 +72,9 @@ export class BedController {
   @Public()
   @Get('service/beds')
   async getBedsByServiceAndDate(@Req() req: Request) {
-    const { branchId, serviceId, date, roomId } = req.query;
+    const { branchId, date, roomId } = req.query;
     return await this.bedService.getBedsByServiceAndDate(
       Number(branchId),
-      Number(serviceId),
       date + '',
       Number(roomId),
     );
