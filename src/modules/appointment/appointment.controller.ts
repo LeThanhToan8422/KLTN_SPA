@@ -26,10 +26,8 @@ export class AppointmentController {
       bedId,
       ...appointment
     } = req.body;
-    console.log(req.body);
-
     let customerDto = null;
-    if (fullName && phone) {
+    if (!req.body.customerId) {
       customerDto = await plainToInstance(CustomerDto, {
         fullName: fullName,
         phone: phone,
