@@ -63,9 +63,7 @@ export class AppointmentDetailController {
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentDetailService.getAll(
-      Number(req.query.branchId),
-      Number(req.query.page),
-      Number(req.query.limit),
+      Number(req.query.appointmentId),
     );
   }
 

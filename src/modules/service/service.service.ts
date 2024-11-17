@@ -161,13 +161,14 @@ export class ServiceService {
   ) {
     const response = await this.datasource.query(
       `
-      select s.id, s.name, SUM(pr.specialPrice) as revenue, COUNT(*) as quantities from appointment as a
-      inner join prices as pr on pr.foreignKeyId = a.serviceOrTreatmentId
-      inner join service as s on s.id = a.serviceOrTreatmentId
+      select s.id, s.name, SUM(p.specialPrice) as revenue, COUNT(*) as quantities from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      inner join prices as p on p.foreignKeyId = ad.foreignKeyId
+      inner join service as s on s.id = ad.appointmentId
       where YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
-      and a.status = 'finished' and a.branchId = ?
-      and pr.type = 'service' and s.status = 'active'
-      group by a.serviceOrTreatmentId
+      and a.branchId = ? and ad.status = 'finished' 
+      and ad.category = 'services' and p.type = 'service'
+      group by ad.foreignKeyId
     `,
       [year, month, branchId],
     );
