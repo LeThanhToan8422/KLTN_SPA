@@ -38,6 +38,8 @@ export class AppointmentService {
     try {
       if (customerDto) {
         const insertedCustomer = await this.customerService.create(customerDto);
+        console.log(insertedCustomer);
+
         appointmentDto.customerId = await plainToInstance(
           CustomerDto,
           insertedCustomer.data,
