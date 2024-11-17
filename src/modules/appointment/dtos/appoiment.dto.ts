@@ -14,7 +14,7 @@ export default class AppoinmentDto {
   @IsNumber()
   @Expose()
   employeeId: number;
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Expose()
   customerId: number;

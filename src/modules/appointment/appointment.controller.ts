@@ -74,6 +74,7 @@ export class AppointmentController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
+
     return await this.appointmentService.create(
       appointmentDto,
       customerDto,
