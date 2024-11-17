@@ -20,6 +20,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { S3Service } from 'src/services/s3.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('branch')
 export class BranchController {
@@ -88,6 +89,7 @@ export class BranchController {
     return await this.branchService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.branchService.getAll(

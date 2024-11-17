@@ -26,6 +26,8 @@ export class AppointmentController {
       bedId,
       ...appointment
     } = req.body;
+    console.log(req.body);
+
     let customerDto = null;
     if (fullName && phone) {
       customerDto = await plainToInstance(CustomerDto, {
@@ -52,7 +54,7 @@ export class AppointmentController {
       foreignKeyId,
       bedId,
     });
-    const errorss = await validate(customerDto);
+    const errorss = await validate(appointmentDetailDto);
     if (errorss.length > 0) {
       const messageErrorss = errorss.map((e) => {
         return {
