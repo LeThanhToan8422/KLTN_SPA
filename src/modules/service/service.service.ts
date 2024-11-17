@@ -116,16 +116,14 @@ export class ServiceService {
   async getOutStandingServices() {
     const response = await this.datasource.query(
       `
-      select a.serviceOrTreatmentId, s.name, ds.content, s.image, s.serviceCategoryId, COUNT(*) as quantity from appointment as a
-      inner join service as s on a.serviceOrTreatmentId = s.id
+      select ad.foreignKeyId, s.name, ds.content, s.image, s.serviceCategoryId from appointment as a
+      inner join appointment_detail as ad on  ad.appointmentId = a.id
+      inner join service as s on s.id = ad.foreignKeyId
       inner join detail_service as ds on ds.serviceId = s.id
-      where YEAR(a.dateTime) = YEAR(NOW()) 
-      and MONTH(a.dateTime) = MONTH(NOW()) 
-      and a.status = 'finished'
-      and a.category = 'services'
+      where ad.category = 'services' and ad.status = 'finished'
       and ds.title = 'Mô tả dịch vụ'
-      group by a.serviceOrTreatmentId
-      order by COUNT(*) desc
+      group by ad.foreignKeyId
+      order by COUNT(*) DESC, ad.expense DESC
       limit 4
     `,
     );
