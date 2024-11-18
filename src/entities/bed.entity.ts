@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Room from './room.entity';
-import AppointmentService from './details-appointment.entity';
 import { StatusBed } from 'src/enums/status-bed.enum';
 import AppointmentDetail from './appointment-detail.entity';
 
@@ -26,8 +25,6 @@ export default class Bed {
     name: 'roomId',
   })
   room: Room;
-  @OneToMany(() => AppointmentService, (as) => as.bed)
-  appointmentServices: AppointmentService[];
   @OneToMany(() => AppointmentDetail, (a) => a.bed)
   appointmentDetails: AppointmentDetail[];
 }

@@ -8,7 +8,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import AppointmentService from './details-appointment.entity';
 import Employee from './employee.entity';
 import Bonus from './bonus.entity';
 import AppointmentDetail from './appointment-detail.entity';
@@ -49,8 +48,6 @@ export default class Appointment {
     name: 'bonusId',
   })
   bonus: Bonus;
-  @OneToMany(() => AppointmentService, (as) => as.appointment)
-  appointmentServices: AppointmentService[];
   @OneToMany(() => AppointmentDetail, (ad) => ad.appointment)
   appointmentDetails: AppointmentDetail[];
 }

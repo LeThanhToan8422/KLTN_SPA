@@ -85,21 +85,4 @@ export class RoomService {
       instanceToPlain(plainToInstance(RoomDto, response)),
     );
   }
-
-  async DemoXSS() {
-    return ResponseCustomizer.success(
-      instanceToPlain(
-        plainToInstance(RoomDto, [
-          {
-            id: 1,
-            name: '<script>alert("XSS Attack")</script>',
-          },
-          {
-            id: 2,
-            name: '<script>alert("Chúc Mừng Bạn Đã Trúng IPHONE15PROMAX")</script>',
-          },
-        ]),
-      ),
-    );
-  }
 }

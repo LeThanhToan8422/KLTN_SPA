@@ -17,11 +17,8 @@ import { EmployeeService } from './modules/employee/employee.service';
 import { AppointmentModule } from './modules/appointment/appointment.module';
 import { BedModule } from './modules/bed/bed.module';
 import { BranchModule } from './modules/branch/branch.module';
-import { CardHistoryModule } from './modules/card-history/card-history.module';
 import { ConsumedProductModule } from './modules/consumed-product/consumed-product.module';
-import { DetailsAppointmentModule } from './modules/details-appointment/details-appointment.module';
 import { InternalExpenseModule } from './modules/internal-expense/internal-expense.module';
-import { PrepaidCardModule } from './modules/prepaid-card/prepaid-card.module';
 import { PricesModule } from './modules/prices/prices.module';
 import { RoomModule } from './modules/room/room.module';
 import { ScheduleModule } from './modules/schedule/schedule.module';
@@ -41,6 +38,8 @@ import { CustomerGiftModule } from './modules/customer-gift/customer-gift.module
 import { AppointmentDetailModule } from './modules/appointment-detail/appointment-detail.module';
 import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { CustomThrottlerGuard } from './guards/custom-throttler.guard';
 
 @Module({
   imports: [
@@ -68,6 +67,12 @@ import Employee from './entities/employee.entity';
         signOptions: { expiresIn: configService.get<string>('JWT_EXPIRATION') }, // Lấy thời gian hết hạn từ file .env
       }),
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 30,
+      },
+    ]),
     AccountModule,
     CustomerModule,
     EmployeeModule,
@@ -75,11 +80,8 @@ import Employee from './entities/employee.entity';
     AppointmentModule,
     BedModule,
     BranchModule,
-    CardHistoryModule,
     ConsumedProductModule,
-    DetailsAppointmentModule,
     InternalExpenseModule,
-    PrepaidCardModule,
     PricesModule,
     RoomModule,
     ScheduleModule,
@@ -108,6 +110,10 @@ import Employee from './entities/employee.entity';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
     },
     CustomerService,
     EmployeeService,

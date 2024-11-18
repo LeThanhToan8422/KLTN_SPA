@@ -1,11 +1,13 @@
 import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
 import { Request } from 'express';
-import { Public } from 'src/decorators/public.decorator';
 import { ConsumedProductService } from './consumed-product.service';
 import ConsumedProductDto from './dtos/consumed-product.dto';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('consumed-product')
 export class ConsumedProductController {
@@ -13,7 +15,8 @@ export class ConsumedProductController {
     private readonly consumedProductService: ConsumedProductService,
   ) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const consumedProductDto = await plainToInstance(
@@ -33,6 +36,8 @@ export class ConsumedProductController {
     return await this.consumedProductService.create(consumedProductDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const consumedProductDto = await plainToInstance(ConsumedProductDto, {
@@ -52,11 +57,14 @@ export class ConsumedProductController {
     return await this.consumedProductService.update(consumedProductDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.consumedProductService.delete(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.consumedProductService.getAll(
@@ -65,6 +73,7 @@ export class ConsumedProductController {
     );
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.consumedProductService.getById(Number(req.params.id));

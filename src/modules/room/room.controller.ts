@@ -6,12 +6,16 @@ import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import RoomDto from './dtos/room.dto';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('room')
 export class RoomController {
   constructor(private readonly roomService: RoomService) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const roomDto = await plainToInstance(RoomDto, req.body);
@@ -28,6 +32,8 @@ export class RoomController {
     return await this.roomService.create(roomDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const roomDto = await plainToInstance(RoomDto, {
@@ -47,11 +53,14 @@ export class RoomController {
     return await this.roomService.update(roomDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.roomService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.roomService.getAll(
@@ -60,14 +69,9 @@ export class RoomController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.roomService.getById(Number(req.params.id));
-  }
-
-  @Public()
-  @Get('demo/xss')
-  async DemoXSS() {
-    return await this.roomService.DemoXSS();
   }
 }

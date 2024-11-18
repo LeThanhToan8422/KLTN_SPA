@@ -8,12 +8,14 @@ import { Role } from 'src/enums/role.enum';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import BonusDto from './dtos/bonus.dto';
 import { Public } from 'src/decorators/public.decorator';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('bonus')
 export class BonusController {
   constructor(private readonly bonusService: BonusService) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const bonusDto = await plainToInstance(BonusDto, req.body);
@@ -31,6 +33,7 @@ export class BonusController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const bonusDto = await plainToInstance(BonusDto, {
@@ -51,11 +54,14 @@ export class BonusController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.bonusService.delete(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.bonusService.getAll(
@@ -64,18 +70,22 @@ export class BonusController {
     );
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.bonusService.getById(Number(req.params.id));
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER, Role.EMPLOYEE)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('newest/active')
   async getNewestBonus() {
     return await this.bonusService.getNewestBonus();
   }
 
   @Public()
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('customer/:id')
   async getBonusPointByCustomerId(@Req() req: Request) {
     return await this.bonusService.getBonusPointByCustomerId(

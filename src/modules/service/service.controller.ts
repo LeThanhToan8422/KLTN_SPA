@@ -19,6 +19,9 @@ import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { S3Service } from 'src/services/s3.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('service')
 export class ServiceController {
@@ -27,7 +30,8 @@ export class ServiceController {
     private readonly s3Service: S3Service,
   ) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -52,7 +56,8 @@ export class ServiceController {
     return await this.serviceService.create(serviceDto);
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -81,6 +86,8 @@ export class ServiceController {
     return await this.serviceService.update(serviceDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.serviceService.delete(Number(req.params.id));
@@ -134,7 +141,7 @@ export class ServiceController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get('revenues/:branchId')
   async getRevenueOfServiceByDate(@Req() req: Request) {
     return await this.serviceService.getRevenueOfServiceByDate(

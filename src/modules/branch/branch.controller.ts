@@ -21,6 +21,7 @@ import { Role } from 'src/enums/role.enum';
 import { S3Service } from 'src/services/s3.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/decorators/public.decorator';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('branch')
 export class BranchController {
@@ -30,6 +31,7 @@ export class BranchController {
   ) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -55,6 +57,7 @@ export class BranchController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -84,6 +87,7 @@ export class BranchController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.branchService.delete(Number(req.params.id));
@@ -98,6 +102,7 @@ export class BranchController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.branchService.getById(Number(req.params.id));

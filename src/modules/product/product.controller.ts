@@ -19,6 +19,9 @@ import ProductDto from './dtos/product.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { S3Service } from 'src/services/s3.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('product')
 export class ProductController {
@@ -27,7 +30,8 @@ export class ProductController {
     private readonly s3Service: S3Service,
   ) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -52,6 +56,8 @@ export class ProductController {
     return await this.productService.create(productDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -80,11 +86,14 @@ export class ProductController {
     return await this.productService.update(productDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.productService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.productService.getAll(
@@ -93,6 +102,7 @@ export class ProductController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.productService.getById(Number(req.params.id));
