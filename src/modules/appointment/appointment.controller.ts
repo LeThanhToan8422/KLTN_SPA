@@ -10,12 +10,13 @@ import AppoinmentDetailDto from '../appointment-detail/dtos/appointment-detail.d
 import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('appointment')
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
+  @Public()
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {

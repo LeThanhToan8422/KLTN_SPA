@@ -77,7 +77,7 @@ export class BonusController {
     return await this.bonusService.getById(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER, Role.EMPLOYEE)
+  @Public()
   @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('newest/active')
   async getNewestBonus() {

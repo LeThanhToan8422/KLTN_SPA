@@ -31,7 +31,7 @@ export class CustomerPointController {
     return await this.customerPointService.create(customerPointDto);
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
