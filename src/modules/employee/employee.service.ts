@@ -95,9 +95,11 @@ export class EmployeeService {
       inner join schedule as sch on e.id = sch.employeeId
       where DATE(sch.date) = DATE(?) and (TIME(?) BETWEEN sch.checkInTime AND sch.checkOutTime))
       having (select COUNT(*) from appointment as a
-      where a.dateTime = ? and a.employeeId = e.id) = 0
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      where a.dateTime = ? and ad.employeeId = e.id) = 0
       order by (select COUNT(*) from appointment as a
-      where a.dateTime = ? and a.employeeId = e.id) ASC  
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      where a.dateTime = ? and ad.employeeId = e.id) ASC  
     `,
       [branchId, dateTime, dateTime, dateTime, dateTime],
     );

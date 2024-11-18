@@ -28,6 +28,7 @@ export class AppointmentController {
       category,
       foreignKeyId,
       bedId,
+      employeeId,
       ...appointment
     } = req.body;
     let customerDto = null;
@@ -55,7 +56,9 @@ export class AppointmentController {
       category,
       foreignKeyId,
       bedId,
+      employeeId,
     });
+
     const errorss = await validate(appointmentDetailDto);
     if (errorss.length > 0) {
       const messageErrorss = errorss.map((e) => {
@@ -66,7 +69,6 @@ export class AppointmentController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrorss[0]));
     }
-
     const appointmentDto = await plainToInstance(AppoinmentDto, appointment);
     const errors = await validate(appointmentDto);
     if (errors.length > 0) {
