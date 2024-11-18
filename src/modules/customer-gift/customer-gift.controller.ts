@@ -7,11 +7,14 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import CustomerGiftDto from './dtos/customer-gift.dto';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('customer-gift')
 export class CustomerGiftController {
   constructor(private readonly customerGiftService: CustomerGiftService) {}
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const customerGiftDto = await plainToInstance(CustomerGiftDto, req.body);
@@ -29,6 +32,7 @@ export class CustomerGiftController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const customerGiftDto = await plainToInstance(CustomerGiftDto, {
@@ -49,11 +53,13 @@ export class CustomerGiftController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.customerGiftService.delete(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.customerGiftService.getAll(
@@ -62,11 +68,13 @@ export class CustomerGiftController {
     );
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.customerGiftService.getById(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Get('customer/:customerId')
   async getByCustomerId(@Req() req: Request) {
     return await this.customerGiftService.getByCustomerId(

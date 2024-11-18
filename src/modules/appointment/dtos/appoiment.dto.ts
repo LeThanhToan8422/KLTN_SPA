@@ -10,10 +10,6 @@ export default class AppoinmentDto {
   @IsString()
   @Expose()
   dateTime: string;
-  @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  employeeId: number;
   @IsOptional()
   @IsNumber()
   @Expose()

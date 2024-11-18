@@ -2,18 +2,21 @@ import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Request } from 'express';
-import { Public } from 'src/decorators/public.decorator';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { AppointmentService } from './appointment.service';
 import AppoinmentDto from './dtos/appoiment.dto';
 import CustomerDto from '../customer/dtos/customer.dto';
 import AppoinmentDetailDto from '../appointment-detail/dtos/appointment-detail.dto';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('appointment')
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const {
@@ -82,7 +85,8 @@ export class AppointmentController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const appointmentDto = await plainToInstance(AppoinmentDto, {
@@ -102,13 +106,15 @@ export class AppointmentController {
     return await this.appointmentService.update(appointmentDto);
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.appointmentService.delete(Number(req.params.id));
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentService.getAll(
@@ -118,12 +124,15 @@ export class AppointmentController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.appointmentService.getById(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('customer/:customerId')
   async getByCustomerId(@Req() req: Request) {
     const customerId = Number(req.params.customerId);

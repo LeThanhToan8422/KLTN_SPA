@@ -6,12 +6,16 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import VoucherDto from './dtos/voucher.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('voucher')
 export class VoucherController {
   constructor(private readonly voucherService: VoucherService) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const voucherDto = await plainToInstance(VoucherDto, req.body);
@@ -28,6 +32,8 @@ export class VoucherController {
     return await this.voucherService.create(voucherDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const voucherDto = await plainToInstance(VoucherDto, {
@@ -47,6 +53,8 @@ export class VoucherController {
     return await this.voucherService.update(voucherDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.voucherService.delete(Number(req.params.id));

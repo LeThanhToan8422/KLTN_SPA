@@ -1,11 +1,13 @@
 import { Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
 import { InternalExpenseService } from './internal-expense.service';
-import { Public } from 'src/decorators/public.decorator';
 import { Request } from 'express';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import InternalExpenseDto from './dtos/internal-expense.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import { Throttle } from '@nestjs/throttler';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('internal-expense')
 export class InternalExpenseController {
@@ -13,7 +15,8 @@ export class InternalExpenseController {
     private readonly internalExpenseService: InternalExpenseService,
   ) {}
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const internalExpenseDto = await plainToInstance(
@@ -33,6 +36,8 @@ export class InternalExpenseController {
     return await this.internalExpenseService.create(internalExpenseDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const internalExpenseDto = await plainToInstance(InternalExpenseDto, {
@@ -52,11 +57,14 @@ export class InternalExpenseController {
     return await this.internalExpenseService.update(internalExpenseDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.internalExpenseService.delete(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.internalExpenseService.getAll(
@@ -65,7 +73,7 @@ export class InternalExpenseController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get('expense/:branchId')
   async getExpenseByMonthYear(@Req() req: Request) {
     return await this.internalExpenseService.getExpenseByMonthYear(
@@ -75,6 +83,7 @@ export class InternalExpenseController {
     );
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.internalExpenseService.getById(Number(req.params.id));

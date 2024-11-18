@@ -21,7 +21,7 @@ import { Role } from 'src/enums/role.enum';
 import UserDto from 'src/dtos/user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3Service } from 'src/services/s3.service';
-import { Public } from 'src/decorators/public.decorator';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('employee')
 export class EmployeeController {
@@ -31,6 +31,7 @@ export class EmployeeController {
   ) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -55,7 +56,8 @@ export class EmployeeController {
     return await this.employeeService.create(employeeDto);
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -85,12 +87,13 @@ export class EmployeeController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.employeeService.delete(Number(req.params.id));
   }
 
-  @Get()
+  @Roles(Role.ADMIN, Role.MANAGER)
   async getAll(@Req() req: Request) {
     return await this.employeeService.getAll(
       Number(req.query.branchId),
@@ -99,7 +102,7 @@ export class EmployeeController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
   @Get('appointments')
   async getEmployeesByDateTime(@Req() req: Request) {
     return await this.employeeService.getEmployeesByDateTime(
@@ -108,7 +111,7 @@ export class EmployeeController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get('salary/:branchId')
   async getSalaryOfEmployeeByMonthYear(@Req() req: Request) {
     return await this.employeeService.getSalaryOfEmployeeByMonthYear(
@@ -118,17 +121,20 @@ export class EmployeeController {
     );
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
   @Get('details')
   async getById(@Req() req: Request) {
     const userDto = await plainToInstance(UserDto, req.user);
     return await this.employeeService.getById(Number(userDto.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
   @Get('account/:id')
   async getByAccountId(@Req() req: Request) {
     return await this.employeeService.getByAccountId(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
   @Get(':id')
   async getByEmpId(@Req() req: Request) {
     return await this.employeeService.getById(Number(req.params.id));

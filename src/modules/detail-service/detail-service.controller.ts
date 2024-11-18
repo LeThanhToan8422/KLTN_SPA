@@ -21,6 +21,7 @@ import DetailServiceDto from './dtos/detail-service.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Request } from 'express';
 import { Public } from 'src/decorators/public.decorator';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('detail-service')
 export class DetailServiceController {
@@ -30,6 +31,7 @@ export class DetailServiceController {
   ) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -55,6 +57,7 @@ export class DetailServiceController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -84,11 +87,13 @@ export class DetailServiceController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.detailServiceService.delete(Number(req.params.id));
   }
 
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.detailServiceService.getAll(
@@ -97,6 +102,7 @@ export class DetailServiceController {
     );
   }
 
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.detailServiceService.getById(Number(req.params.id));

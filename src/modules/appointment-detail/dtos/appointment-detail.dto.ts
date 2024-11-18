@@ -33,6 +33,10 @@ export default class AppointmentDetailDto {
   @IsNotEmpty()
   @IsNumber()
   @Expose()
+  employeeId: number;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
   bedId: number;
   @IsOptional()
   @IsNumber()

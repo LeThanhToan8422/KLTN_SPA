@@ -6,7 +6,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import PrepaidCard from './prepaid-card.entity';
 import Appointment from './appointment.entity';
 import Account from './account.entity';
 import CustomerGift from './customer-gift.entity';
@@ -52,8 +51,6 @@ export default class Customer {
     name: 'accountId',
   })
   account: Account;
-  @OneToOne(() => PrepaidCard, (p) => p.customer)
-  prepaidCard: PrepaidCard;
   @OneToMany(() => Appointment, (a) => a.customer)
   appointments: Appointment[];
   @OneToMany(() => CustomerGift, (c) => c.customer)

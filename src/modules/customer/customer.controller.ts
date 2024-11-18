@@ -21,6 +21,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3Service } from 'src/services/s3.service';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('customer')
 export class CustomerController {
@@ -30,6 +31,7 @@ export class CustomerController {
   ) {}
 
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -54,7 +56,8 @@ export class CustomerController {
     return await this.customerService.create(customerDto);
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -84,6 +87,7 @@ export class CustomerController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.customerService.delete(Number(req.params.id));
@@ -98,12 +102,13 @@ export class CustomerController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.customerService.getById(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Get('account/:id')
   async getByAccountId(@Req() req: Request) {
     return await this.customerService.getByAccountId(Number(req.params.id));

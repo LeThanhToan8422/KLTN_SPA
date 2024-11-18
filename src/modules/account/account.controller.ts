@@ -22,6 +22,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import CustomerDto from '../customer/dtos/customer.dto';
 import EmployeeDto from '../employee/dtos/employee.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('account')
 export class AccountController {
@@ -31,12 +32,14 @@ export class AccountController {
   ) {}
 
   @Public()
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Post('login')
   async login(@Req() req: Request) {
     return await this.accountService.login(req.body.phone, req.body.password);
   }
 
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post('register')
   @UseInterceptors(FileInterceptor('file'))
   async register(
@@ -70,6 +73,7 @@ export class AccountController {
   }
 
   @Public()
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   async create(@Req() req: Request) {
     const accountDto = await plainToInstance(AccountDto, req.body);
@@ -86,7 +90,8 @@ export class AccountController {
     return await this.accountService.create(accountDto);
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   async update(@Req() req: Request) {
     const accountDto = await plainToInstance(AccountDto, {
@@ -107,12 +112,14 @@ export class AccountController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.accountService.delete(Number(req.params.id));
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.accountService.getAll(
@@ -122,14 +129,15 @@ export class AccountController {
     );
   }
 
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.accountService.getById(Number(req.params.id));
   }
 
-  // @Roles(Role.ADMIN, Role.MANAGER)
-  @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('phone/:phone')
   async checkAccountByPhone(@Req() req: Request) {
     return await this.accountService.checkAccountByPhone(req.params.phone);

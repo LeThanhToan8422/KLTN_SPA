@@ -23,18 +23,6 @@ async function bootstrap() {
       },
     }),
   );
-  // app.use(cookieParser());
-  // app.use(
-  //   session({
-  //     secret: 'your_secret_key',
-  //     resave: false,
-  //     saveUninitialized: false,
-  //     cookie: {
-  //       httpOnly: true,
-  //       sameSite: 'strict',
-  //     } as session.CookieOptions,
-  //   }),
-  // );
   await app.listen(3000);
 }
 bootstrap();

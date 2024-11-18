@@ -21,6 +21,7 @@ import GiftDto from './dtos/gift.dto';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Request } from 'express';
 import { Public } from 'src/decorators/public.decorator';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('gift')
 export class GiftController {
@@ -30,6 +31,7 @@ export class GiftController {
   ) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -55,6 +57,7 @@ export class GiftController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -84,6 +87,7 @@ export class GiftController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.giftService.delete(Number(req.params.id));

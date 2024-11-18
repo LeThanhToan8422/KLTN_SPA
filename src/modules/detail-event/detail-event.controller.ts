@@ -20,6 +20,7 @@ import DetailEventDto from './dtos/detail-event.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3Service } from 'src/services/s3.service';
 import { DetailEventService } from './detail-event.service';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('detail-event')
 export class DetailEventController {
@@ -29,6 +30,7 @@ export class DetailEventController {
   ) {}
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -54,6 +56,7 @@ export class DetailEventController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
   @UseInterceptors(FileInterceptor('file'))
   async update(
@@ -83,11 +86,13 @@ export class DetailEventController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.detailEventService.delete(Number(req.params.id));
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER, Role.EMPLOYEE)
   @Get()
   async getAll(@Req() req: Request) {
     return await this.detailEventService.getAll(
@@ -96,6 +101,7 @@ export class DetailEventController {
     );
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER, Role.EMPLOYEE)
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.detailEventService.getById(Number(req.params.id));
