@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import Bed from './bed.entity';
 import Appointment from './appointment.entity';
+import Employee from './employee.entity';
 
 @Entity()
 export default class AppointmentDetail {
@@ -33,9 +34,16 @@ export default class AppointmentDetail {
   })
   status: StatusAppoiment;
   @Column()
+  employeeId: number;
+  @Column()
   bedId: number;
   @Column()
   appointmentId: number;
+  @ManyToOne(() => Employee, (e) => e.appointmentDetails)
+  @JoinColumn({
+    name: 'employeeId',
+  })
+  employee: Employee;
   @ManyToOne(() => Bed, (b) => b.appointmentDetails)
   @JoinColumn({
     name: 'bedId',

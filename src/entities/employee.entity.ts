@@ -12,8 +12,8 @@ import Schedule from './schedule.entity';
 import Wage from './Wage.entity';
 import { Status } from 'src/enums/status.enum';
 import Account from './account.entity';
-import Appointment from './appointment.entity';
 import Branch from './branch.entity';
+import AppointmentDetail from './appointment-detail.entity';
 
 @Entity()
 export default class Employee {
@@ -63,8 +63,8 @@ export default class Employee {
   account: Account;
   @OneToMany(() => Schedule, (s) => s.employee)
   schedules: Schedule[];
-  @OneToMany(() => Appointment, (a) => a.employee)
-  appointments: Appointment[];
+  @OneToMany(() => AppointmentDetail, (a) => a.employee)
+  appointmentDetails: AppointmentDetail[];
   @ManyToOne(() => Wage, (w) => w.employees)
   @JoinColumn({
     name: 'wageId',

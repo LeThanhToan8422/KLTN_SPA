@@ -8,7 +8,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import Employee from './employee.entity';
 import Bonus from './bonus.entity';
 import AppointmentDetail from './appointment-detail.entity';
 
@@ -21,18 +20,11 @@ export default class Appointment {
   })
   dateTime: Date;
   @Column()
-  employeeId: number;
-  @Column()
   customerId: number;
   @Column()
   branchId: number;
   @Column()
   bonusId: number;
-  @ManyToOne(() => Employee, (e) => e.appointments)
-  @JoinColumn({
-    name: 'employeeId',
-  })
-  employee: Employee;
   @ManyToOne(() => Customer, (c) => c.appointments)
   @JoinColumn({
     name: 'customerId',
