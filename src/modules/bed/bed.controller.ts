@@ -8,6 +8,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Throttle } from '@nestjs/throttler';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('bed')
 export class BedController {
@@ -76,7 +77,7 @@ export class BedController {
     return await this.bedService.getById(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER, Role.EMPLOYEE)
+  @Public()
   @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('service/beds')
   async getBedsByServiceAndDate(@Req() req: Request) {

@@ -22,6 +22,7 @@ import UserDto from 'src/dtos/user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { S3Service } from 'src/services/s3.service';
 import { Throttle } from '@nestjs/throttler';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('employee')
 export class EmployeeController {
@@ -102,7 +103,7 @@ export class EmployeeController {
     );
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
+  @Public()
   @Get('appointments')
   async getEmployeesByDateTime(@Req() req: Request) {
     return await this.employeeService.getEmployeesByDateTime(

@@ -136,7 +136,7 @@ export class AccountController {
     return await this.accountService.getById(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
+  @Public()
   @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('phone/:phone')
   async checkAccountByPhone(@Req() req: Request) {
