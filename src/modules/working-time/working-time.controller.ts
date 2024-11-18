@@ -8,6 +8,7 @@ import { Request } from 'express';
 import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('working-time')
 export class WorkingTimeController {
@@ -74,7 +75,7 @@ export class WorkingTimeController {
     return await this.workingTimeService.getById(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
+  @Public()
   @Get('service/times')
   async getWorkingTimeByServiceIdAndDate(@Req() req: Request) {
     const { branchId, roomId, date } = req.query;
