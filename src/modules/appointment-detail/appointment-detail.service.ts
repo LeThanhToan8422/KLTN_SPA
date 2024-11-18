@@ -7,7 +7,6 @@ import AppoinmentDetailDto from './dtos/appointment-detail.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
-import { Pagination } from 'src/helpers/pagination';
 
 @Injectable()
 export class AppointmentDetailService {
@@ -74,18 +73,14 @@ export class AppointmentDetailService {
     }
   }
 
-  async getAll(appointmentId: number, page: number, limit: number) {
-    const [data, totalItems] =
-      await this.appointmentDetailRepository.findAndCount({
-        where: {
-          appointmentId: appointmentId,
-        },
-        skip: (page - 1) * limit,
-        take: limit,
-      });
+  async getAll(appointmentId: number) {
+    const response = await this.appointmentDetailRepository.find({
+      where: {
+        appointmentId: appointmentId,
+      },
+    });
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(AppoinmentDetailDto, data)),
-      new Pagination(totalItems, page, limit),
+      instanceToPlain(plainToInstance(AppoinmentDetailDto, response)),
     );
   }
 
