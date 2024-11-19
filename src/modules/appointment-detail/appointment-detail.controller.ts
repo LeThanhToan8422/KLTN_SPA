@@ -79,4 +79,20 @@ export class AppointmentDetailController {
   async getById(@Req() req: Request) {
     return await this.appointmentDetailService.getById(Number(req.params.id));
   }
+
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Put(':id/status')
+  async updateStatus(@Req() req: Request) {
+    const { status } = req.body;
+    if (!['confirmed', 'implement', 'finished', 'canceled'].includes(status)) {
+      return ErrorCustomizer.BadRequestError(
+        `Invalid status value: ${status}. Allowed values are 'confirmed', 'implement', 'finished', 'canceled'.`,
+      );
+    }
+    return await this.appointmentDetailService.updateStatus(
+      Number(req.params.id),
+      status,
+    );
+  }
 }
