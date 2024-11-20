@@ -7,6 +7,8 @@ import AppoinmentDetailDto from './dtos/appointment-detail.dto';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
+import AppointmentDetailDto from './dtos/appointment-detail.dto';
+import { StatusAppoiment } from 'src/enums/status-appointment.enum';
 
 @Injectable()
 export class AppointmentDetailService {
@@ -89,5 +91,31 @@ export class AppointmentDetailService {
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(AppoinmentDetailDto, response)),
     );
+  }
+
+  async updateStatus(id: number, status: StatusAppoiment) {
+    const queryRunner = this.datasource.createQueryRunner();
+    queryRunner.startTransaction();
+    try {
+      const appointmentDetail = await this.crudRepository.getById(id);
+      if (!appointmentDetail) {
+        return ErrorCustomizer.NotFoundError(
+          `AppointmentDetail with id ${id} not found.`,
+        );
+      }
+      appointmentDetail.status = status;
+      const updatedItem = await this.crudRepository.update(appointmentDetail);
+
+      await queryRunner.commitTransaction();
+
+      return ResponseCustomizer.success(
+        instanceToPlain(plainToInstance(AppointmentDetailDto, updatedItem)),
+      );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    }
   }
 }

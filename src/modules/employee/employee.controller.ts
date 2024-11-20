@@ -94,7 +94,7 @@ export class EmployeeController {
     return await this.employeeService.delete(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.employeeService.getAll(
@@ -136,7 +136,7 @@ export class EmployeeController {
     return await this.employeeService.getByAccountId(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
   @Get(':id')
   async getByEmpId(@Req() req: Request) {
     return await this.employeeService.getById(Number(req.params.id));
