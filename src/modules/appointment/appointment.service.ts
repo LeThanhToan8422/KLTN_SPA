@@ -33,10 +33,6 @@ export class AppointmentService {
     customerDto: CustomerDto,
     appointmentDetailDto: AppointmentDetailDto,
   ) {
-    console.log(appointmentDto);
-    console.log(customerDto);
-    console.log(appointmentDetailDto);
-
     const queryRunner = this.datasource.createQueryRunner();
     queryRunner.startTransaction();
     try {

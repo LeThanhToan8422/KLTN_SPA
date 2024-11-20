@@ -95,6 +95,7 @@ export class EmployeeController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
+  @Get()
   async getAll(@Req() req: Request) {
     return await this.employeeService.getAll(
       Number(req.query.branchId),
