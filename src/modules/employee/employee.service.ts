@@ -9,6 +9,7 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
 import EmployeeSalaryDto from './dtos/employee-salary.dto';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -139,8 +140,9 @@ export class EmployeeService {
       inner join wage as w on w.role = e.role
       where NOW() <= w.effectiveDate and e.id = sch.employeeId)) as salary,
       (select SUM(p.commission) from appointment as a
-      inner join prices as p on p.foreignKeyId = a.serviceOrTreatmentId
-      where a.category = 'services' and p.type = 'service' and a.employeeId = em.id and YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?) as commissions
+      inner join appointment_detail as ad on ad.appointmentId = a.id
+      inner join prices as p on p.foreignKeyId = ad.foreignKeyId
+      where ad.category = 'services' and p.type = 'service' and ad.employeeId = em.id and YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?) as commissions
       from schedule as sch
       inner join employee as em on em.id = sch.employeeId
       where sch.checkInTime IS NOT NULL and sch.checkOutTime IS NOT NULL
@@ -151,6 +153,12 @@ export class EmployeeService {
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(EmployeeSalaryDto, response)),
+    );
+  }
+
+  async updateStatus(updateStatusDto: UpdateStatusDto) {
+    return ResponseCustomizer.success(
+      await this.crudRepository.updateStatus(updateStatusDto),
     );
   }
 }

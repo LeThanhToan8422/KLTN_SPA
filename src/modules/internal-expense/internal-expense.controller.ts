@@ -8,6 +8,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('internal-expense')
 export class InternalExpenseController {
@@ -73,7 +74,8 @@ export class InternalExpenseController {
     );
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
+  // @Roles(Role.ADMIN, Role.MANAGER)
+  @Public()
   @Get('expense/:branchId')
   async getExpenseByMonthYear(@Req() req: Request) {
     return await this.internalExpenseService.getExpenseByMonthYear(

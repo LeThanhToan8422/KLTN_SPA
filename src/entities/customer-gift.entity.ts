@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Customer from './customer.entity';
 import { CategoryGift } from 'src/enums/category-gift.enum';
+import Appointment from './appointment.entity';
 
 @Entity()
 export default class CustomerGift {
@@ -30,4 +32,6 @@ export default class CustomerGift {
     name: 'customerId',
   })
   customer: Customer;
+  @OneToOne(() => Appointment, (a) => a.voucher)
+  appointment: Appointment;
 }

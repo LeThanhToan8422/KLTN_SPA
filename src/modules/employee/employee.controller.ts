@@ -23,6 +23,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { S3Service } from 'src/services/s3.service';
 import { Throttle } from '@nestjs/throttler';
 import { Public } from 'src/decorators/public.decorator';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Controller('employee')
 export class EmployeeController {
@@ -55,6 +56,17 @@ export class EmployeeController {
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
     return await this.employeeService.create(employeeDto);
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('update-status')
+  async updateStatus(@Req() req: Request) {
+    const updateStatusDto = await plainToInstance(UpdateStatusDto, {
+      id: req.query.id,
+      status: req.query.status,
+    });
+    return await this.employeeService.updateStatus(updateStatusDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)

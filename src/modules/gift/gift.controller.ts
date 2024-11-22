@@ -22,6 +22,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Request } from 'express';
 import { Public } from 'src/decorators/public.decorator';
 import { Throttle } from '@nestjs/throttler';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Controller('gift')
 export class GiftController {
@@ -54,6 +55,17 @@ export class GiftController {
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
     return await this.giftService.create(giftDto);
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('update-status')
+  async updateStatus(@Req() req: Request) {
+    const updateStatusDto = await plainToInstance(UpdateStatusDto, {
+      id: req.query.id,
+      status: req.query.status,
+    });
+    return await this.giftService.updateStatus(updateStatusDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)

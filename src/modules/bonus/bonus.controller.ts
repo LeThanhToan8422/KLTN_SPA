@@ -9,6 +9,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import BonusDto from './dtos/bonus.dto';
 import { Public } from 'src/decorators/public.decorator';
 import { Throttle } from '@nestjs/throttler';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Controller('bonus')
 export class BonusController {
@@ -30,6 +31,17 @@ export class BonusController {
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
     return await this.bonusService.create(bonusDto);
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('update-status')
+  async updateStatus(@Req() req: Request) {
+    const updateStatusDto = await plainToInstance(UpdateStatusDto, {
+      id: req.query.id,
+      status: req.query.status,
+    });
+    return await this.bonusService.updateStatus(updateStatusDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
@@ -61,7 +73,6 @@ export class BonusController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.bonusService.getAll(
@@ -71,21 +82,18 @@ export class BonusController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.bonusService.getById(Number(req.params.id));
   }
 
   @Public()
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('newest/active')
   async getNewestBonus() {
     return await this.bonusService.getNewestBonus();
   }
 
   @Public()
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('customer/:id')
   async getBonusPointByCustomerId(@Req() req: Request) {
     return await this.bonusService.getBonusPointByCustomerId(

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 import ICRUDGeneric, {
   PaginatedResult,
 } from 'src/interfaces/crud-generic.interface';
@@ -6,6 +7,10 @@ import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
 
 interface withId {
   id: number;
+}
+
+interface withStatus {
+  status: string;
 }
 
 @Injectable()
@@ -29,6 +34,24 @@ export default class CRUDRepository<T extends withId>
       const preloadedItem = await this.repository.preload(item);
       const savedItem = await this.repository.save(preloadedItem);
       return savedItem;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async updateStatus(item: UpdateStatusDto): Promise<T & withStatus> {
+    try {
+      const responseItem = await this.repository.findOne({
+        where: { id: item.id } as FindOptionsWhere<T>,
+      });
+
+      if (this.hasStatus(responseItem)) {
+        responseItem.status = item.status;
+        const savedItem = await this.repository.save(responseItem);
+        return savedItem;
+      } else {
+        throw new Error('This entity does not have a "status" field');
+      }
     } catch (error) {
       throw new Error(error);
     }
@@ -65,5 +88,9 @@ export default class CRUDRepository<T extends withId>
 
   async getByCondition(options: FindManyOptions<T>): Promise<T[]> {
     return await this.repository.find(options);
+  }
+
+  private hasStatus(item: any): item is T & withStatus {
+    return 'status' in item;
   }
 }
