@@ -14,6 +14,7 @@ import CustomerDto from '../customer/dtos/customer.dto';
 import { CustomerService } from '../customer/customer.service';
 import EmployeeDto from '../employee/dtos/employee.dto';
 import { EmployeeService } from '../employee/employee.service';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Injectable()
 export class AccountService {
@@ -64,6 +65,12 @@ export class AccountService {
         ErrorCustomizer.InternalServerError(error.message),
       );
     }
+  }
+
+  async updateStatus(updateStatusDto: UpdateStatusDto) {
+    return ResponseCustomizer.success(
+      await this.crudRepository.updateStatus(updateStatusDto),
+    );
   }
 
   async delete(id: number) {

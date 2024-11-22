@@ -23,7 +23,7 @@ import { Request } from 'express';
 import { Public } from 'src/decorators/public.decorator';
 import { Throttle } from '@nestjs/throttler';
 
-@Controller('event')
+@Controller('events')
 export class EventController {
   constructor(
     private readonly eventService: EventService,

@@ -22,6 +22,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Controller('product')
 export class ProductController {
@@ -54,6 +55,17 @@ export class ProductController {
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
     return await this.productService.create(productDto);
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('update-status')
+  async updateStatus(@Req() req: Request) {
+    const updateStatusDto = await plainToInstance(UpdateStatusDto, {
+      id: req.query.id,
+      status: req.query.status,
+    });
+    return await this.productService.updateStatus(updateStatusDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)

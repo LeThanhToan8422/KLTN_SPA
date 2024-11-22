@@ -9,6 +9,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Throttle } from '@nestjs/throttler';
 import { Public } from 'src/decorators/public.decorator';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Controller('bed')
 export class BedController {
@@ -30,6 +31,16 @@ export class BedController {
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrors[0]));
     }
     return await this.bedService.create(bedDto);
+  }
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('update-status')
+  async updateStatus(@Req() req: Request) {
+    const updateStatusDto = await plainToInstance(UpdateStatusDto, {
+      id: req.query.id,
+      status: req.query.status,
+    });
+    return await this.bedService.updateStatus(updateStatusDto);
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
@@ -61,7 +72,6 @@ export class BedController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER, Role.EMPLOYEE)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.bedService.getAll(
@@ -71,14 +81,12 @@ export class BedController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER, Role.EMPLOYEE)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.bedService.getById(Number(req.params.id));
   }
 
   @Public()
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('service/beds')
   async getBedsByServiceAndDate(@Req() req: Request) {
     const { branchId, date, roomId } = req.query;

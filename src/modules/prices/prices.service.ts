@@ -8,6 +8,7 @@ import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Injectable()
 export class PricesService {
@@ -92,6 +93,12 @@ export class PricesService {
     });
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(PricesDto, prices)),
+    );
+  }
+
+  async updateStatus(updateStatusDto: UpdateStatusDto) {
+    return ResponseCustomizer.success(
+      await this.crudRepository.updateStatus(updateStatusDto),
     );
   }
 }

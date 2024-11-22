@@ -6,10 +6,13 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import Bonus from './bonus.entity';
 import AppointmentDetail from './appointment-detail.entity';
+import { StatusPayment } from 'src/enums/status-payment.enum';
+import CustomerGift from './customer-gift.entity';
 
 @Entity()
 export default class Appointment {
@@ -19,12 +22,22 @@ export default class Appointment {
     type: 'datetime',
   })
   dateTime: Date;
+  @Column({
+    type: 'enum',
+    enum: StatusPayment,
+    default: StatusPayment.UNPAID,
+  })
+  status: StatusPayment;
   @Column()
   customerId: number;
   @Column()
   branchId: number;
   @Column()
   bonusId: number;
+  @Column({
+    default: null,
+  })
+  voucherId: number;
   @ManyToOne(() => Customer, (c) => c.appointments)
   @JoinColumn({
     name: 'customerId',
@@ -40,6 +53,11 @@ export default class Appointment {
     name: 'bonusId',
   })
   bonus: Bonus;
+  @OneToOne(() => CustomerGift, (c) => c.appointment)
+  @JoinColumn({
+    name: 'voucherId',
+  })
+  voucher: CustomerGift;
   @OneToMany(() => AppointmentDetail, (ad) => ad.appointment)
   appointmentDetails: AppointmentDetail[];
 }

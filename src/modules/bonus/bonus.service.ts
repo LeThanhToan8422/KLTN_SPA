@@ -9,6 +9,7 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
 import { Status } from 'src/enums/status.enum';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Injectable()
 export class BonusService {
@@ -117,5 +118,11 @@ export class BonusService {
       [customerId],
     );
     return ResponseCustomizer.success(response[0]);
+  }
+
+  async updateStatus(updateStatusDto: UpdateStatusDto) {
+    return ResponseCustomizer.success(
+      await this.crudRepository.updateStatus(updateStatusDto),
+    );
   }
 }

@@ -65,7 +65,6 @@ export class AppointmentDetailController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentDetailService.getAll(
@@ -74,7 +73,6 @@ export class AppointmentDetailController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.appointmentDetailService.getById(Number(req.params.id));

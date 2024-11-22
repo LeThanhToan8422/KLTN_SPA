@@ -11,6 +11,9 @@ import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Public } from 'src/decorators/public.decorator';
+import * as crypto from 'crypto';
+import axios from 'axios';
+import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 
 @Controller('appointment')
 export class AppointmentController {
@@ -88,6 +91,103 @@ export class AppointmentController {
     );
   }
 
+  @Public()
+  // @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Post('payments/momo/:amount')
+  async payMoMO(@Req() req: Request) {
+    const accessKey = 'F8BBA842ECF85';
+    const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+    const orderInfo = 'pay with MoMo';
+    const partnerCode = 'MOMO';
+    const redirectUrl = 'exp://192.168.1.17:8081';
+    const ipnUrl =
+      'https://0c89-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
+    const requestType = 'payWithMethod';
+    const amount = req.params.amount;
+    const orderId = partnerCode + new Date().getTime();
+    const requestId = orderId;
+    const extraData = '';
+    const orderGroupId = '';
+    const autoCapture = true;
+    const lang = 'vi';
+
+    const rawSignature =
+      'accessKey=' +
+      accessKey +
+      '&amount=' +
+      amount +
+      '&extraData=' +
+      extraData +
+      '&ipnUrl=' +
+      ipnUrl +
+      '&orderId=' +
+      orderId +
+      '&orderInfo=' +
+      orderInfo +
+      '&partnerCode=' +
+      partnerCode +
+      '&redirectUrl=' +
+      redirectUrl +
+      '&requestId=' +
+      requestId +
+      '&requestType=' +
+      requestType;
+
+    const signature = crypto
+      .createHmac('sha256', secretKey)
+      .update(rawSignature)
+      .digest('hex');
+
+    const requestBody = JSON.stringify({
+      partnerCode: partnerCode,
+      partnerName: 'Test',
+      storeId: 'MomoTestStore',
+      requestId: requestId,
+      amount: amount,
+      orderId: orderId,
+      orderInfo: orderInfo,
+      redirectUrl: redirectUrl,
+      ipnUrl: ipnUrl,
+      lang: lang,
+      requestType: requestType,
+      autoCapture: autoCapture,
+      extraData: extraData,
+      orderGroupId: orderGroupId,
+      signature: signature,
+    });
+
+    try {
+      console.log('Sending...');
+      const response = await axios.post(
+        'https://test-payment.momo.vn/v2/gateway/api/create',
+        requestBody,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return ResponseCustomizer.success(response.data);
+    } catch (error) {
+      console.error('Error: ', error.message);
+      if (error.response) {
+        console.error('Response Status: ', error.response.status);
+        console.error('Response Data: ', error.response.data);
+      }
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    }
+  }
+
+  @Public()
+  @Post('receive-notify/momo')
+  async receiveNotifyMoMo(@Req() req: Request) {
+    console.log(req.body);
+    return req.body;
+  }
+
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
@@ -117,7 +217,6 @@ export class AppointmentController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentService.getAll(
@@ -128,14 +227,12 @@ export class AppointmentController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.appointmentService.getById(Number(req.params.id));
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('customer/:customerId')
   async getByCustomerId(@Req() req: Request) {
     const customerId = Number(req.params.customerId);

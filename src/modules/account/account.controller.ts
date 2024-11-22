@@ -23,6 +23,7 @@ import CustomerDto from '../customer/dtos/customer.dto';
 import EmployeeDto from '../employee/dtos/employee.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Throttle } from '@nestjs/throttler';
+import UpdateStatusDto from 'src/dtos/update-status.dto';
 
 @Controller('account')
 export class AccountController {
@@ -90,6 +91,17 @@ export class AccountController {
     return await this.accountService.create(accountDto);
   }
 
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post('update-status')
+  async updateStatus(@Req() req: Request) {
+    const updateStatusDto = await plainToInstance(UpdateStatusDto, {
+      id: req.query.id,
+      status: req.query.status,
+    });
+    return await this.accountService.updateStatus(updateStatusDto);
+  }
+
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Throttle({ default: { limit: 15, ttl: 60000 } })
   @Put(':id')
@@ -119,7 +131,6 @@ export class AccountController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get()
   async getAll(@Req() req: Request) {
     return await this.accountService.getAll(
@@ -130,14 +141,12 @@ export class AccountController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE, Role.CUSTOMER)
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.accountService.getById(Number(req.params.id));
   }
 
   @Public()
-  @Throttle({ default: { limit: 30, ttl: 60000 } })
   @Get('phone/:phone')
   async checkAccountByPhone(@Req() req: Request) {
     return await this.accountService.checkAccountByPhone(req.params.phone);
