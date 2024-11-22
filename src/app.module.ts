@@ -70,7 +70,7 @@ import { CustomThrottlerGuard } from './guards/custom-throttler.guard';
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
-        limit: 30,
+        limit: 3000,
       },
     ]),
     AccountModule,
