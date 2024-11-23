@@ -104,8 +104,8 @@ export class AppointmentController {
     const ipnUrl =
       'https://0c89-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
-    const amount = req.query.amount;
-    const orderId = req.query.appointmentId;
+    const amount = req.params.amount;
+    const orderId = partnerCode + new Date().getTime();
     const requestId = orderId;
     const extraData = '';
     const orderGroupId = '';
