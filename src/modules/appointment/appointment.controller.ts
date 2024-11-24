@@ -91,21 +91,21 @@ export class AppointmentController {
     );
   }
 
-  @Public()
-  // @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  // @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
-  @Post('payments/momo/:amount')
+  @Get('payments/momo')
   async payMoMO(@Req() req: Request) {
     const accessKey = 'F8BBA842ECF85';
     const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
     const orderInfo = 'pay with MoMo';
     const partnerCode = 'MOMO';
-    const redirectUrl = 'exp://192.168.1.17:8081';
-    const ipnUrl =
-      'https://0c89-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
+    const redirectUrl = 'http://localhost:3000/service?page=1&limit=100';
+    const ipnUrl = 'http://localhost:3000/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
-    const amount = req.query.amount;
-    const orderId = req.query.appointmentId;
+    const amount = Number(req.query.amount);
+    const orderId =
+      req.query.appointmentId + partnerCode + new Date().getTime();
     const requestId = orderId;
     const extraData = '';
     const orderGroupId = '';
