@@ -30,11 +30,11 @@ export default class AppointmentDetailDto {
   @IsNumber()
   @Expose()
   foreignKeyId: number;
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Expose()
   employeeId: number;
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Expose()
   bedId: number;

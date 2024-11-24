@@ -11,7 +11,9 @@ export default class Events {
     type: 'date',
   })
   startDate: Date;
-  @Column()
+  @Column({
+    type: 'date',
+  })
   expiryDate: Date;
   @Column()
   image: string;
