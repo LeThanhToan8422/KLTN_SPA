@@ -33,9 +33,9 @@ export default class AppointmentDetail {
     default: StatusAppoiment.CONFIRMED,
   })
   status: StatusAppoiment;
-  @Column()
+  @Column({ default: null })
   employeeId: number;
-  @Column()
+  @Column({ default: null })
   bedId: number;
   @Column()
   appointmentId: number;

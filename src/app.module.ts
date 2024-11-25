@@ -40,7 +40,6 @@ import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CustomThrottlerGuard } from './guards/custom-throttler.guard';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
