@@ -1,3 +1,4 @@
+import { CustomerGiftService } from './../customer-gift/customer-gift.service';
 import { AppointmentDetailService } from './../appointment-detail/appointment-detail.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +13,9 @@ import { Pagination } from 'src/helpers/pagination';
 import CustomerDto from '../customer/dtos/customer.dto';
 import { CustomerService } from '../customer/customer.service';
 import AppointmentDetailDto from '../appointment-detail/dtos/appointment-detail.dto';
+import { StatusAppoiment } from 'src/enums/status-appointment.enum';
+import { StatusPayment } from 'src/enums/status-payment.enum';
+import { StatusCustomerGift } from 'src/enums/status-customer-gift.enum';
 
 @Injectable()
 export class AppointmentService {
@@ -20,6 +24,7 @@ export class AppointmentService {
     @InjectRepository(Appointment)
     private readonly appointmentRepository: Repository<Appointment>,
     private readonly customerService: CustomerService,
+    private readonly customerGiftService: CustomerGiftService,
     private readonly appointmentDetailService: AppointmentDetailService,
     private datasource: DataSource,
   ) {
@@ -128,5 +133,71 @@ export class AppointmentService {
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(AppoinmentDto, appointments)),
     );
+  }
+
+  async updateStatusAfterPayment(
+    appointmentId: number,
+    appointmentDetails: Array<string>,
+    voucherId: Array<string>,
+  ) {
+    const queryRunner = this.datasource.createQueryRunner();
+    queryRunner.startTransaction();
+    try {
+      // AppointmentDetails
+      const foundDetails =
+        await this.appointmentDetailService.getAll(appointmentId);
+      const detailFilters = await (
+        foundDetails.data as AppointmentDetailDto[]
+      ).filter((d) => appointmentDetails.includes(d.id + ''));
+      const resultDetails = await Promise.all(
+        detailFilters.map(
+          async (df) =>
+            await this.appointmentDetailService.updateStatus(
+              df.id,
+              StatusAppoiment.PAID,
+            ),
+        ),
+      );
+      // Appointment
+      const foundAppointment = await this.appointmentRepository.findOne({
+        where: {
+          id: appointmentId,
+        },
+      });
+      let resultAppointment = null;
+      if (foundAppointment) {
+        foundAppointment.status = StatusPayment.PAID;
+        resultAppointment =
+          await this.appointmentRepository.save(foundAppointment);
+      } else {
+        await queryRunner.rollbackTransaction();
+        return ResponseCustomizer.error(
+          ErrorCustomizer.NotFoundError('Not found appointment'),
+        );
+      }
+
+      // Voucher
+      const resultVouchers = await Promise.all(
+        voucherId.map(
+          async (v) =>
+            await this.customerGiftService.updateStatus(
+              Number(v),
+              StatusCustomerGift.USED,
+            ),
+        ),
+      );
+      await queryRunner.commitTransaction();
+      return ResponseCustomizer.success({
+        message: 'successfully',
+        resultAppointment,
+        resultDetails,
+        resultVouchers,
+      });
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    }
   }
 }

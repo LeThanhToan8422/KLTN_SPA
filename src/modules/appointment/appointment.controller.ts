@@ -96,8 +96,6 @@ export class AppointmentController {
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @Get('payments/momo')
   async payMoMO(@Req() req: Request) {
-    console.log(req.query);
-
     const accessKey = 'F8BBA842ECF85';
     const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
     const orderInfo = 'pay with MoMo';
@@ -108,7 +106,18 @@ export class AppointmentController {
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =
-      req.query.appointmentId + '_:_' + partnerCode + new Date().getTime();
+      req.query.appointmentId +
+      '_:_' +
+      (req.query.appointmentDetails
+        ? JSON.parse(req.query.appointmentDetails + '').join('_')
+        : '') +
+      '_:_' +
+      (req.query.voucherId
+        ? JSON.parse(req.query.voucherId + '').join('_')
+        : '') +
+      '_:_' +
+      partnerCode +
+      new Date().getTime();
     const requestId = orderId;
     const extraData = '';
     const orderGroupId = '';
@@ -187,8 +196,16 @@ export class AppointmentController {
   @Public()
   @Post('receive-notify/momo')
   async receiveNotifyMoMo(@Req() req: Request) {
-    console.log(req.body);
-    return req.body;
+    const information = req.body.orderId.split('_:_');
+    const appointmentId = Number(information[0]);
+    const appointmentDetails = information[1].split('_');
+    const voucherId = information[2].split('_');
+    const response = await this.appointmentService.updateStatusAfterPayment(
+      appointmentId,
+      appointmentDetails,
+      voucherId,
+    );
+    return response;
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)

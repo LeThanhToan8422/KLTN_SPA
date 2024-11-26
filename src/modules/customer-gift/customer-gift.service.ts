@@ -8,6 +8,7 @@ import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
+import { StatusCustomerGift } from 'src/enums/status-customer-gift.enum';
 
 @Injectable()
 export class CustomerGiftService {
@@ -44,6 +45,37 @@ export class CustomerGiftService {
     queryRunner.startTransaction();
     try {
       const savedItem = await this.crudRepository.update(customerGiftDto);
+      await queryRunner.commitTransaction();
+      return ResponseCustomizer.success(
+        instanceToPlain(plainToInstance(CustomerGiftDto, savedItem)),
+      );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    }
+  }
+
+  async updateStatus(id: number, status: StatusCustomerGift) {
+    const queryRunner = this.datasource.createQueryRunner();
+    queryRunner.startTransaction();
+    try {
+      const found = await this.customerGiftRepository.findOne({
+        where: {
+          id: id,
+        },
+      });
+      let savedItem = null;
+      if (found) {
+        found.status = status;
+        savedItem = await this.customerGiftRepository.save(found);
+      } else {
+        await queryRunner.rollbackTransaction();
+        return ResponseCustomizer.error(
+          ErrorCustomizer.NotFoundError('Not found voucher of customer'),
+        );
+      }
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success(
         instanceToPlain(plainToInstance(CustomerGiftDto, savedItem)),
