@@ -91,8 +91,8 @@ export class AppointmentController {
     );
   }
 
-  @Public()
-  // @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  // @Public()
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @Get('payments/momo')
   async payMoMO(@Req() req: Request) {
