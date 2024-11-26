@@ -142,7 +142,7 @@ export class EmployeeController {
     return await this.employeeService.getById(Number(userDto.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER)
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
   @Get('account/:id')
   async getByAccountId(@Req() req: Request) {
     return await this.employeeService.getByAccountId(Number(req.params.id));
