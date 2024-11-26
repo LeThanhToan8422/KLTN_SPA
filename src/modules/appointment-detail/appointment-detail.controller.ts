@@ -8,6 +8,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('appointment-detail')
 export class AppointmentDetailController {
@@ -64,7 +65,8 @@ export class AppointmentDetailController {
     return await this.appointmentDetailService.delete(Number(req.params.id));
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  // @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Public()
   @Get()
   async getAll(@Req() req: Request) {
     return await this.appointmentDetailService.getAll(

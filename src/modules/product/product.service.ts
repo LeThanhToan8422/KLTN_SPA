@@ -9,6 +9,7 @@ import { instanceToPlain, plainToInstance } from 'class-transformer';
 import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Pagination } from 'src/helpers/pagination';
 import UpdateStatusDto from 'src/dtos/update-status.dto';
+import { Status } from 'src/enums/status.enum';
 
 @Injectable()
 export class ProductService {
@@ -72,11 +73,17 @@ export class ProductService {
     }
   }
 
-  async getAll(page: number, limit: number) {
-    const paginatedResult = await this.crudRepository.getAll(page, limit);
+  async getAll(page: number, limit: number, status: Status = Status.ACTIVE) {
+    const [data, totalItems] = await this.productRepository.findAndCount({
+      where: {
+        status: status,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
     return ResponseCustomizer.success(
-      instanceToPlain(plainToInstance(ProductDto, paginatedResult.data)),
-      new Pagination(paginatedResult.totalItems, page, limit),
+      instanceToPlain(plainToInstance(ProductDto, data)),
+      new Pagination(totalItems, page, limit),
     );
   }
 
