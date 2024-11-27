@@ -119,4 +119,10 @@ export class ProductController {
   async getById(@Req() req: Request) {
     return await this.productService.getById(Number(req.params.id));
   }
+
+  @Public()
+  @Get('all/with-prices')
+  async getAllWithPrices() {
+    return await this.productService.getAllWithPrices();
+  }
 }

@@ -8,6 +8,7 @@ import ErrorCustomizer from 'src/helpers/error-customizer.error';
 import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('schedule')
 export class ScheduleController {
@@ -72,5 +73,12 @@ export class ScheduleController {
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.scheduleService.getById(Number(req.params.id));
+  }
+
+  // @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
+  @Public()
+  @Get('date/week')
+  async getSchedulesByDate(@Req() req: Request) {
+    return await this.scheduleService.getSchedulesByDate(req.query.date + '');
   }
 }

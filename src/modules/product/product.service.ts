@@ -99,4 +99,14 @@ export class ProductService {
       await this.crudRepository.updateStatus(updateStatusDto),
     );
   }
+
+  async getAllWithPrices() {
+    const response = await this.datasource.query(`
+      select p.id, p.name, p.image, p.serviceCategoryId, pr.price, pr.specialPrice, pr.commission from product as p
+      inner join prices as pr on p.id = pr.foreignKeyId
+      where pr.type = 'product' and pr.status = 'active' 
+      and p.status = 'active' and pr.applicableDate <= NOW()  
+    `);
+    return ResponseCustomizer.success(response);
+  }
 }

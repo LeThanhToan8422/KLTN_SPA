@@ -85,4 +85,22 @@ export class ScheduleService {
       instanceToPlain(plainToInstance(ScheduleDto, response)),
     );
   }
+
+  async getSchedulesByDate(date: string) {
+    const response = await this.datasource.query(
+      `
+      SELECT *
+      FROM schedule
+      WHERE date BETWEEN 
+        DATE_SUB(?, INTERVAL (DAYOFWEEK(?) - 2) DAY)
+        AND 
+        DATE_ADD(?, INTERVAL (8 - DAYOFWEEK(?)) DAY)
+      order by date ASC, shift ASC
+    `,
+      [date, date, date, date],
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ScheduleDto, response)),
+    );
+  }
 }

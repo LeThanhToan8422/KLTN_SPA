@@ -158,6 +158,19 @@ export class AppointmentService {
             ),
         ),
       );
+
+      const canceldetailFilters = await (
+        foundDetails.data as AppointmentDetailDto[]
+      ).filter((d) => !appointmentDetails.includes(d.id + ''));
+      await Promise.all(
+        canceldetailFilters.map(
+          async (df) =>
+            await this.appointmentDetailService.updateStatus(
+              df.id,
+              StatusAppoiment.CANCELED,
+            ),
+        ),
+      );
       // Appointment
       const foundAppointment = await this.appointmentRepository.findOne({
         where: {
@@ -188,7 +201,6 @@ export class AppointmentService {
       );
       await queryRunner.commitTransaction();
       return ResponseCustomizer.success({
-        message: 'successfully',
         resultAppointment,
         resultDetails,
         resultVouchers,
