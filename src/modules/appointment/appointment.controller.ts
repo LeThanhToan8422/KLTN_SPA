@@ -14,15 +14,14 @@ import { Public } from 'src/decorators/public.decorator';
 import * as crypto from 'crypto';
 import axios from 'axios';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
-import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import MyGateWay from './gateway';
 
-@WebSocketGateway(3000, { transports: ['websocket'] })
 @Controller('appointment')
 export class AppointmentController {
-  @WebSocketServer()
-  server: Server;
-  constructor(private readonly appointmentService: AppointmentService) {}
+  constructor(
+    private readonly appointmentService: AppointmentService,
+    private readonly myGateWay: MyGateWay,
+  ) {}
 
   @Public()
   @Throttle({ default: { limit: 10, ttl: 60000 } })
@@ -107,7 +106,7 @@ export class AppointmentController {
     const partnerCode = 'MOMO';
     const redirectUrl = 'http://localhost:5173/manager/appointment';
     const ipnUrl =
-      'https://4c4a-2402-800-6371-fea6-a06a-e194-fa52-bf8f.ngrok-free.app/appointment/receive-notify/momo';
+      'https://54ff-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =
@@ -211,18 +210,7 @@ export class AppointmentController {
       appointmentDetails,
       voucherId,
     );
-    if (response.data) {
-      this.server.emit('notify-payment', {
-        message: 'success',
-        data: response.data,
-      });
-    } else {
-      this.server.emit('notify-payment', {
-        message: 'failure',
-        error: response.error,
-      });
-    }
-    console.log(response);
+    this.myGateWay.sendNotifyPayment(response);
     return response;
   }
 

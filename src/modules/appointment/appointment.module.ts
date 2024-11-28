@@ -9,6 +9,7 @@ import AppointmentDetail from 'src/entities/appointment-detail.entity';
 import { AppointmentDetailService } from '../appointment-detail/appointment-detail.service';
 import { CustomerGiftService } from '../customer-gift/customer-gift.service';
 import CustomerGift from 'src/entities/customer-gift.entity';
+import MyGateWay from './gateway';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import CustomerGift from 'src/entities/customer-gift.entity';
     CustomerService,
     AppointmentDetailService,
     CustomerGiftService,
+    MyGateWay,
   ],
 })
 export class AppointmentModule {}
