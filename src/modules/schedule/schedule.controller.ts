@@ -81,4 +81,13 @@ export class ScheduleController {
   async getSchedulesByDate(@Req() req: Request) {
     return await this.scheduleService.getSchedulesByDate(req.query.date + '');
   }
+
+  @Public()
+  @Get('date/week/employee/:id')
+  async getSchedulesByDateByEmployeeId(@Req() req: Request) {
+    return await this.scheduleService.getSchedulesByDateByEmployeeId(
+      req.query.date + '',
+      Number(req.params.id),
+    );
+  }
 }

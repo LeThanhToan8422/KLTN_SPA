@@ -136,6 +136,17 @@ export class EmployeeController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
+  @Get('statistic/:employeeId')
+  async statisticEmployeeById(@Req() req: Request) {
+    return await this.employeeService.statisticEmployeeById(
+      Number(req.query.branchId),
+      Number(req.params.employeeId),
+      Number(req.query.month),
+      Number(req.query.year),
+    );
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
   @Get('details')
   async getById(@Req() req: Request) {
     const userDto = await plainToInstance(UserDto, req.user);

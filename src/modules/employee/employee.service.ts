@@ -137,6 +137,9 @@ export class EmployeeService {
     const response = await this.datasource.query(
       `
       select em.id, em.fullName, em.role, 
+      SUM(HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime))) as hours, (select w.hourlyRate from employee as e
+      inner join wage as w on w.role = e.role
+      where NOW() <= w.effectiveDate and e.id = sch.employeeId) as rates,
       SUM(HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime)) * (select w.hourlyRate from employee as e
       inner join wage as w on w.role = e.role
       where NOW() <= w.effectiveDate and e.id = sch.employeeId)) as salary,
@@ -151,6 +154,40 @@ export class EmployeeService {
       group by sch.employeeId  
     `,
       [year, month, year, month, branchId],
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(EmployeeSalaryDto, response)),
+    );
+  }
+
+  async statisticEmployeeById(
+    branchId: number,
+    employeeId: number,
+    month: number,
+    year: number,
+  ) {
+    const response = await this.datasource.query(
+      `
+      select a.dateTime, sch.shift, sch.checkInTime, sch.checkOutTime, GROUP_CONCAT(ad.time) as appointmentTimes,
+      HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime)) as hours, 
+      (select w.hourlyRate from employee as e
+      inner join wage as w on w.role = e.role
+      where NOW() <= w.effectiveDate and e.id = sch.employeeId) as rates,
+      (HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime)) * (select w.hourlyRate from employee as e
+      inner join wage as w on w.role = e.role
+      where NOW() <= w.effectiveDate and e.id = sch.employeeId)) as salary,
+        SUM(pr.commission) as commission
+    from schedule as sch
+    inner join appointment as a on sch.date = a.dateTime
+    inner join appointment_detail as ad on a.id = ad.appointmentId and ad.employeeId = sch.employeeId
+    inner join prices as pr on pr.foreignKeyId = ad.foreignKeyId
+    where a.branchId = ? and sch.employeeId = ? and YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
+    and ad.category = 'services' and ad.status = 'paid' 
+    and a.status = 'paid' and pr.type = 'service' and pr.status = 'active' and pr.applicableDate <= NOW()
+    group by a.dateTime
+    order by a.dateTime ASC
+    `,
+      [branchId, employeeId, year, month],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(EmployeeSalaryDto, response)),
