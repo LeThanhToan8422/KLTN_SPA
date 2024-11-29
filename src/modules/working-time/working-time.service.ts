@@ -94,23 +94,24 @@ export class WorkingTimeService {
     roomId: number,
     date: string,
   ) {
+    const [dt, time] = date.split(' ');
     const response = await this.datasource.query(
       `
       select * from working_time as wt
       where wt.time not in (
-        select DATE_FORMAT(a.dateTime, '%H:%i')
+        select DATE_FORMAT(ad.time, '%H:%i')
         from appointment as a
         inner join appointment_detail ad on a.id = ad.appointmentId
         inner join service as s on s.id = ad.foreignKeyId
         inner join service_category as sc on sc.id = s.serviceCategoryId
-        where a.branchId = ? and a.dateTime = ?
+        where a.branchId = ? and DATE(a.dateTime) = ? and ad.time = ?
         and ad.status = 'confirmed' and ad.category = 'services'
         and sc.roomId = ?
         group by a.dateTime
         having COUNT(*) = (select COUNT(*) from bed as b where b.roomId = ?)
       )
       `,
-      [bId, date, roomId, roomId],
+      [bId, dt, time, roomId, roomId],
     );
 
     console.log(response);

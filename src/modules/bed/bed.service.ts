@@ -88,6 +88,7 @@ export class BedService {
   }
 
   async getBedsByServiceAndDate(bId: number, date: string, roomId: number) {
+    const [dt, time] = date.split(' ');
     const response = await this.datasource.query(
       `
       select * from bed as b
@@ -95,10 +96,10 @@ export class BedService {
         select ad.bedId from appointment as a
         inner join appointment_detail as ad on a.id = ad.appointmentId
         where ad.status = 'confirmed' and ad.category = 'services'
-        and a.branchId = ? and a.dateTime = ?
+        and a.branchId = ? and a.dateTime = ? and ad.time = ?
       ) and b.roomId = ?
       `,
-      [bId, date, roomId],
+      [bId, dt, time, roomId],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(BedDto, response)),

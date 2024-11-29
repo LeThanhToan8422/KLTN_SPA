@@ -19,7 +19,7 @@ export default class Appointment {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({
-    type: 'datetime',
+    type: 'date',
   })
   dateTime: Date;
   @Column({

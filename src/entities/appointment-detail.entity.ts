@@ -22,6 +22,10 @@ export default class AppointmentDetail {
   })
   category: CategoryAppointment;
   @Column({
+    type: 'time',
+  })
+  time: Date;
+  @Column({
     default: 0,
   })
   expense: number;

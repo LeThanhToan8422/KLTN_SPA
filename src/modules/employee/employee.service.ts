@@ -88,6 +88,7 @@ export class EmployeeService {
   }
 
   async getEmployeesByDateTime(branchId: number, dateTime: string) {
+    const [date, time] = dateTime.split(' ');
     const response = await this.datasource.query(
       `
       select *
@@ -97,12 +98,12 @@ export class EmployeeService {
       where DATE(sch.date) = DATE(?) and (TIME(?) BETWEEN sch.checkInTime AND sch.checkOutTime))
       having (select COUNT(*) from appointment as a
       inner join appointment_detail as ad on a.id = ad.appointmentId
-      where a.dateTime = ? and ad.employeeId = e.id) = 0
+      where a.dateTime = ? and ad.time = ? and ad.employeeId = e.id) = 0
       order by (select COUNT(*) from appointment as a
       inner join appointment_detail as ad on a.id = ad.appointmentId
-      where a.dateTime = ? and ad.employeeId = e.id) ASC  
+      where a.dateTime = ? and ad.time = ? and ad.employeeId = e.id) ASC  
     `,
-      [branchId, dateTime, dateTime, dateTime, dateTime],
+      [branchId, date, time, date, time, date, time],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(EmployeeDto, response)),
