@@ -104,21 +104,19 @@ export class AppointmentController {
     const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
     const orderInfo = 'pay with MoMo';
     const partnerCode = 'MOMO';
-    const redirectUrl = 'http://localhost:5173/manager/appointment';
+    const redirectUrl = '';
     const ipnUrl =
-      'https://54ff-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
+      'https://17ef-115-79-42-100.ngrok-free.app/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =
       req.query.appointmentId +
       '_:_' +
       (req.query.appointmentDetails
-        ? JSON.parse(req.query.appointmentDetails + '').join('_')
+        ? (req.query.appointmentDetails as []).join('_')
         : '') +
       '_:_' +
-      (req.query.voucherId
-        ? JSON.parse(req.query.voucherId + '').join('_')
-        : '') +
+      (req.query.voucherId ? (req.query.voucherId as []).join('_') : '') +
       '_:_' +
       partnerCode +
       new Date().getTime();
@@ -200,7 +198,6 @@ export class AppointmentController {
   @Public()
   @Post('receive-notify/momo')
   async receiveNotifyMoMo(@Req() req: Request) {
-    console.log(req.body.orderId);
     const information = req.body.orderId.split('_:_');
     const appointmentId = Number(information[0]);
     const appointmentDetails = information[1].split('_');

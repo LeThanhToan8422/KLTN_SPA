@@ -168,7 +168,7 @@ export class EmployeeService {
   ) {
     const response = await this.datasource.query(
       `
-      select a.dateTime, sch.shift, sch.checkInTime, sch.checkOutTime, GROUP_CONCAT(ad.time) as appointmentTimes,
+      select CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, sch.shift, sch.checkInTime, sch.checkOutTime, GROUP_CONCAT(ad.time) as appointmentTimes,
       HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime)) as hours, 
       (select w.hourlyRate from employee as e
       inner join wage as w on w.role = e.role
@@ -177,15 +177,15 @@ export class EmployeeService {
       inner join wage as w on w.role = e.role
       where NOW() <= w.effectiveDate and e.id = sch.employeeId)) as salary,
         SUM(pr.commission) as commission
-    from schedule as sch
-    inner join appointment as a on sch.date = a.dateTime
-    inner join appointment_detail as ad on a.id = ad.appointmentId and ad.employeeId = sch.employeeId
-    inner join prices as pr on pr.foreignKeyId = ad.foreignKeyId
-    where a.branchId = ? and sch.employeeId = ? and YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
-    and ad.category = 'services' and ad.status = 'paid' 
-    and a.status = 'paid' and pr.type = 'service' and pr.status = 'active' and pr.applicableDate <= NOW()
-    group by a.dateTime
-    order by a.dateTime ASC
+      from schedule as sch
+      inner join appointment as a on sch.date = a.dateTime
+      inner join appointment_detail as ad on a.id = ad.appointmentId and ad.employeeId = sch.employeeId
+      inner join prices as pr on pr.foreignKeyId = ad.foreignKeyId
+      where a.branchId = ? and sch.employeeId = ? and YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
+      and ad.category = 'services' and ad.status = 'paid' 
+      and a.status = 'paid' and pr.type = 'service' and pr.status = 'active' and pr.applicableDate <= NOW()
+      group by a.dateTime
+      order by a.dateTime ASC
     `,
       [branchId, employeeId, year, month],
     );

@@ -11,7 +11,7 @@ import {
 import { Socket, Server } from 'socket.io';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: '*' } })
 @Injectable()
 export default class MyGateWay
   implements OnGatewayConnection, OnGatewayDisconnect

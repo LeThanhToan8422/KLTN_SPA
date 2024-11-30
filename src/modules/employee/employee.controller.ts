@@ -135,7 +135,8 @@ export class EmployeeController {
     );
   }
 
-  @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
+  // @Roles(Role.ADMIN, Role.MANAGER, Role.EMPLOYEE)
+  @Public()
   @Get('statistic/:employeeId')
   async statisticEmployeeById(@Req() req: Request) {
     return await this.employeeService.statisticEmployeeById(
