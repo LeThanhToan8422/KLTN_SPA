@@ -29,7 +29,7 @@ export default class Service {
   @JoinColumn({
     name: 'serviceCategoryId',
   })
-  serviceCategories: ServiceCategory[];
+  serviceCategory: ServiceCategory;
   @OneToMany(() => TreatmentService, (ts) => ts.service)
   treatmentServices: TreatmentService[];
   @OneToMany(() => DetailService, (d) => d.service)

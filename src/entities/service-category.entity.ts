@@ -23,7 +23,7 @@ export default class ServiceCategory {
     name: 'roomId',
   })
   room: Room;
-  @OneToMany(() => Service, (s) => s.serviceCategories)
+  @OneToMany(() => Service, (s) => s.serviceCategory)
   services: Service[];
   @OneToMany(() => Product, (p) => p.serviceCategories)
   products: Product[];

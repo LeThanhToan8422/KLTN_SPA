@@ -33,6 +33,14 @@ export default class ScheduleDto {
   @IsString()
   @Expose()
   checkOutTime: string;
+  // @IsNotEmpty()
+  // @IsString()
+  // @Expose()
+  // startTime: string;
+  // @IsNotEmpty()
+  // @IsString()
+  // @Expose()
+  // endTime: string;
   @IsNotEmpty()
   @IsNumber()
   @Expose()

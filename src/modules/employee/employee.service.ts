@@ -89,13 +89,16 @@ export class EmployeeService {
 
   async getEmployeesByDateTime(branchId: number, dateTime: string) {
     const [date, time] = dateTime.split(' ');
+    console.log(time);
+    const appointmentShift = time < '15:00:00' ? 'morning' : 'afternoon';
+
     const response = await this.datasource.query(
       `
       select *
       from employee as e
       where e.status = 'active' and e.branchId = ? and e.id in (select e.id from employee as e
       inner join schedule as sch on e.id = sch.employeeId
-      where DATE(sch.date) = DATE(?) and (TIME(?) BETWEEN sch.checkInTime AND sch.checkOutTime))
+      where DATE(sch.date) = DATE(?) and sch.shift = ?)
       having (select COUNT(*) from appointment as a
       inner join appointment_detail as ad on a.id = ad.appointmentId
       where a.dateTime = ? and ad.time = ? and ad.employeeId = e.id) = 0
@@ -103,7 +106,7 @@ export class EmployeeService {
       inner join appointment_detail as ad on a.id = ad.appointmentId
       where a.dateTime = ? and ad.time = ? and ad.employeeId = e.id) ASC  
     `,
-      [branchId, date, time, date, time, date, time],
+      [branchId, date, appointmentShift, date, time, date, time],
     );
     return ResponseCustomizer.success(
       instanceToPlain(plainToInstance(EmployeeDto, response)),

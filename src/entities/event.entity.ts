@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import DetailEvent from './detail-event.entity';
+import Prices from './prices.entity';
 
 @Entity()
 export default class Events {
@@ -17,6 +18,12 @@ export default class Events {
   expiryDate: Date;
   @Column()
   image: string;
+  @Column({
+    default: 0,
+  })
+  discount: number;
   @OneToMany(() => DetailEvent, (de) => de.event)
   detailEvents: DetailEvent[];
+  @OneToMany(() => DetailEvent, (de) => de.event)
+  prices: Prices[];
 }
