@@ -198,6 +198,8 @@ export class AppointmentController {
   @Public()
   @Post('receive-notify/momo')
   async receiveNotifyMoMo(@Req() req: Request) {
+    console.log(req.body);
+
     const information = req.body.orderId.split('_:_');
     const appointmentId = Number(information[0]);
     const appointmentDetails = information[1].split('_');

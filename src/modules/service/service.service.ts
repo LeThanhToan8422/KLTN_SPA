@@ -121,7 +121,7 @@ export class ServiceService {
       inner join appointment_detail as ad on  ad.appointmentId = a.id
       inner join service as s on s.id = ad.foreignKeyId
       inner join detail_service as ds on ds.serviceId = s.id
-      where ad.category = 'services' and ad.status = 'finished'
+      where ad.category = 'services' and ad.status = 'paid'
       and ds.title = 'Mô tả dịch vụ'
       group by ad.foreignKeyId
       order by COUNT(*) DESC, ad.expense DESC
@@ -167,7 +167,7 @@ export class ServiceService {
       inner join prices as p on p.foreignKeyId = ad.foreignKeyId
       inner join service as s on s.id = ad.appointmentId
       where YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
-      and a.branchId = ? and ad.status = 'finished' 
+      and a.branchId = ? and ad.status = 'paid' 
       and ad.category = 'services' and p.type = 'service'
       group by ad.foreignKeyId
     `,
