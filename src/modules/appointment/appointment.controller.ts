@@ -36,6 +36,7 @@ export class AppointmentController {
       foreignKeyId,
       bedId,
       employeeId,
+      time,
       ...appointment
     } = req.body;
     let customerDto = null;
@@ -64,6 +65,7 @@ export class AppointmentController {
       foreignKeyId,
       bedId,
       employeeId,
+      time,
     });
 
     const errorss = await validate(appointmentDetailDto);
