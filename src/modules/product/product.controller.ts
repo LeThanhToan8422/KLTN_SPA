@@ -23,6 +23,7 @@ import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import UpdateStatusDto from 'src/dtos/update-status.dto';
+import { Status } from 'src/enums/status.enum';
 
 @Controller('product')
 export class ProductController {
@@ -111,6 +112,16 @@ export class ProductController {
     return await this.productService.getAll(
       Number(req.query.page),
       Number(req.query.limit),
+    );
+  }
+
+  @Public()
+  @Get('status')
+  async getAllByStatus(@Req() req: Request) {
+    return await this.productService.getAllByStatus(
+      Number(req.query.page),
+      Number(req.query.limit),
+      req.query.status + '' === 'active' ? Status.ACTIVE : Status.INACTIVE,
     );
   }
 

@@ -135,6 +135,30 @@ export class AppointmentService {
     );
   }
 
+  async getAppointmentByCustomerId(customerId: number) {
+    const appointments = await this.datasource.query(
+      `
+      select a.id, CONCAT(b.name, ' ', b.address) as branch, ad.status, a.voucherId, a.dateTime, ad.time, ad.category, ad.expense, s.name, s.image, e.fullName as employee
+      from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      inner join service as s on s.id = ad.foreignKeyId
+      inner join employee as e on e.id = ad.employeeId
+      inner join branch as b on b.id = a.branchId
+      where a.customerId = ? and ad.category = 'services'
+      union
+      select a.id, CONCAT(b.name, ' ', b.address) as branch, ad.status, a.voucherId, a.dateTime, ad.time, ad.category, ad.expense, p.name, p.image, e.fullName as employee
+      from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      inner join product as p on p.id = ad.foreignKeyId
+      left join employee as e on e.id = ad.employeeId
+      inner join branch as b on b.id = a.branchId
+      where a.customerId = ? and ad.category = 'products'  
+    `,
+      [customerId, customerId],
+    );
+    return ResponseCustomizer.success(appointments);
+  }
+
   async updateStatusAfterPayment(
     appointmentId: number,
     appointmentDetails: Array<string>,

@@ -73,7 +73,22 @@ export class ProductService {
     }
   }
 
-  async getAll(page: number, limit: number, status: Status = Status.ACTIVE) {
+  async getAll(page: number, limit: number) {
+    const [data, totalItems] = await this.productRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ProductDto, data)),
+      new Pagination(totalItems, page, limit),
+    );
+  }
+
+  async getAllByStatus(
+    page: number,
+    limit: number,
+    status: Status = Status.ACTIVE,
+  ) {
     const [data, totalItems] = await this.productRepository.findAndCount({
       where: {
         status: status,

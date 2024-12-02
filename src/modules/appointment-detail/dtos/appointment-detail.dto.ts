@@ -22,7 +22,7 @@ export default class AppointmentDetailDto {
   @IsIn(['services', 'treatments', 'products'])
   @Expose()
   category: string;
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Expose()
   time: string;

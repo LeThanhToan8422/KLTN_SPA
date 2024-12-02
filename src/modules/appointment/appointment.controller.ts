@@ -36,9 +36,13 @@ export class AppointmentController {
       foreignKeyId,
       bedId,
       employeeId,
-      time,
-      ...appointment
+      dateTime,
+      customerId,
+      branchId,
+      bonusId,
     } = req.body;
+
+    const [date, time] = dateTime.split(' ');
     let customerDto = null;
     if (!req.body.customerId) {
       customerDto = await plainToInstance(CustomerDto, {
@@ -78,7 +82,12 @@ export class AppointmentController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrorss[0]));
     }
-    const appointmentDto = await plainToInstance(AppoinmentDto, appointment);
+    const appointmentDto = await plainToInstance(AppoinmentDto, {
+      dateTime: date,
+      customerId,
+      branchId,
+      bonusId,
+    });
     const errors = await validate(appointmentDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
@@ -108,7 +117,7 @@ export class AppointmentController {
     const partnerCode = 'MOMO';
     const redirectUrl = '';
     const ipnUrl =
-      'https://17ef-115-79-42-100.ngrok-free.app/appointment/receive-notify/momo';
+      'https://2d52-2402-800-6371-fea6-4854-1ff3-5077-c9c3.ngrok-free.app/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =
@@ -264,5 +273,12 @@ export class AppointmentController {
   async getByCustomerId(@Req() req: Request) {
     const customerId = Number(req.params.customerId);
     return await this.appointmentService.getByCustomerId(customerId);
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Get('details/customer/:customerId')
+  async getAppointmentByCustomerId(@Req() req: Request) {
+    const customerId = Number(req.params.customerId);
+    return await this.appointmentService.getAppointmentByCustomerId(customerId);
   }
 }
