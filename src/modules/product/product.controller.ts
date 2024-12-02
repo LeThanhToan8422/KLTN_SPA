@@ -125,4 +125,12 @@ export class ProductController {
   async getAllWithPrices() {
     return await this.productService.getAllWithPrices();
   }
+
+  @Public()
+  @Get('events/:eventId')
+  async getProductsByEventId(@Req() req: Request) {
+    return await this.productService.getProductsByEventId(
+      Number(req.params.eventId),
+    );
+  }
 }

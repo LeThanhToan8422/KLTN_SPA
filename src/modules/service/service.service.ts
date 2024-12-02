@@ -188,4 +188,20 @@ export class ServiceService {
       await this.crudRepository.updateStatus(updateStatusDto),
     );
   }
+
+  async getServicesByEventId(eventId: number) {
+    const paginatedResult = await this.datasource.query(
+      `
+      select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission, floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice)) as finalPrice
+      from prices as p
+      inner join service as s on p.foreignKeyId = s.id
+      left join events as e on e.id = p.eventId
+      where p.type = 'service' and (p.price - p.specialPrice) > 0 and p.eventId = ?
+    `,
+      [eventId],
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ServiceDto, paginatedResult)),
+    );
+  }
 }

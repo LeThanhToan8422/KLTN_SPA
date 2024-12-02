@@ -111,4 +111,19 @@ export class ProductService {
     `);
     return ResponseCustomizer.success(response);
   }
+
+  async getProductsByEventId(eventId: number) {
+    const response = await this.datasource.query(
+      `
+      select p.id, p.name, p.image, p.serviceCategoryId, pr.price, pr.specialPrice, pr.commission, floor(IF(e.discount IS NOT NULL, pr.price - (pr.price * (e.discount / 100)), pr.specialPrice)) as finalPrice
+      from product as p
+      inner join prices as pr on p.id = pr.foreignKeyId
+      left join events as e on e.id = pr.eventId
+      where pr.type = 'product' and pr.status = 'active' 
+      and p.status = 'active' and pr.applicableDate <= NOW() and pr.eventId = ?
+    `,
+      [eventId],
+    );
+    return ResponseCustomizer.success(response);
+  }
 }
