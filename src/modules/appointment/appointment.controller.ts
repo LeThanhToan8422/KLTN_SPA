@@ -276,9 +276,10 @@ export class AppointmentController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
-  @Get('details/customer/:customerId')
-  async getAppointmentByCustomerId(@Req() req: Request) {
-    const customerId = Number(req.params.customerId);
-    return await this.appointmentService.getAppointmentByCustomerId(customerId);
+  @Get('details/account/:accountId')
+  async getAppointmentByAccountId(@Req() req: Request) {
+    return await this.appointmentService.getAppointmentByAccountId(
+      Number(req.params.accountId),
+    );
   }
 }
