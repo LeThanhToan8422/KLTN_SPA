@@ -24,6 +24,6 @@ export default class Events {
   discount: number;
   @OneToMany(() => DetailEvent, (de) => de.event)
   detailEvents: DetailEvent[];
-  @OneToMany(() => DetailEvent, (de) => de.event)
+  @OneToMany(() => Prices, (p) => p.event)
   prices: Prices[];
 }

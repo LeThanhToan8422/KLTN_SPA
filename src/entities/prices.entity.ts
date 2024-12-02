@@ -1,6 +1,13 @@
 import { Status } from 'src/enums/status.enum';
 import { TypePrices } from 'src/enums/type-prices.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import Events from './event.entity';
 
 @Entity()
 export default class Prices {
@@ -32,4 +39,13 @@ export default class Prices {
   status: Status;
   @Column()
   foreignKeyId: number;
+  @Column({
+    default: null,
+  })
+  eventId: number;
+  @ManyToOne(() => Events, (e) => e.prices)
+  @JoinColumn({
+    name: 'eventId',
+  })
+  event: Events;
 }

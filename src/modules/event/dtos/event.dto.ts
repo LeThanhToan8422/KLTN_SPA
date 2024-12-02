@@ -22,4 +22,8 @@ export default class EventDto {
   @IsString()
   @Expose()
   image: string;
+  @IsNotEmpty()
+  @IsNumber()
+  @Expose()
+  discount: number;
 }

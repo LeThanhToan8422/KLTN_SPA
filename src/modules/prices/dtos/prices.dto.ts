@@ -38,4 +38,8 @@ export default class PricesDto {
   @IsNumber()
   @Expose()
   foreignKeyId: number;
+  @IsOptional()
+  @IsNumber()
+  @Expose()
+  eventId: number;
 }

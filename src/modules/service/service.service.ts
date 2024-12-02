@@ -87,8 +87,10 @@ export class ServiceService {
   ) {
     const paginatedResult = await this.datasource.query(
       `
-      select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission from service as s
+      select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission, floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice)) as finalPrice
+      from service as s
       inner join prices as p on s.id = p.foreignKeyId
+      left join events as e on e.id = p.eventId
       where s.status = 'active' and p.type = 'service' and p.applicableDate <= current_date() and s.serviceCategoryId = ?
       limit ?, ? 
     `,
@@ -102,8 +104,10 @@ export class ServiceService {
   async getDiscountServices(page: number, limit: number) {
     const paginatedResult = await this.datasource.query(
       `
-      select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission from prices as p
+      select s.id, s.name, s.duration, s.image, s.serviceCategoryId, p.originalPrice, p.price, p.specialPrice, p.commission, floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice)) as finalPrice
+      from prices as p
       inner join service as s on p.foreignKeyId = s.id
+      left join events as e on e.id = p.eventId
       where p.type = 'service' and (p.price - p.specialPrice) > 0
       limit ?, ? 
     `,
@@ -162,10 +166,11 @@ export class ServiceService {
   ) {
     const response = await this.datasource.query(
       `
-      select s.id, s.name, SUM(p.specialPrice) as revenue, COUNT(*) as quantities from appointment as a
+      select s.id, s.name, SUM(floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice))) as revenue, COUNT(*) as quantities from appointment as a
       inner join appointment_detail as ad on a.id = ad.appointmentId
       inner join prices as p on p.foreignKeyId = ad.foreignKeyId
       inner join service as s on s.id = ad.appointmentId
+      left join events as e on e.id = p.eventId
       where YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
       and a.branchId = ? and ad.status = 'paid' 
       and ad.category = 'services' and p.type = 'service'
