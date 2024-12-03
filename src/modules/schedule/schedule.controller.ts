@@ -54,7 +54,7 @@ export class ScheduleController {
   }
 
   @Roles(Role.ADMIN, Role.MANAGER)
-  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
   @Delete(':id')
   async delete(@Req() req: Request) {
     return await this.scheduleService.delete(Number(req.params.id));

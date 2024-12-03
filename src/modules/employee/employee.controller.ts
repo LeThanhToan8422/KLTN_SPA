@@ -86,6 +86,7 @@ export class EmployeeController {
       id: Number(id),
       ...dataParse,
     });
+
     const errors = await validate(employeeDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
