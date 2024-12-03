@@ -169,7 +169,7 @@ export class ServiceService {
       select s.id, s.name, SUM(floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice))) as revenue, COUNT(*) as quantities from appointment as a
       inner join appointment_detail as ad on a.id = ad.appointmentId
       inner join prices as p on p.foreignKeyId = ad.foreignKeyId
-      inner join service as s on s.id = ad.appointmentId
+      inner join service as s on s.id = ad.foreignKeyId
       left join events as e on e.id = p.eventId
       where YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
       and a.branchId = ? and ad.status = 'paid' 

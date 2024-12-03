@@ -144,4 +144,15 @@ export class ProductController {
       Number(req.params.eventId),
     );
   }
+
+  // @Roles(Role.ADMIN, Role.MANAGER)
+  @Public()
+  @Get('revenues/:branchId')
+  async getRevenueOfServiceByDate(@Req() req: Request) {
+    return await this.productService.getRevenueOfProductByDate(
+      Number(req.query.month),
+      Number(req.query.year),
+      Number(req.params.branchId),
+    );
+  }
 }
