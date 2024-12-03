@@ -98,6 +98,8 @@ export class AppointmentDetailService {
     queryRunner.startTransaction();
     try {
       const appointmentDetail = await this.crudRepository.getById(id);
+      console.log(appointmentDetail);
+
       if (!appointmentDetail) {
         return ErrorCustomizer.NotFoundError(
           `AppointmentDetail with id ${id} not found.`,
@@ -105,7 +107,6 @@ export class AppointmentDetailService {
       }
       appointmentDetail.status = status;
       const updatedItem = await this.crudRepository.update(appointmentDetail);
-
       await queryRunner.commitTransaction();
 
       return ResponseCustomizer.success(

@@ -86,24 +86,24 @@ export class AppointmentDetailController {
   @Put(':id/status')
   async updateStatus(@Req() req: Request) {
     const { status } = req.body;
-    console.log(Number(req.params.id), status);
+    console.log(Number(req.params.id), status.status);
     let stt = StatusAppoiment.CANCELED;
     if (
       !['confirmed', 'implement', 'finished', 'canceled', 'paid'].includes(
-        status + '',
+        status.status + '',
       )
     ) {
       return ErrorCustomizer.BadRequestError(
-        `Invalid status value: ${status}. Allowed values are 'confirmed', 'implement', 'finished', 'canceled'.`,
+        `Invalid status value: ${status.status}. Allowed values are 'confirmed', 'implement', 'finished', 'canceled'.`,
       );
     } else {
-      if (status === 'confirmed') {
+      if (status.status === 'confirmed') {
         stt = StatusAppoiment.CONFIRMED;
-      } else if (status === 'implement') {
+      } else if (status.status === 'implement') {
         stt = StatusAppoiment.IMPLEMENT;
-      } else if (status === 'finished') {
+      } else if (status.status === 'finished') {
         stt = StatusAppoiment.FINISHED;
-      } else if (status === 'paid') {
+      } else if (status.status === 'paid') {
         stt = StatusAppoiment.PAID;
       } else {
         stt = StatusAppoiment.CANCELED;
