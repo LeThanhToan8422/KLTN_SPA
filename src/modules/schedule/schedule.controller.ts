@@ -90,4 +90,12 @@ export class ScheduleController {
       Number(req.params.id),
     );
   }
+
+  @Public()
+  @Get('time-keeping/:date')
+  async getSchedulesByDateForTimekeeping(@Req() req: Request) {
+    return await this.scheduleService.getSchedulesByDateForTimekeeping(
+      req.params.date + '',
+    );
+  }
 }
