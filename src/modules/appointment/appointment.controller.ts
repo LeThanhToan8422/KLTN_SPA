@@ -265,4 +265,20 @@ export class AppointmentController {
     const customerId = Number(req.params.customerId);
     return await this.appointmentService.getByCustomerId(customerId);
   }
+
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Put(':id/status')
+  async updateStatus(@Req() req: Request) {
+    const { status } = req.body;
+    if (!['paid', 'unpaid', 'canceled'].includes(status)) {
+      return ErrorCustomizer.BadRequestError(
+        `Invalid status value: ${status}. Allowed values are 'paid', 'unpaid', 'canceled'.`,
+      );
+    }
+    return await this.appointmentService.updateStatus(
+      Number(req.params.id),
+      status,
+    );
+  }
 }
