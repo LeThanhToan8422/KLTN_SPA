@@ -197,10 +197,13 @@ export class AccountService {
           AccountDto,
           accountResponse.data,
         );
+        console.log(accountResponse);
+        console.log(accountDtoResponse);
+
         if (customerDto) {
           const customerResponse = await this.customerService.create({
             ...customerDto,
-            accountId: accountDtoResponse.id,
+            accountId: accountDtoResponse?.id,
           });
           await queryRunner.commitTransaction();
           return ResponseCustomizer.success({
@@ -214,8 +217,10 @@ export class AccountService {
         } else {
           const employeeResponse = await this.employeeService.create({
             ...employeeDto,
-            accountId: accountDtoResponse.id,
+            accountId: accountDtoResponse?.id,
           });
+          console.log(employeeResponse);
+
           await queryRunner.commitTransaction();
           return ResponseCustomizer.success({
             account: instanceToPlain(

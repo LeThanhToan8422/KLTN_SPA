@@ -140,6 +140,14 @@ export class ServiceController {
   }
 
   @Public()
+  @Get('events/:eventId')
+  async getServicesByEventId(@Req() req: Request) {
+    return await this.serviceService.getServicesByEventId(
+      Number(req.params.eventId),
+    );
+  }
+
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.serviceService.getById(Number(req.params.id));

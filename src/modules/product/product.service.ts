@@ -73,7 +73,22 @@ export class ProductService {
     }
   }
 
-  async getAll(page: number, limit: number, status: Status = Status.ACTIVE) {
+  async getAll(page: number, limit: number) {
+    const [data, totalItems] = await this.productRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ProductDto, data)),
+      new Pagination(totalItems, page, limit),
+    );
+  }
+
+  async getAllByStatus(
+    page: number,
+    limit: number,
+    status: Status = Status.ACTIVE,
+  ) {
     const [data, totalItems] = await this.productRepository.findAndCount({
       where: {
         status: status,
@@ -110,5 +125,44 @@ export class ProductService {
       and p.status = 'active' and pr.applicableDate <= NOW()  
     `);
     return ResponseCustomizer.success(response);
+  }
+
+  async getProductsByEventId(eventId: number) {
+    const response = await this.datasource.query(
+      `
+      select p.id, p.name, p.image, p.serviceCategoryId, pr.price, pr.specialPrice, pr.commission, floor(IF(e.discount IS NOT NULL, pr.price - (pr.price * (e.discount / 100)), pr.specialPrice)) as finalPrice
+      from product as p
+      inner join prices as pr on p.id = pr.foreignKeyId
+      left join events as e on e.id = pr.eventId
+      where pr.type = 'product' and pr.status = 'active' 
+      and p.status = 'active' and pr.applicableDate <= NOW() and pr.eventId = ?
+    `,
+      [eventId],
+    );
+    return ResponseCustomizer.success(response);
+  }
+
+  async getRevenueOfProductByDate(
+    month: number,
+    year: number,
+    branchId: number,
+  ) {
+    const response = await this.datasource.query(
+      `
+      select pr.id, pr.name, SUM(floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice))) as revenue, COUNT(*) as quantities from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      inner join prices as p on p.foreignKeyId = ad.foreignKeyId
+      inner join product as pr on pr.id = ad.foreignKeyId
+      left join events as e on e.id = p.eventId
+      where YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
+      and a.branchId = ? and ad.status = 'paid' 
+      and ad.category = 'products' and p.type = 'product'
+      group by ad.foreignKeyId
+    `,
+      [year, month, branchId],
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ProductDto, response)),
+    );
   }
 }

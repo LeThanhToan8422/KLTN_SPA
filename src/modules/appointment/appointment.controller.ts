@@ -36,9 +36,13 @@ export class AppointmentController {
       foreignKeyId,
       bedId,
       employeeId,
-      time,
-      ...appointment
+      dateTime,
+      customerId,
+      branchId,
+      bonusId,
     } = req.body;
+
+    const [date, time] = dateTime.split(' ');
     let customerDto = null;
     if (!req.body.customerId) {
       customerDto = await plainToInstance(CustomerDto, {
@@ -78,7 +82,12 @@ export class AppointmentController {
       });
       return ErrorCustomizer.BadRequestError(JSON.stringify(messageErrorss[0]));
     }
-    const appointmentDto = await plainToInstance(AppoinmentDto, appointment);
+    const appointmentDto = await plainToInstance(AppoinmentDto, {
+      dateTime: date,
+      customerId,
+      branchId,
+      bonusId,
+    });
     const errors = await validate(appointmentDto);
     if (errors.length > 0) {
       const messageErrors = errors.map((e) => {
@@ -108,7 +117,7 @@ export class AppointmentController {
     const partnerCode = 'MOMO';
     const redirectUrl = '';
     const ipnUrl =
-      'https://17ef-115-79-42-100.ngrok-free.app/appointment/receive-notify/momo';
+      'https://kltn-spa.onrender.com/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =
@@ -279,6 +288,12 @@ export class AppointmentController {
     return await this.appointmentService.updateStatus(
       Number(req.params.id),
       status,
+    );
+  }
+  @Get('details/account/:accountId')
+  async getAppointmentByAccountId(@Req() req: Request) {
+    return await this.appointmentService.getAppointmentByAccountId(
+      Number(req.params.accountId),
     );
   }
 }

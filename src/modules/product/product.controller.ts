@@ -23,6 +23,7 @@ import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import UpdateStatusDto from 'src/dtos/update-status.dto';
+import { Status } from 'src/enums/status.enum';
 
 @Controller('product')
 export class ProductController {
@@ -115,6 +116,16 @@ export class ProductController {
   }
 
   @Public()
+  @Get('status')
+  async getAllByStatus(@Req() req: Request) {
+    return await this.productService.getAllByStatus(
+      Number(req.query.page),
+      Number(req.query.limit),
+      req.query.status + '' === 'active' ? Status.ACTIVE : Status.INACTIVE,
+    );
+  }
+
+  @Public()
   @Get(':id')
   async getById(@Req() req: Request) {
     return await this.productService.getById(Number(req.params.id));
@@ -124,5 +135,24 @@ export class ProductController {
   @Get('all/with-prices')
   async getAllWithPrices() {
     return await this.productService.getAllWithPrices();
+  }
+
+  @Public()
+  @Get('events/:eventId')
+  async getProductsByEventId(@Req() req: Request) {
+    return await this.productService.getProductsByEventId(
+      Number(req.params.eventId),
+    );
+  }
+
+  // @Roles(Role.ADMIN, Role.MANAGER)
+  @Public()
+  @Get('revenues/:branchId')
+  async getRevenueOfServiceByDate(@Req() req: Request) {
+    return await this.productService.getRevenueOfProductByDate(
+      Number(req.query.month),
+      Number(req.query.year),
+      Number(req.params.branchId),
+    );
   }
 }

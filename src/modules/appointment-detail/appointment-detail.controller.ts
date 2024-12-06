@@ -9,6 +9,7 @@ import { Throttle } from '@nestjs/throttler';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { Public } from 'src/decorators/public.decorator';
+import { StatusAppoiment } from 'src/enums/status-appointment.enum';
 
 @Controller('appointment-detail')
 export class AppointmentDetailController {
@@ -85,14 +86,32 @@ export class AppointmentDetailController {
   @Put(':id/status')
   async updateStatus(@Req() req: Request) {
     const { status } = req.body;
-    if (!['confirmed', 'implement', 'finished', 'canceled'].includes(status)) {
+    console.log(Number(req.params.id), status.status);
+    let stt = StatusAppoiment.CANCELED;
+    if (
+      !['confirmed', 'implement', 'finished', 'canceled', 'paid'].includes(
+        status.status + '',
+      )
+    ) {
       return ErrorCustomizer.BadRequestError(
-        `Invalid status value: ${status}. Allowed values are 'confirmed', 'implement', 'finished', 'canceled'.`,
+        `Invalid status value: ${status.status}. Allowed values are 'confirmed', 'implement', 'finished', 'canceled'.`,
       );
+    } else {
+      if (status.status === 'confirmed') {
+        stt = StatusAppoiment.CONFIRMED;
+      } else if (status.status === 'implement') {
+        stt = StatusAppoiment.IMPLEMENT;
+      } else if (status.status === 'finished') {
+        stt = StatusAppoiment.FINISHED;
+      } else if (status.status === 'paid') {
+        stt = StatusAppoiment.PAID;
+      } else {
+        stt = StatusAppoiment.CANCELED;
+      }
     }
     return await this.appointmentDetailService.updateStatus(
       Number(req.params.id),
-      status,
+      stt,
     );
   }
 }

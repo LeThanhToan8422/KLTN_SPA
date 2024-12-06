@@ -135,6 +135,36 @@ export class AppointmentService {
     );
   }
 
+  async getAppointmentByAccountId(accountId: number) {
+    const appointments = await this.datasource.query(
+      `
+      select ad.id, CONCAT(b.name,' ',b.address) as branch, ad.status, 
+      CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, ad.time, ad.category, ad.expense, s.name, s.image, e.fullName as employee
+      from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      inner join branch as b on b.id = a.branchId
+      inner join service as s on s.id = ad.foreignKeyId
+      left join employee as e on e.id = ad.employeeId
+      inner join customer as c on c.id = a.customerId
+      inner join account as ac on ac.id = c.accountId
+      where ac.id = ? and ad.category = 'services'
+      union
+      select ad.id, CONCAT(b.name,' ',b.address) as branch, ad.status, 
+      CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, ad.time, ad.category, ad.expense, p.name, p.image, e.fullName as employee
+      from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      inner join branch as b on b.id = a.branchId
+      inner join product as p on p.id = ad.foreignKeyId
+      left join employee as e on e.id = ad.employeeId
+      inner join customer as c on c.id = a.customerId
+      inner join account as ac on ac.id = c.accountId
+      where ac.id = ? and ad.category = 'products'
+    `,
+      [accountId, accountId],
+    );
+    return ResponseCustomizer.success(appointments);
+  }
+
   async updateStatusAfterPayment(
     appointmentId: number,
     appointmentDetails: Array<string>,
