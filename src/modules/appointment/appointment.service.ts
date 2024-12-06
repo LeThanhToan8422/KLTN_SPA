@@ -242,4 +242,28 @@ export class AppointmentService {
       );
     }
   }
+
+  async updateStatus(id: number, status: StatusPayment) {
+    const queryRunner = this.datasource.createQueryRunner();
+    queryRunner.startTransaction();
+    try {
+      const appointment = await this.crudRepository.getById(id);
+      if (!appointment) {
+        return ErrorCustomizer.NotFoundError(
+          `Appointment with id ${id} not found.`,
+        );
+      }
+      appointment.status = status;
+      const updatedItem = await this.crudRepository.update(appointment);
+      await queryRunner.commitTransaction();
+      return ResponseCustomizer.success(
+        instanceToPlain(plainToInstance(AppoinmentDto, updatedItem)),
+      );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    }
+  }
 }

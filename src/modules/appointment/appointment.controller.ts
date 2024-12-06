@@ -335,6 +335,7 @@ export class AppointmentController {
       status,
     );
   }
+
   @Get('details/account/:accountId')
   async getAppointmentByAccountId(@Req() req: Request) {
     return await this.appointmentService.getAppointmentByAccountId(

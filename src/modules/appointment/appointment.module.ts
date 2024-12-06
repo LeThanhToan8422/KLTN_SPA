@@ -10,6 +10,8 @@ import { AppointmentDetailService } from '../appointment-detail/appointment-deta
 import { CustomerGiftService } from '../customer-gift/customer-gift.service';
 import CustomerGift from 'src/entities/customer-gift.entity';
 import MyGateWay from './gateway';
+import CustomerPoint from 'src/entities/customer-point.entity';
+import Bonus from 'src/entities/bonus.entity';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import MyGateWay from './gateway';
       Customer,
       AppointmentDetail,
       CustomerGift,
+      CustomerPoint,
+      Bonus,
     ]),
   ],
   controllers: [AppointmentController],
