@@ -15,12 +15,21 @@ import * as crypto from 'crypto';
 import axios from 'axios';
 import { ResponseCustomizer } from 'src/helpers/response-customizer.response';
 import MyGateWay from './gateway';
+import { InjectRepository } from '@nestjs/typeorm';
+import CustomerPoint from 'src/entities/customer-point.entity';
+import { Repository } from 'typeorm';
+import Bonus from 'src/entities/bonus.entity';
+import CustomerPointDto from '../customer-point/dtos/customer-point.dto';
 
 @Controller('appointment')
 export class AppointmentController {
   constructor(
     private readonly appointmentService: AppointmentService,
     private readonly myGateWay: MyGateWay,
+    @InjectRepository(CustomerPoint)
+    private readonly customerPointRepository: Repository<CustomerPoint>,
+    @InjectRepository(Bonus)
+    private readonly bonusRepository: Repository<Bonus>,
   ) {}
 
   @Public()
@@ -117,7 +126,7 @@ export class AppointmentController {
     const partnerCode = 'MOMO';
     const redirectUrl = '';
     const ipnUrl =
-      'https://kltn-spa.onrender.com/appointment/receive-notify/momo';
+      'https://2495-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =
@@ -128,6 +137,12 @@ export class AppointmentController {
         : '') +
       '_:_' +
       (req.query.voucherId ? (req.query.voucherId as []).join('_') : '') +
+      '_:_' +
+      req.query.customerId +
+      '_:_' +
+      req.query.amount +
+      '_:_' +
+      req.query.bonusId +
       '_:_' +
       partnerCode +
       new Date().getTime();
@@ -209,8 +224,6 @@ export class AppointmentController {
   @Public()
   @Post('receive-notify/momo')
   async receiveNotifyMoMo(@Req() req: Request) {
-    console.log(req.body);
-
     const information = req.body.orderId.split('_:_');
     const appointmentId = Number(information[0]);
     const appointmentDetails = information[1].split('_');
@@ -220,6 +233,38 @@ export class AppointmentController {
       appointmentDetails,
       voucherId,
     );
+    if (response.data) {
+      const foundCustomerPoint = await this.customerPointRepository.findOne({
+        where: {
+          customerId: Number(information[3]),
+        },
+      });
+      const foundBonus = await this.bonusRepository.findOne({
+        where: {
+          id: Number(information[5]),
+        },
+      });
+      const point = Math.ceil(
+        Number(
+          (Number(information[4]) / Number(foundBonus?.price)) *
+            Number(foundBonus?.point),
+        ),
+      );
+      if (foundCustomerPoint) {
+        foundCustomerPoint.expenditures += Number(information[4]);
+        foundCustomerPoint.accumulationPoints += point;
+        foundCustomerPoint.currentPoints += point;
+        await this.customerPointRepository.save(foundCustomerPoint);
+      } else {
+        const customerPoint = plainToInstance(CustomerPointDto, {
+          expenditures: Number(information[4]),
+          accumulationPoints: point,
+          currentPoints: point,
+          customerId: Number(information[3]),
+        });
+        await this.customerPointRepository.save(customerPoint);
+      }
+    }
     this.myGateWay.sendNotifyPayment(response);
     return response;
   }
