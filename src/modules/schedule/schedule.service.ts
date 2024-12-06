@@ -126,7 +126,7 @@ export class ScheduleService {
   async getSchedulesByDateForTimekeeping(date: string) {
     const response = await this.datasource.query(
       `
-      select sch.id, sch.date, sch.shift, sch.checkInTime, sch.checkOutTime, e.fullName from schedule as sch
+      select sch.id, sch.date, sch.shift, sch.checkInTime, sch.checkOutTime, e.fullName, e.id as employeeId from schedule as sch
       inner join employee as e on e.id = sch.employeeId
       where sch.date = ?
     `,
