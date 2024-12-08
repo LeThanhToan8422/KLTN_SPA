@@ -23,10 +23,6 @@ export default class PricesDto {
   @Expose()
   commission: number;
   @IsNotEmpty()
-  @IsNumber()
-  @Expose()
-  vat: number;
-  @IsNotEmpty()
   @IsString()
   @Expose()
   applicableDate: string;
