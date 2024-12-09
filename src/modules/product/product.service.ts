@@ -122,7 +122,7 @@ export class ProductService {
       inner join prices as pr on p.id = pr.foreignKeyId
       left join events as e on e.id = pr.eventId
       where pr.type = 'product' and pr.status = 'active' 
-      and p.status = 'active' and pr.applicableDate <= NOW()  
+      and p.status = 'active' and pr.status = 'active'  
     `);
     return ResponseCustomizer.success(response);
   }
@@ -135,7 +135,7 @@ export class ProductService {
       inner join prices as pr on p.id = pr.foreignKeyId
       left join events as e on e.id = pr.eventId
       where pr.type = 'product' and pr.status = 'active' 
-      and p.status = 'active' and pr.applicableDate <= NOW() and pr.eventId = ?
+      and p.status = 'active' and pr.status = 'active' and pr.eventId = ?
     `,
       [eventId],
     );

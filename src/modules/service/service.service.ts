@@ -91,7 +91,7 @@ export class ServiceService {
       from service as s
       inner join prices as p on s.id = p.foreignKeyId
       left join events as e on e.id = p.eventId
-      where s.status = 'active' and p.type = 'service' and p.applicableDate <= current_date() and s.serviceCategoryId = ?
+      where s.status = 'active' and p.type = 'service' and p.status = 'active' and s.serviceCategoryId = ?
       limit ?, ? 
     `,
       [serviceCategoryId, (page - 1) * limit, limit],

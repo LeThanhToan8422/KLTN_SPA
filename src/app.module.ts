@@ -40,6 +40,7 @@ import Customer from './entities/customer.entity';
 import Employee from './entities/employee.entity';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CustomThrottlerGuard } from './guards/custom-throttler.guard';
+import { OtpModule } from './modules/otp/otp.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -98,6 +99,7 @@ import { CustomThrottlerGuard } from './guards/custom-throttler.guard';
     CustomerPointModule,
     CustomerGiftModule,
     AppointmentDetailModule,
+    OtpModule,
   ],
   controllers: [AppController],
   providers: [
