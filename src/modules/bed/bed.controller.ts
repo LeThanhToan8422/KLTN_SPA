@@ -96,4 +96,10 @@ export class BedController {
       Number(roomId),
     );
   }
+
+  @Roles(Role.ADMIN)
+  @Get('room/:id')
+  async getByRoomId(@Req() req: Request) {
+    return await this.bedService.getByRoomId(Number(req.params.id));
+  }
 }

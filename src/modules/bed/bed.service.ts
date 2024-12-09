@@ -111,4 +111,13 @@ export class BedService {
       await this.crudRepository.updateStatus(updateStatusDto),
     );
   }
+
+  async getByRoomId(id: number) {
+    const response = await this.bedRepository.find({
+      where: { roomId: id },
+    });
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(BedDto, response)),
+    );
+  }
 }

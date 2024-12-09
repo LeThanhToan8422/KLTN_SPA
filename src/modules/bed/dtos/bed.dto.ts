@@ -18,7 +18,6 @@ export default class BedDto {
   name: string;
   @IsNotEmpty()
   @IsString()
-  @IsIn(['empty', 'full'])
   @Expose()
   status: string;
   @IsNotEmpty()
