@@ -126,7 +126,7 @@ export class AppointmentController {
     const partnerCode = 'MOMO';
     const redirectUrl = '';
     const ipnUrl =
-      'https://009a-2402-800-6371-fea6-159d-856c-2727-dfe7.ngrok-free.app/appointment/receive-notify/momo';
+      'https://6a0e-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =

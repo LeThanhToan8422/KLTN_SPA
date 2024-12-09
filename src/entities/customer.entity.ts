@@ -39,7 +39,8 @@ export default class Customer {
   })
   address: string;
   @Column({
-    default: 'avatar.png',
+    default:
+      'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/9b0c8e11-7887-4319-af7b-e2b8112d01e3-quynh-aka-la-ai-99-hinh-anh-ve-quynh-aka-hai-huoc-1535_901.jpg',
   })
   image: string;
   @Column({

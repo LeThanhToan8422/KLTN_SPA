@@ -34,6 +34,9 @@ export class VoucherService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -51,6 +54,9 @@ export class VoucherService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -68,6 +74,9 @@ export class VoucherService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 

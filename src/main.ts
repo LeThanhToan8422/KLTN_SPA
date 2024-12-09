@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import 'reflect-metadata';
 import * as dotenv from 'dotenv';
 import helmet from 'helmet';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
 // import * as cookieParser from 'cookie-parser';
 // import * as session from 'express-session';
 
@@ -23,6 +24,7 @@ async function bootstrap() {
       },
     }),
   );
+  app.useGlobalInterceptors(new LoggingInterceptor());
   await app.listen(3000);
 }
 bootstrap();

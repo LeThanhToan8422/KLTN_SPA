@@ -35,6 +35,9 @@ export class WageService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -52,6 +55,9 @@ export class WageService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -69,6 +75,9 @@ export class WageService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 

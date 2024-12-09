@@ -38,6 +38,9 @@ export class AppointmentDetailService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -55,6 +58,9 @@ export class AppointmentDetailService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -72,6 +78,9 @@ export class AppointmentDetailService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -98,8 +107,6 @@ export class AppointmentDetailService {
     queryRunner.startTransaction();
     try {
       const appointmentDetail = await this.crudRepository.getById(id);
-      console.log(appointmentDetail);
-
       if (!appointmentDetail) {
         return ErrorCustomizer.NotFoundError(
           `AppointmentDetail with id ${id} not found.`,
@@ -117,6 +124,9 @@ export class AppointmentDetailService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 }

@@ -47,7 +47,8 @@ export default class Employee {
   })
   status: Status;
   @Column({
-    default: 'avatar.png',
+    default:
+      'https://kimbeautyspas.s3.ap-southeast-1.amazonaws.com/53453e3e-b94c-4698-9815-efe27ba0ece4-quynh-aka-5-e1680714220964.jpg',
   })
   image: string;
   @Column()

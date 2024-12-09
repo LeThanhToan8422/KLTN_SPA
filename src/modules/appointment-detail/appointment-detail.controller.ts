@@ -86,7 +86,6 @@ export class AppointmentDetailController {
   @Put(':id/status')
   async updateStatus(@Req() req: Request) {
     const { status } = req.body;
-    console.log(Number(req.params.id), status.status);
     let stt = StatusAppoiment.CANCELED;
     if (
       !['confirmed', 'implement', 'finished', 'canceled', 'paid'].includes(

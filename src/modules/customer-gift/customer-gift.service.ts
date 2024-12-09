@@ -37,6 +37,9 @@ export class CustomerGiftService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -54,6 +57,9 @@ export class CustomerGiftService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -85,6 +91,9 @@ export class CustomerGiftService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
@@ -102,6 +111,9 @@ export class CustomerGiftService {
       return ResponseCustomizer.error(
         ErrorCustomizer.InternalServerError(error.message),
       );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
     }
   }
 
