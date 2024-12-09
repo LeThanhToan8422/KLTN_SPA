@@ -126,7 +126,7 @@ export class AppointmentController {
     const partnerCode = 'MOMO';
     const redirectUrl = '';
     const ipnUrl =
-      'https://6a0e-119-17-239-133.ngrok-free.app/appointment/receive-notify/momo';
+      'https://kltn-spa.onrender.com/appointment/receive-notify/momo';
     const requestType = 'payWithMethod';
     const amount = Number(req.query.amount);
     const orderId =
