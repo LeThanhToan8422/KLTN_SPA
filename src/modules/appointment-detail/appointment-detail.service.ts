@@ -129,4 +129,45 @@ export class AppointmentDetailService {
       await queryRunner.release();
     }
   }
+
+  async updateStatusByAppointmentId(
+    appointmentId: number,
+    status: StatusAppoiment,
+  ) {
+    const queryRunner = this.datasource.createQueryRunner();
+    queryRunner.startTransaction();
+    try {
+      let appointmentDetails = await this.appointmentDetailRepository.find({
+        where: {
+          appointmentId: appointmentId,
+        },
+      });
+      if (!appointmentDetails) {
+        return ErrorCustomizer.NotFoundError(
+          `AppointmentDetails with appointmentId ${appointmentId} not found.`,
+        );
+      }
+      appointmentDetails = appointmentDetails?.map((a) => {
+        return {
+          ...a,
+          status: status,
+        };
+      });
+      const updateItems =
+        await this.appointmentDetailRepository.save(appointmentDetails);
+      await queryRunner.commitTransaction();
+
+      return ResponseCustomizer.success(
+        instanceToPlain(plainToInstance(AppointmentDetailDto, updateItems)),
+      );
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      return ResponseCustomizer.error(
+        ErrorCustomizer.InternalServerError(error.message),
+      );
+    } finally {
+      // Đảm bảo giải phóng kết nối
+      await queryRunner.release();
+    }
+  }
 }

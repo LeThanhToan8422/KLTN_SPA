@@ -113,4 +113,37 @@ export class AppointmentDetailController {
       stt,
     );
   }
+
+  @Roles(Role.ADMIN, Role.MANAGER, Role.CUSTOMER)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Put('appointment/:appointmentId/status')
+  async updateStatusByAppointmentId(@Req() req: Request) {
+    const { status } = req.body;
+    let stt = StatusAppoiment.CANCELED;
+    if (
+      !['confirmed', 'implement', 'finished', 'canceled', 'paid'].includes(
+        status.status + '',
+      )
+    ) {
+      return ErrorCustomizer.BadRequestError(
+        `Invalid status value: ${status.status}. Allowed values are 'confirmed', 'implement', 'finished', 'canceled'.`,
+      );
+    } else {
+      if (status.status === 'confirmed') {
+        stt = StatusAppoiment.CONFIRMED;
+      } else if (status.status === 'implement') {
+        stt = StatusAppoiment.IMPLEMENT;
+      } else if (status.status === 'finished') {
+        stt = StatusAppoiment.FINISHED;
+      } else if (status.status === 'paid') {
+        stt = StatusAppoiment.PAID;
+      } else {
+        stt = StatusAppoiment.CANCELED;
+      }
+    }
+    return await this.appointmentDetailService.updateStatusByAppointmentId(
+      Number(req.params.appointmentId),
+      stt,
+    );
+  }
 }
