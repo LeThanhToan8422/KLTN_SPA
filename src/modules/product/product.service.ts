@@ -158,14 +158,12 @@ export class ProductService {
   ) {
     const response = await this.datasource.query(
       `
-      select pr.id, pr.name, SUM(floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice))) as revenue, COUNT(*) as quantities from appointment as a
+      select pr.id, pr.name, COUNT(*) as quantities, (ad.expense * COUNT(*)) as revenue from appointment as a
       inner join appointment_detail as ad on a.id = ad.appointmentId
-      inner join prices as p on p.foreignKeyId = ad.foreignKeyId
       inner join product as pr on pr.id = ad.foreignKeyId
-      left join events as e on e.id = p.eventId
       where YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?
       and a.branchId = ? and ad.status = 'paid' 
-      and ad.category = 'products' and p.type = 'product'
+      and ad.category = 'products'
       group by ad.foreignKeyId
     `,
       [year, month, branchId],

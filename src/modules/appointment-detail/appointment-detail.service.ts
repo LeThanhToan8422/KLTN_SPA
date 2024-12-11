@@ -170,4 +170,100 @@ export class AppointmentDetailService {
       await queryRunner.release();
     }
   }
+
+  async getStatisticAppointmentDetailByServiceId(
+    serviceId: number,
+    branchId: number,
+    month: number,
+    year: number,
+  ) {
+    const response = await this.datasource.query(
+      `
+      select ad.id, CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, ad.expense, COUNT(*) as quantities, (ad.expense * COUNT(*)) as revenue from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      where ad.foreignKeyId = ?  and a.branchId = ?
+      and MONTH(a.dateTime) = ? and YEAR(a.dateTime) = ?
+      and ad.category = 'services' and ad.status = 'paid'
+      group by a.dateTime
+      order by a.dateTime ASC
+    `,
+      [serviceId, branchId, month, year],
+    );
+    return ResponseCustomizer.success(response);
+  }
+
+  async getStatisticAppointmentDetailByEmployeeId(
+    employeeId: number,
+    branchId: number,
+    month: number,
+    year: number,
+  ) {
+    const response = await this.datasource.query(
+      `
+      SELECT SubQuery.dateTime, SUM(SubQuery.commission) as commission, 
+      SubQuery.role, IF(SubQuery.commission > 0, COUNT(*), 0) as quantities,
+      (
+        SELECT SUM(HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime))) 
+          FROM schedule as sch 
+          WHERE sch.employeeId = SubQuery.employeeId AND DAY(sch.date) = DAY(SubQuery.dateTime) 
+          AND MONTH(sch.date) = MONTH(SubQuery.dateTime) AND YEAR(sch.date) = YEAR(SubQuery.dateTime)
+          GROUP BY sch.date, sch.employeeId
+          LIMIT 0,1
+      ) as hours,
+      (
+        SELECT SUM(HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime))) 
+          FROM schedule as sch 
+          WHERE sch.employeeId = SubQuery.employeeId AND DAY(sch.date) = DAY(SubQuery.dateTime) 
+          AND MONTH(sch.date) = MONTH(SubQuery.dateTime) AND YEAR(sch.date) = YEAR(SubQuery.dateTime)
+          GROUP BY sch.date, sch.employeeId
+          LIMIT 0,1
+      ) * w.hourlyRate as salary
+      FROM (
+        SELECT DISTINCT ad.id, CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, pr.commission, 
+        e.role, e.id as employeeId
+        FROM appointment AS a
+        INNER JOIN appointment_detail AS ad ON a.id = ad.appointmentId
+        INNER JOIN service AS s ON s.id = ad.foreignKeyId
+        INNER JOIN prices AS pr ON s.id = pr.foreignKeyId
+        INNER JOIN employee AS e ON e.id = ad.employeeId
+        WHERE ad.employeeId = ?  AND a.branchId = ?
+        AND MONTH(a.dateTime) = ? AND YEAR(a.dateTime) = ?
+        AND ad.category = 'services' AND ad.status = 'paid'
+        AND pr.type = 'service' AND pr.status = 'active'
+        UNION
+        SELECT 1, CONVERT_TZ(sch.date, '+00:00', '+07:00') as dateTime, 0, e.role, e.id as employeeId
+        FROM schedule as sch
+        INNER JOIN employee AS e ON e.id = sch.employeeId
+        WHERE sch.employeeId = ? AND e.branchId = ?
+        AND MONTH(sch.date) = ? AND YEAR(sch.date) = ?
+      ) AS SubQuery
+      INNER JOIN wage as w on w.role = SubQuery.role
+      WHERE DATE(SubQuery.dateTime) < NOW()
+      GROUP BY SubQuery.dateTime;
+    `,
+      [employeeId, branchId, month, year, employeeId, branchId, month, year],
+    );
+    return ResponseCustomizer.success(response);
+  }
+
+  async getStatisticAppointmentDetailByProductId(
+    productId: number,
+    branchId: number,
+    month: number,
+    year: number,
+  ) {
+    const response = await this.datasource.query(
+      `
+      select ad.id, CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, ad.expense, COUNT(*) as quantities, (ad.expense * COUNT(*)) as revenue from appointment as a
+      inner join appointment_detail as ad on a.id = ad.appointmentId
+      where ad.foreignKeyId = ?  and a.branchId = ?
+      and MONTH(a.dateTime) = ? and YEAR(a.dateTime) = ?
+      and ad.category = 'products' and ad.status = 'paid'
+      group by a.dateTime
+      order by a.dateTime ASC
+    `,
+      [productId, branchId, month, year],
+    );
+    return ResponseCustomizer.success(response);
+  }
 }

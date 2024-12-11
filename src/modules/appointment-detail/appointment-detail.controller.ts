@@ -146,4 +146,40 @@ export class AppointmentDetailController {
       stt,
     );
   }
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Get('statistic/service')
+  async getStatisticAppointmentDetailByServiceId(@Req() req: Request) {
+    const { serviceId, branchId, month, year } = req.query;
+    return await this.appointmentDetailService.getStatisticAppointmentDetailByServiceId(
+      Number(serviceId),
+      Number(branchId),
+      Number(month),
+      Number(year),
+    );
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Get('statistic/employee')
+  async getStatisticAppointmentDetailByEmployeeId(@Req() req: Request) {
+    const { employeeId, branchId, month, year } = req.query;
+    return await this.appointmentDetailService.getStatisticAppointmentDetailByEmployeeId(
+      Number(employeeId),
+      Number(branchId),
+      Number(month),
+      Number(year),
+    );
+  }
+
+  @Roles(Role.ADMIN, Role.MANAGER)
+  @Get('statistic/product')
+  async getStatisticAppointmentDetailByProductId(@Req() req: Request) {
+    const { productId, branchId, month, year } = req.query;
+    return await this.appointmentDetailService.getStatisticAppointmentDetailByProductId(
+      Number(productId),
+      Number(branchId),
+      Number(month),
+      Number(year),
+    );
+  }
 }

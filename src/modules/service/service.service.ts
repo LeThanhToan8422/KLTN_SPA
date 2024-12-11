@@ -146,6 +146,25 @@ export class ServiceService {
     );
   }
 
+  async statisticOutStandingServices(branchId: number, date: string) {
+    const response = await this.datasource.query(
+      `
+      select s.id, s.name, COUNT(*) as quantities, SUM(ad.expense) as revenue from appointment as a
+      inner join appointment_detail as ad on  ad.appointmentId = a.id
+      inner join service as s on s.id = ad.foreignKeyId
+      where ad.category = 'services' and ad.status = 'paid' 
+      and a.branchId = ? and a.dateTime <= ?
+      group by ad.foreignKeyId
+      order by COUNT(*) DESC, ad.expense DESC
+      limit 4
+    `,
+      [branchId, date],
+    );
+    return ResponseCustomizer.success(
+      instanceToPlain(plainToInstance(ServiceDto, response)),
+    );
+  }
+
   async getById(id: number) {
     const response = await this.crudRepository.getById(id);
     return ResponseCustomizer.success(
@@ -175,7 +194,7 @@ export class ServiceService {
   ) {
     const response = await this.datasource.query(
       `
-      select s.id, s.name, SUM(floor(IF(e.discount IS NOT NULL, p.price - (p.price * (e.discount / 100)), p.specialPrice))) as revenue, COUNT(*) as quantities from appointment as a
+      select s.id, s.name, COUNT(*) as quantities, (ad.expense * COUNT(*)) as revenue from appointment as a
       inner join appointment_detail as ad on a.id = ad.appointmentId
       inner join prices as p on p.foreignKeyId = ad.foreignKeyId
       inner join service as s on s.id = ad.foreignKeyId

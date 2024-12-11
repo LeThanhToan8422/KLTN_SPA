@@ -170,4 +170,13 @@ export class ServiceController {
       Number(req.params.branchId),
     );
   }
+
+  @Public()
+  @Get('statistic/out-standings')
+  async statisticOutStandingServices(@Req() req: Request) {
+    return await this.serviceService.statisticOutStandingServices(
+      Number(req.query.branchId),
+      req.query.date + '',
+    );
+  }
 }
