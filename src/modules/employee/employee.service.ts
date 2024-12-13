@@ -158,7 +158,8 @@ export class EmployeeService {
       (select SUM(p.commission) from appointment as a
       inner join appointment_detail as ad on ad.appointmentId = a.id
       inner join prices as p on p.foreignKeyId = ad.foreignKeyId
-      where ad.category = 'services' and p.type = 'service' and ad.employeeId = em.id and YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?) as commissions
+      where ad.category = 'services' and p.type = 'service' and ad.employeeId = em.id and ad.status = 'paid'
+      and YEAR(a.dateTime) = ? and MONTH(a.dateTime) = ?) as commissions
       from schedule as sch
       inner join employee as em on em.id = sch.employeeId
       where sch.checkInTime IS NOT NULL and sch.checkOutTime IS NOT NULL

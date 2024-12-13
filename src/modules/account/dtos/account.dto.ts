@@ -17,7 +17,6 @@ export default class AccountDto {
   id: number;
   @IsNotEmpty()
   @IsString()
-  @IsPhoneNumber('VN')
   @Expose()
   phone: string;
   @IsNotEmpty()
