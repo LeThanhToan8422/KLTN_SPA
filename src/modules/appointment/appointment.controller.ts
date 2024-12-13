@@ -50,6 +50,7 @@ export class AppointmentController {
       branchId,
       bonusId,
     } = req.body;
+    console.log(req.body);
 
     const [date, time] = dateTime.split(' ');
     let customerDto = null;

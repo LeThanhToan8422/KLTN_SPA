@@ -200,46 +200,69 @@ export class AppointmentDetailService {
   ) {
     const response = await this.datasource.query(
       `
-      SELECT SubQuery.dateTime, SUM(SubQuery.commission) as commission, 
-      SubQuery.role, IF(SubQuery.commission > 0, COUNT(*), 0) as quantities,
-      (
-        SELECT SUM(HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime))) 
-          FROM schedule as sch 
-          WHERE sch.employeeId = SubQuery.employeeId AND DAY(sch.date) = DAY(SubQuery.dateTime) 
-          AND MONTH(sch.date) = MONTH(SubQuery.dateTime) AND YEAR(sch.date) = YEAR(SubQuery.dateTime)
-          GROUP BY sch.date, sch.employeeId
-          LIMIT 0,1
-      ) as hours,
-      (
-        SELECT SUM(HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime))) 
-          FROM schedule as sch 
-          WHERE sch.employeeId = SubQuery.employeeId AND DAY(sch.date) = DAY(SubQuery.dateTime) 
-          AND MONTH(sch.date) = MONTH(SubQuery.dateTime) AND YEAR(sch.date) = YEAR(SubQuery.dateTime)
-          GROUP BY sch.date, sch.employeeId
-          LIMIT 0,1
-      ) * w.hourlyRate as salary
+      WITH ScheduleHours AS (
+          SELECT 
+              sch.employeeId, 
+              DATE(sch.date) AS workDate, 
+              SUM(HOUR(TIMEDIFF(sch.checkOutTime, sch.checkInTime))) AS totalHours
+          FROM schedule sch
+          GROUP BY sch.employeeId, workDate
+      ),
+      FinalHours AS (
+          SELECT 
+              employeeId, 
+              workDate, 
+              IF(totalHours > 8, 8, totalHours) AS cappedHours
+          FROM ScheduleHours
+      )
+      SELECT 
+          SubQuery.dateTime, 
+          SUM(SubQuery.commission) AS commission, 
+          SubQuery.role, 
+          IF(SUM(SubQuery.commission) > 0, COUNT(*), 0) AS quantities,
+          sh.totalHours AS hours,
+          fh.cappedHours * w.hourlyRate AS salary
       FROM (
-        SELECT DISTINCT ad.id, CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, pr.commission, 
-        e.role, e.id as employeeId
-        FROM appointment AS a
-        INNER JOIN appointment_detail AS ad ON a.id = ad.appointmentId
-        INNER JOIN service AS s ON s.id = ad.foreignKeyId
-        INNER JOIN prices AS pr ON s.id = pr.foreignKeyId
-        INNER JOIN employee AS e ON e.id = ad.employeeId
-        WHERE ad.employeeId = ?  AND a.branchId = ?
-        AND MONTH(a.dateTime) = ? AND YEAR(a.dateTime) = ?
-        AND ad.category = 'services' AND ad.status = 'paid'
-        AND pr.type = 'service' AND pr.status = 'active'
-        UNION
-        SELECT 1, CONVERT_TZ(sch.date, '+00:00', '+07:00') as dateTime, 0, e.role, e.id as employeeId
-        FROM schedule as sch
-        INNER JOIN employee AS e ON e.id = sch.employeeId
-        WHERE sch.employeeId = ? AND e.branchId = ?
-        AND MONTH(sch.date) = ? AND YEAR(sch.date) = ?
+          SELECT DISTINCT 
+              ad.id, 
+              CONVERT_TZ(a.dateTime, '+00:00', '+07:00') AS dateTime, 
+              pr.commission, 
+              e.role, 
+              e.id AS employeeId
+          FROM appointment AS a
+          INNER JOIN appointment_detail AS ad ON a.id = ad.appointmentId
+          INNER JOIN service AS s ON s.id = ad.foreignKeyId
+          INNER JOIN prices AS pr ON s.id = pr.foreignKeyId
+          INNER JOIN employee AS e ON e.id = ad.employeeId
+          WHERE 
+              ad.employeeId = ?
+              AND a.branchId = ?
+              AND MONTH(a.dateTime) = ?
+              AND YEAR(a.dateTime) = ?
+              AND ad.category = 'services' 
+              AND ad.status = 'paid'
+              AND pr.type = 'service' 
+              AND pr.status = 'active'
+          UNION
+          SELECT 
+              1, 
+              CONVERT_TZ(sch.date, '+00:00', '+07:00') AS dateTime, 
+              0, 
+              e.role, 
+              e.id AS employeeId
+          FROM schedule sch
+          INNER JOIN employee e ON e.id = sch.employeeId
+          WHERE 
+              sch.employeeId = ?
+              AND e.branchId = ?
+              AND MONTH(sch.date) = ?
+              AND YEAR(sch.date) = ?
       ) AS SubQuery
-      INNER JOIN wage as w on w.role = SubQuery.role
+      LEFT JOIN ScheduleHours sh ON SubQuery.employeeId = sh.employeeId AND DATE(SubQuery.dateTime) = sh.workDate
+      LEFT JOIN FinalHours fh ON SubQuery.employeeId = fh.employeeId AND DATE(SubQuery.dateTime) = fh.workDate
+      INNER JOIN wage w ON w.role = SubQuery.role
       WHERE DATE(SubQuery.dateTime) < NOW()
-      GROUP BY SubQuery.dateTime;
+      GROUP BY SubQuery.dateTime
     `,
       [employeeId, branchId, month, year, employeeId, branchId, month, year],
     );
